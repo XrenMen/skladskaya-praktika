@@ -1,5 +1,6 @@
 ---
 import { path, siteName } from '../lib/site';
+import SiteFooter from '../components/SiteFooter.astro';
 import '../styles/site.css';
 import '@fontsource-variable/source-sans-3/wght.css';
 import '../styles/journal.css';
@@ -9,8 +10,8 @@ const {title,description,section,type='website',image=path('photos/cover-1280.we
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const fullTitle = title + ' — ' + siteName;
 const nav = [
-  { id:'topics', title:'Рубрики', href:path('topics/') },
   { id:'materials', title:'Статьи', href:path('materials/') },
+  { id:'topics', title:'Рубрики', href:path('topics/') },
   { id:'tools', title:'Инструменты', href:path('tools/') },
   { id:'search', title:'Поиск', href:path('search/') }
 ];
@@ -35,14 +36,19 @@ const nav = [
 </head>
 <body>
 <a href="#main" class="skip">К содержанию</a>
-<header class="site-top">
-  <div class="mast wrap">
-    <a href={path()} class="brand" aria-label="Складская практика — главная">
-      <span>Складская практика</span>
+<header class="site-top" id="site-top" tabindex="-1">
+  <div class="mast journal-shell">
+    <a href={path()} class="brand" aria-label={siteName + ' — главная'} aria-current={section === 'home' ? 'page' : undefined}>
+      {siteName}
     </a>
-    <nav aria-label="Главное меню">
+    <nav class="site-nav" aria-label="Главное меню">
       {nav.map(item => (
-        <a href={item.href} aria-current={section === item.id ? 'page' : undefined}>
+        <a
+          class:list={[{ 'site-nav-search': item.id === 'search' }]}
+          href={item.href}
+          aria-current={section === item.id ? (Astro.url.pathname === item.href ? 'page' : 'location') : undefined}
+        >
+          {item.id === 'search' && <span class="site-search-icon" aria-hidden="true"></span>}
           {item.title}
         </a>
       ))}
@@ -50,18 +56,6 @@ const nav = [
   </div>
 </header>
 <main class:list={[section === 'home' ? 'home-main' : 'wrap']} id="main" tabindex="-1"><slot /></main>
-<footer class="foot site-foot">
-  <div class="wrap footer-inner">
-    <div>
-      <p class="footer-name">Складская практика</p>
-      <p>Информационный журнал для команд складской логистики</p>
-    </div>
-    <nav aria-label="О журнале">
-      <a href={path('about/')}>О проекте</a>
-      <a href={path('editorial/')}>Редакция</a>
-      <a href={path('rss.xml')}>RSS</a>
-    </nav>
-  </div>
-</footer>
+<SiteFooter />
 </body>
 </html>

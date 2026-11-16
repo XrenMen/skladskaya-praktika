@@ -1,78 +1,120 @@
+.journal-shell {
+  width: min(1480px, calc(100% - clamp(28px, 7.5vw, 112px)));
+  margin-inline: auto;
+}
+
 .site-top {
   border-bottom: 1px solid var(--line);
   background: var(--paper);
   color: var(--ink);
 }
 
-.site-top .mast,
-.site-foot .footer-inner {
-  width: min(1480px, calc(100% - clamp(28px, 7.5vw, 112px)));
+.site-top .mast {
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 8px 24px;
+  min-height: 65px;
+  padding-block: 0;
 }
 
-.site-top .mast { min-height: 53px; padding-block: 0; gap: 8px 24px; }
 .site-top .brand {
-  flex: 0 0 auto;
-  display: inline-flex;
+  flex: none;
   min-height: 44px;
-  align-items: center;
   color: var(--ink);
-  font: 650 1.18rem/1.17 var(--font-sans);
-  letter-spacing: -.032em;
+  font: 700 clamp(1.38rem, 2.06vw, 1.85rem)/1.05 var(--font-sans);
+  letter-spacing: -.045em;
 }
+
 .site-top .brand:hover { color: var(--link); }
-.site-top .mast nav { gap: 0 clamp(13px, 3vw, 38px); }
-.site-top .mast nav a {
-  position: relative;
+
+.site-top .site-nav {
+  align-items: stretch;
+  flex-wrap: nowrap;
+  gap: 0 clamp(6px, 1.2vw, 17px);
+}
+
+.site-top .site-nav a {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  min-width: 44px;
   min-height: 44px;
-  padding-block: 0;
+  padding: 0 clamp(7px, 1.2vw, 16px);
   border: 0;
-  color: var(--muted);
-  font-size: .94rem;
+  color: var(--text);
+  font-size: 1rem;
   font-weight: 550;
   text-decoration: none;
   white-space: nowrap;
 }
-.site-top .mast nav a:hover,
-.site-top .mast nav a[aria-current="page"] { color: var(--link); }
-.site-top .mast nav a[aria-current="page"] { font-weight: 650; }
-.site-top .mast nav a[aria-current="page"]::after {
-  content: "";
+
+.site-top .site-nav a:hover,
+.site-top .site-nav a[aria-current] { color: var(--link); }
+
+.site-top .site-nav a[aria-current] {
+  box-shadow: inset 0 -2px currentColor;
+  font-weight: 650;
+}
+
+.site-top .site-nav .site-nav-search {
+  gap: 8px;
+  border-inline-start: 1px solid var(--line);
+  padding-inline-end: 0;
+}
+
+.site-search-icon {
+  position: relative;
+  flex: none;
+  width: 12px;
+  height: 12px;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  margin-inline-end: 3px;
+}
+
+.site-search-icon::after {
   position: absolute;
-  inset: auto 0 1px;
-  height: 1px;
+  right: -5px;
+  bottom: -2px;
+  width: 6px;
+  height: 1.5px;
   background: currentColor;
+  transform: rotate(45deg);
+  content: "";
 }
 
-.site-foot {
-  background: var(--wash);
-  color: var(--ink);
-  border-top: 1px solid var(--line);
-  margin-top: clamp(32px, 6vw, 76px);
-}
-.site-foot .footer-inner {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 15px 38px;
-  padding-block: clamp(20px, 3.8vw, 36px);
-}
-.site-foot .footer-name { margin-bottom: 4px; font-size: 1.1rem; font-weight: 650; }
-.site-foot .footer-inner p:not(.footer-name) { color: var(--muted); font-size: .9rem; }
-.site-foot nav { gap: 0 22px; }
-.site-foot nav a { display: inline-flex; align-items: center; min-height: 44px; font-size: .92rem; color: var(--ink); text-decoration: none; }
-.site-foot nav a:hover { color: var(--link); }
+@media (max-width: 700px) {
+  .site-top .mast {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    padding-top: 3px;
+  }
 
-@media (max-width: 600px) {
-  .site-top .mast { align-items: flex-start; flex-direction: column; gap: 0; padding-top: 2px; }
-  .site-top .mast nav { width: 100%; gap: 0 clamp(12px, 3.2vw, 18px); }
-  .site-top .mast nav a { font-size: .9rem; }
-  .site-foot .footer-inner { flex-direction: column; }
+  .site-top .site-nav {
+    justify-content: space-between;
+    width: 100%;
+    gap: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .site-top .site-nav a {
+    padding-inline: clamp(5px, 1.6vw, 12px);
+    font-size: .925rem;
+  }
+
+  .site-top .site-nav a:first-child { padding-inline-start: 0; }
+  .site-top .site-nav .site-nav-search { padding-inline-start: clamp(8px, 2.2vw, 14px); }
+}
+
+@media (max-width: 340px) {
+  .site-top .site-nav a { font-size: .875rem; }
 }
 
 @media print {
   .site-top { padding-bottom: 12px; }
   .site-top .brand { color: #000; }
+  .site-top .site-nav,
   .site-foot { display: none; }
 }
+

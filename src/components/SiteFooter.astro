@@ -1,0 +1,164 @@
+---
+import { practiceTools } from '../lib/practice-tools';
+import { categories, categoryPath, path, siteName } from '../lib/site';
+
+const sections = [
+  {
+    title: 'Материалы',
+    links: [
+      { label: 'Все статьи', href: path('materials/') },
+      ...categories.map(({ id, name }) => ({ label: name, href: categoryPath(id) })),
+    ],
+  },
+  {
+    title: 'Инструменты',
+    links: practiceTools.map(({ path: route, title }) => ({ label: title, href: path(route) })),
+  },
+  {
+    title: 'О журнале',
+    links: [
+      { label: 'О проекте', href: path('about/') },
+      { label: 'Редакция', href: path('editorial/') },
+      { label: 'RSS', href: path('rss.xml') },
+    ],
+  },
+];
+---
+
+<footer class="site-foot">
+  <div class="journal-shell footer-layout">
+    <div class="footer-brand">
+      <a class="footer-wordmark" href={path()} aria-label={siteName + ' — главная'}>{siteName}</a>
+      <p>Информационный журнал для команд складской логистики</p>
+    </div>
+
+    <nav class="footer-directory" aria-label="Навигация в подвале">
+      {sections.map(({ title, links }) => (
+        <div class="footer-group">
+          <h2>{title}</h2>
+          <ul>
+            {links.map(({ label, href }) => (
+              <li>
+                <a href={href} aria-current={Astro.url.pathname === href ? 'page' : undefined}>{label}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </nav>
+  </div>
+</footer>
+
+<style>
+  .site-foot {
+    background: var(--ink);
+    color: var(--paper);
+    margin-block-start: clamp(44px, 7vw, 96px);
+  }
+
+  .footer-layout {
+    display: grid;
+    grid-template-columns: minmax(230px, .95fr) minmax(0, 2fr);
+    gap: clamp(28px, 4.5vw, 72px);
+    padding-block: clamp(30px, 5vw, 64px);
+  }
+
+  .footer-wordmark {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 44px;
+    color: inherit;
+    font-size: clamp(2rem, 3.7vw, 3.5rem);
+    font-weight: 650;
+    letter-spacing: -.042em;
+    line-height: .98;
+    text-decoration: none;
+  }
+
+  .footer-brand p {
+    max-inline-size: 28ch;
+    margin: 12px 0 0;
+    color: var(--on-dark-muted);
+    line-height: 1.4;
+  }
+
+  .footer-directory {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.36fr) minmax(0, .76fr);
+    gap: clamp(14px, 3vw, 45px);
+  }
+
+  .footer-group h2 {
+    margin: 0 0 7px;
+    color: var(--paper);
+    font-size: 1rem;
+    font-weight: 650;
+    letter-spacing: 0;
+    line-height: 1.25;
+    text-wrap: initial;
+  }
+
+  .footer-group ul {
+    display: grid;
+    gap: 2px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .footer-group a {
+    display: flex;
+    align-items: center;
+    min-block-size: 44px;
+    min-inline-size: 44px;
+    padding-block: 5px;
+    color: var(--on-dark-muted);
+    line-height: 1.25;
+    text-decoration: none;
+    overflow-wrap: break-word;
+  }
+
+  .footer-group a[aria-current="page"] {
+    color: var(--paper);
+    font-weight: 650;
+  }
+
+  @media (hover: hover) {
+    .footer-wordmark:hover {
+      color: #c7d0ff;
+    }
+
+    .footer-group a:hover {
+      color: var(--paper);
+      background: rgb(255 255 255 / 8%);
+    }
+  }
+
+  .site-foot a:focus-visible {
+    outline-color: var(--paper);
+  }
+
+  @media (max-width: 850px) {
+    .footer-layout {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (max-width: 560px) {
+    .footer-directory {
+      grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr);
+      row-gap: 18px;
+    }
+
+    .footer-group:last-child {
+      grid-column: 1 / -1;
+      padding-block-start: 14px;
+      border-block-start: 1px solid rgb(255 255 255 / 22%);
+    }
+
+    .footer-group:last-child ul {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      column-gap: 8px;
+    }
+  }
+</style>
