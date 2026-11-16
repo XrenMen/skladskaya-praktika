@@ -6,11 +6,11 @@ import articles from '../../lib/content.mjs';
 import { path } from '../../lib/site';
 import { photoForArticle } from '../../lib/media';
 
-const lead = articles.find(article => article.slug === 'warehouse-move');
+const lead = articles.find(article => article.slug === 'receiving-discrepancies');
 const second = articles.find(article => article.slug === 'storage-cost');
 const archive = articles.filter(article => article !== lead && article !== second);
 ---
-<Site title="Все статьи журнала" description="Руководства по выбору склада, расчёту хранения, запуску фулфилмента и приёмке товара." section="materials" image={photoForArticle('warehouse-move').large}>
+<Site title="Все статьи журнала" description="Руководства по выбору склада, расчёту хранения, запуску фулфилмента и приёмке товара." section="materials" image={photoForArticle('receiving-discrepancies').large}>
   <header class="collection-head">
     <div>
       <h1>Статьи</h1>

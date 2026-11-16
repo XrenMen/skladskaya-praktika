@@ -10,6 +10,26 @@ interface ArticlePhotoSource {
 }
 
 export const articlePhotoSources: Record<string, ArticlePhotoSource> = {
+  "receiving-discrepancies": {
+    "photographer": "Artem Podrez",
+    "source": "https://www.pexels.com/photo/man-writing-on-a-clipboard-while-near-the-cardboard-boxes-5025647/",
+    "alt": "Сотрудник записывает данные рядом с коробками в фургоне",
+    "position": "50% 54%",
+    "smallWidth": 640,
+    "smallHeight": 427,
+    "largeWidth": 1280,
+    "largeHeight": 853
+  },
+  "cycle-counting": {
+    "photographer": "Tiger Lily",
+    "source": "https://www.pexels.com/photo/employee-looking-at-an-inventory-4484047/",
+    "alt": "Сотрудник сверяет данные на планшете на фоне складских стеллажей",
+    "position": "50% 53%",
+    "smallWidth": 640,
+    "smallHeight": 427,
+    "largeWidth": 1280,
+    "largeHeight": 853
+  },
   "warehouse-site-audit": {
     "photographer": "Centre for Ageing Better",
     "source": "https://www.pexels.com/photo/employees-looking-at-the-clipboard-while-standing-near-metal-shelves-13804490/",

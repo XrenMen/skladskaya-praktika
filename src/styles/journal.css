@@ -81,20 +81,31 @@ img { color: var(--muted); }
   margin: 0;
   padding: 0;
 }
-.route-guide__list li { border-bottom: 1px solid var(--line); }
-.route-guide__list a {
+.route-guide__list li {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 14px;
-  padding: 17px 2px 16px;
-  color: var(--ink);
-  text-decoration: none;
+  grid-template-columns: minmax(0, 1fr) minmax(8rem, .55fr);
   align-items: center;
+  gap: 10px 22px;
+  padding: 17px 2px 16px;
+  border-bottom: 1px solid var(--line);
 }
 .route-guide__list h3 { margin: 0 0 3px; text-wrap: initial; }
-.route-guide__list a:hover h3 { color: var(--link); }
+.route-guide__list h3 a { color: var(--ink); text-decoration: none; }
+.route-guide__list h3 a:hover { color: var(--link); text-decoration: underline; }
 .route-guide__list p { margin: 0; color: var(--muted); font-size: .92rem; }
-.route-guide__list a > span { font-size: 1.28rem; color: var(--link); }
+.route-guide__start {
+  display: inline-flex;
+  justify-self: start;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  font-size: .92rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+@media (max-width: 515px) {
+  .route-guide__list li { grid-template-columns: minmax(0, 1fr); gap: 2px; padding-bottom: 6px; }
+}
 
 /* Keep the wide illustrations separate from the text measure. */
 .article-head { max-width: 950px; margin: 0 auto; padding: clamp(28px, 5.5vw, 74px) 0 25px; }

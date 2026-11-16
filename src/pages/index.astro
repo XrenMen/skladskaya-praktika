@@ -14,9 +14,9 @@ const image = {
 const lead = articles.find(article => article.slug === 'warehouse-move')!;
 const leadPhoto = photoForArticle(lead.slug);
 const routes = [
-  { id: 'storage', title: 'Выбрать склад', description: 'Как сравнить операторов, посчитать хранение и заложить запас мест.' },
-  { id: 'operations', title: 'Подготовить поставку', description: 'Приёмка товара, расписание отгрузок и переезд склада.' },
-  { id: 'fulfillment', title: 'Разобраться в фулфилменте', description: 'Тарифы, схемы FBO и FBS, обработка возвратов.' },
+  { id: 'storage', title: 'Выбрать склад', description: 'Как сравнить операторов, посчитать хранение и заложить запас мест.', start: 'warehouse-site-audit', startLabel: 'Как осмотреть склад' },
+  { id: 'operations', title: 'Подготовить поставку', description: 'Приёмка товара, расписание отгрузок и переезд склада.', start: 'first-delivery', startLabel: 'Первая поставка по шагам' },
+  { id: 'fulfillment', title: 'Разобраться в фулфилменте', description: 'Тарифы, схемы FBO и FBS, обработка возвратов.', start: 'returns', startLabel: 'Разобрать процесс возвратов' },
 ];
 ---
 <Site title="Журнал о складской логистике" description="Практические статьи для тех, кто выбирает склад, организует поставки и сравнивает фулфилмент." image={image.wide} section="home">
@@ -49,17 +49,15 @@ const routes = [
       <ul class="route-guide__list">
         {routes.map(route => (
           <li>
-            <a href={categoryPath(route.id)}>
-              <div><h3>{route.title}</h3><p>{route.description}</p></div>
-              <span aria-hidden="true">→</span>
-            </a>
+            <div><h3><a href={categoryPath(route.id)}>{route.title}</a></h3><p>{route.description}</p></div>
+            <a class="route-guide__start" href={articlePath(route.start)}>{route.startLabel} <span aria-hidden="true">→</span></a>
           </li>
         ))}
       </ul>
     </div>
   </section>
 
-  <HomeIssue featured="warehouse-site-audit" secondary={['first-delivery', 'compare-fulfillment']} />
+  <HomeIssue featured="receiving-discrepancies" secondary={['cycle-counting', 'compare-fulfillment']} />
 
   <HomePractice />
 </Site>

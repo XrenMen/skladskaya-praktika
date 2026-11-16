@@ -137,6 +137,16 @@
   letter-spacing: -.065em;
   font-variant-numeric: tabular-nums;
 }
+.practice-index__sample--quotes dl { margin: 7px 0 0; border-top: 1px solid var(--line); }
+.practice-index__sample--quotes dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding-block: 8px;
+  border-bottom: 1px solid var(--line);
+}
+.practice-index__sample--quotes dd { margin: 0; font-variant-numeric: tabular-nums; }
+.practice-index__sample--quotes dl div:last-child { color: var(--link); font-weight: 650; }
 .practice-index__sample--peak { color: var(--surface); background: var(--dark); }
 .practice-index__sample--peak strong { color: var(--bright); }
 .practice-index__sample--storage { color: #211a10; background: var(--bright); }

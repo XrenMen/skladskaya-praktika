@@ -3,15 +3,24 @@ import Site from '../../layouts/Site.astro';
 import Card from '../../components/Card.astro';
 import CollectionNav from '../../components/CollectionNav.astro';
 import articles from '../../lib/content.mjs';
-import { categories, path } from '../../lib/site';
+import { articlePath, categories, path } from '../../lib/site';
+import { topicRoutes } from '../../lib/editorial-paths';
 import { photoForCategory } from '../../lib/media';
+import '../../styles/editorial-paths.css';
 
 export function getStaticPaths() {
   return categories.map(category => ({ params: { topic: category.id }, props: { category } }));
 }
 
 const { category } = Astro.props;
-const selected = articles.filter(article => article.category === category.id);
+const { start, next } = topicRoutes[category.id];
+const lead = articles.find(article => article.slug === start.slug);
+const nextArticle = 'slug' in next ? articles.find(article => article.slug === next.slug) : undefined;
+const nextTitle = 'label' in next ? next.label : nextArticle?.title;
+const nextHref = 'route' in next ? path(next.route) : articlePath(next.slug);
+const archive = articles.filter(article =>
+  article.category === category.id && article !== lead && article !== nextArticle
+);
 const image = photoForCategory(category.id);
 ---
 <Site title={category.title} description={category.description} image={image.large} section="topics">
@@ -34,7 +43,31 @@ const image = photoForCategory(category.id);
     />
   </header>
   <CollectionNav active={category.id} />
-  <ul class="collection-list">
-    {selected.map(item => <li><Card item={item} compact hideTopic heading="h2" /></li>)}
-  </ul>
+  {lead && (
+    <section class="topic-route" aria-labelledby="topic-route-title">
+      <div class="topic-route-start">
+        <h2 id="topic-route-title">С чего начать</h2>
+        <a href={articlePath(lead.slug)}>
+          {lead.title} <span aria-hidden="true">→</span>
+        </a>
+        <p>{start.reason}</p>
+      </div>
+      {nextTitle && (
+        <a class="editorial-tool" href={nextHref}>
+          <span class="editorial-tool-label">{'route' in next ? 'Инструмент' : 'Следующая статья'}</span>
+          <strong>{nextTitle}</strong>
+          <span class="editorial-tool-detail">{next.reason}</span>
+          <span class="editorial-tool-arrow" aria-hidden="true">↗</span>
+        </a>
+      )}
+    </section>
+  )}
+  {archive.length > 0 && (
+    <section class="topic-archive" aria-labelledby="topic-archive-title">
+      <h2 id="topic-archive-title">Ещё по теме</h2>
+      <ul class="collection-list">
+        {archive.map(item => <li><Card item={item} compact hideTopic heading="h3" /></li>)}
+      </ul>
+    </section>
+  )}
 </Site>

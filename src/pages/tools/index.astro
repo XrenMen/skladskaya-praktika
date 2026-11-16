@@ -5,16 +5,33 @@ import { practiceTools } from '../../lib/practice-tools';
 import { photoForArticle } from '../../lib/media';
 import '../../styles/practice-tools.css';
 
-const [checklist, peak, storage] = practiceTools;
+const [quotes, checklist, peak, storage] = practiceTools;
 ---
-<Site title="Инструменты для склада" description="Чек-лист осмотра склада, расчёт запаса паллетомест на пик и калькулятор стоимости хранения." section="tools" image={photoForArticle('warehouse-site-audit').large}>
+<Site title="Инструменты для склада" description="Сравнение складских тарифов, чек-лист осмотра, расчёт запаса паллетомест и стоимости хранения." section="tools" image={photoForArticle('warehouse-site-audit').large}>
   <header class="practice-tool-head practice-index-head">
     <h1>Инструменты для склада</h1>
-    <p class="lede">Что проверить на площадке, сколько мест понадобится в пик и во сколько обойдётся хранение.</p>
+    <p class="lede">Осмотрите площадку, рассчитайте запас мест и сравните предложения складов на одном объёме работы.</p>
   </header>
 
   <div class="practice-index" aria-label="Инструменты">
-    <article class="practice-index__row" aria-labelledby="tool-checklist">
+    <article class="practice-index__row" aria-labelledby="tool-quotes">
+      <div class="practice-index__copy">
+        <h2 id="tool-quotes">{quotes.title}</h2>
+        <p>{quotes.description}</p>
+        <a class="button" href={path(quotes.path)}>{quotes.action} <span aria-hidden="true">→</span></a>
+        <a class="practice-index__article" href={articlePath(quotes.article)}>{quotes.articleTitle}</a>
+      </div>
+      <div class="practice-index__sample practice-index__sample--quotes">
+        <p>Пример · один месяц</p>
+        <dl>
+          <div><dt>Склад 1</dt><dd>66 800 ₽</dd></div>
+          <div><dt>Склад 2</dt><dd>64 900 ₽</dd></div>
+          <div><dt>Склад 3</dt><dd>64 300 ₽</dd></div>
+        </dl>
+      </div>
+    </article>
+
+    <article class="practice-index__row practice-index__row--reverse" aria-labelledby="tool-checklist">
       <div class="practice-index__copy">
         <h2 id="tool-checklist">{checklist.title}</h2>
         <p>{checklist.description}</p>
@@ -31,7 +48,7 @@ const [checklist, peak, storage] = practiceTools;
       </div>
     </article>
 
-    <article class="practice-index__row practice-index__row--reverse" aria-labelledby="tool-peak">
+    <article class="practice-index__row" aria-labelledby="tool-peak">
       <div class="practice-index__copy">
         <h2 id="tool-peak">{peak.title}</h2>
         <p>{peak.description}</p>
@@ -46,7 +63,7 @@ const [checklist, peak, storage] = practiceTools;
       </div>
     </article>
 
-    <article class="practice-index__row" aria-labelledby="tool-storage">
+    <article class="practice-index__row practice-index__row--reverse" aria-labelledby="tool-storage">
       <div class="practice-index__copy">
         <h2 id="tool-storage">{storage.title}</h2>
         <p>{storage.description}</p>

@@ -3,7 +3,7 @@ import { path } from '../lib/site';
 import { practiceTools } from '../lib/practice-tools';
 import '../styles/practice-tools.css';
 
-const [checklist, ...calculators] = practiceTools;
+const [featured, ...additional] = practiceTools;
 ---
 <section class="wrap practice-teaser" id="calculator" aria-labelledby="practice-teaser-title">
   <header class="practice-teaser__header">
@@ -12,13 +12,13 @@ const [checklist, ...calculators] = practiceTools;
   </header>
 
   <div class="practice-teaser__content">
-    <a class="practice-teaser__lead" href={path(checklist.path)}>
-      <h3>{checklist.title}</h3>
-      <p>{checklist.description}</p>
-      <span class="practice-teaser__action">{checklist.action} <span aria-hidden="true">→</span></span>
+    <a class="practice-teaser__lead" href={path(featured.path)}>
+      <h3>{featured.title}</h3>
+      <p>{featured.description}</p>
+      <span class="practice-teaser__action">{featured.action} <span aria-hidden="true">→</span></span>
     </a>
     <ul class="practice-teaser__list">
-      {calculators.map(tool => (
+      {additional.map(tool => (
         <li>
           <a href={path(tool.path)}>
             <div><h3>{tool.title}</h3><p>{tool.description}</p></div>

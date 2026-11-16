@@ -1,5 +1,13 @@
 export const practiceTools = [
   {
+    path: 'tools/warehouse-quotes/',
+    title: 'Сравнение складских тарифов',
+    description: 'Сравните три сметы на одинаковом объёме хранения, приёмки и отгрузки. Учтите ежемесячные доплаты.',
+    action: 'Сравнить тарифы',
+    article: 'choose-operator',
+    articleTitle: 'Что запросить у складского оператора',
+  },
+  {
     path: 'tools/warehouse-checklist/',
     title: 'Чек-лист осмотра склада',
     description: 'Пройдите площадку от въезда до выдачи. Отметьте проверенное и распечатайте лист осмотра.',

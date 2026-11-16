@@ -1,0 +1,238 @@
+---
+import Site from '../../layouts/Site.astro';
+import { articlePath, path } from '../../lib/site';
+import '../../styles/practice-tools.css';
+
+const units = [
+  { volume: 'Хранение, паллето-дни', rate: 'Хранение, ₽/паллето-день', example: 2400 },
+  { volume: 'Принято за месяц, паллеты', rate: 'Приёмка, ₽/паллета', example: 120 },
+  { volume: 'Отгружено за месяц, паллеты', rate: 'Отгрузка, ₽/паллета', example: 100 },
+];
+
+const rateLabels = [...units.map((unit) => unit.rate), 'Фиксированная плата, ₽/месяц'];
+const quotes = [
+  { name: 'Склад 1', rates: [17.5, 90, 100, 4000], total: '66 800 ₽' },
+  { name: 'Склад 2', rates: [16, 110, 95, 3800], total: '64 900 ₽' },
+  { name: 'Склад 3', rates: [18, 80, 85, 3000], total: '64 300 ₽' },
+];
+---
+
+<Site title="Сравнение складских тарифов" description="Сравните три складских предложения на одном объёме и узнайте затраты на хранение, приёмку и отгрузку за месяц." section="tools">
+  <header class="practice-tool-head">
+    <a class="practice-tool-back" href={path('tools/')}>← Все инструменты</a>
+    <h1>Сравнение складских тарифов</h1>
+    <p class="lede">Введите месячные объёмы и тарифы трёх складов. Сумма включает хранение, приёмку, отгрузку и фиксированную плату.</p>
+  </header>
+
+  <form class="quotes-form" id="warehouse-quotes" novalidate>
+    <fieldset class="quotes-volume" data-quotes-volume disabled>
+      <legend>Объёмы на месяц</legend>
+      <p class="quotes-note" id="quotes-volume-note">В полях — пример расчёта. Замените числа своими. Если операции не было, укажите 0.</p>
+      <div class="quotes-volume-fields">
+        {units.map((unit) => (
+          <label class="quotes-field">
+            <span>{unit.volume}</span>
+            <input data-quote-volume type="number" inputmode="numeric" min="0" max="1000000" step="1" value={unit.example} required aria-describedby="quotes-volume-note" />
+          </label>
+        ))}
+      </div>
+      <a class="quotes-inline-link" href={path('calculator/')}>Как посчитать паллето-дни</a>
+    </fieldset>
+
+    <div class="quotes-tariff-head">
+      <h2 id="quotes-tariff-heading">Тарифы складов</h2>
+      <p id="quotes-rates-note" class="quotes-note">Используйте одну базу для сравнения тарифов, например цены с НДС. Если платы нет, укажите 0. Допустимы тарифы до 1 000 000 ₽ с точностью до копеек.</p>
+    </div>
+
+    <section class="quotes-list" aria-labelledby="quotes-tariff-heading">
+      {quotes.map((quote, index) => (
+        <div class="quotes-card" data-quote-card data-quote-name={quote.name} data-quote-best={index === 2 ? 'true' : undefined}>
+          <fieldset data-quote-fields disabled>
+            <legend>{quote.name}</legend>
+            {rateLabels.map((label, rateIndex) => (
+              <label class="quotes-field">
+                <span>{label}</span>
+                <input data-quote-rate type="number" inputmode="decimal" min="0" max="1000000" step="0.01" value={quote.rates[rateIndex]} required aria-describedby="quotes-rates-note" />
+              </label>
+            ))}
+          </fieldset>
+          <div class="quotes-total">
+            <span data-quote-total-label>{index === 2 ? 'Минимум за месяц' : 'За месяц'}</span>
+            <strong data-quote-amount>{quote.total}</strong>
+          </div>
+        </div>
+      ))}
+    </section>
+
+    <div class="quotes-summary">
+      <p data-quote-summary role="status" aria-atomic="true">В примере меньше всего стоит Склад 3 — 64 300 ₽ в месяц.</p>
+      <button type="reset" class="button outline" data-quotes-reset hidden>Вернуть пример</button>
+    </div>
+
+    <noscript><p class="quotes-note">Для пересчёта включите JavaScript. Сейчас показан пример.</p></noscript>
+  </form>
+
+  <section class="practice-tool-links">
+    <h2>Что проверить в тарифах</h2>
+    <p>Стоимость за месяц — это сумма трёх операций по их тарифам и фиксированной платы.</p>
+    <p>Сверьте месячный минимум и доплаты за отдельные работы. Калькулятор учитывает только суммы, которые вы указали в полях.</p>
+    <a href={articlePath('storage-cost')}>Из чего складывается стоимость хранения <span aria-hidden="true">→</span></a>
+    <a href={articlePath('warehouse-site-audit')}>Как проверить склад перед договором <span aria-hidden="true">→</span></a>
+  </section>
+  <script is:inline type="module" src={path('assets/warehouse-quotes.js')}></script>
+</Site>
+
+<style>
+  .quotes-form {
+    display: grid;
+    gap: 22px;
+    margin-block: 0 48px;
+  }
+  .quotes-form fieldset {
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  .quotes-form .quotes-volume {
+    background: var(--surface, #fff);
+    box-shadow: 0 0 0 1px var(--line);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .quotes-volume legend {
+    float: left;
+    width: 100%;
+    margin-block-end: 8px;
+    font-size: 1.35rem;
+    font-weight: 650;
+  }
+  .quotes-note {
+    margin: 0;
+    color: var(--muted);
+  }
+  .quotes-volume-fields {
+    clear: both;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin-block: 14px;
+  }
+  .quotes-field {
+    display: grid;
+    align-content: end;
+    gap: 4px;
+    font-size: 0.95rem;
+    line-height: 1.3;
+  }
+  .quotes-field input {
+    min-width: 0;
+    width: 100%;
+    padding: 9px 10px;
+    border: 1px solid var(--field-line, var(--line));
+    border-radius: 6px;
+    background: var(--surface, #fff);
+    color: var(--ink);
+    font: inherit;
+    font-size: 1rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .quotes-field input:focus-visible {
+    outline: 2px solid var(--link);
+    outline-offset: 2px;
+  }
+  .quotes-field input[aria-invalid="true"] {
+    border-color: var(--accent, #a82d22);
+  }
+  .quotes-inline-link {
+    font-size: 0.95rem;
+    text-underline-offset: 3px;
+  }
+  .quotes-tariff-head {
+    margin-block-start: 6px;
+  }
+  .quotes-tariff-head h2 {
+    margin-block: 0 5px;
+  }
+  .quotes-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .quotes-card {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--surface, #fff);
+  }
+  .quotes-card[data-quote-best="true"] {
+    border-color: var(--link);
+  }
+  .quotes-card legend {
+    margin-block-end: 8px;
+    font-size: 1.2rem;
+    font-weight: 650;
+  }
+  .quotes-card .quotes-field + .quotes-field {
+    margin-block-start: 12px;
+  }
+  .quotes-total {
+    display: grid;
+    align-content: start;
+    gap: 2px;
+    min-height: 71px;
+    margin-block-start: 17px;
+    padding-block-start: 12px;
+    border-top: 1px solid var(--line);
+    line-height: 1.2;
+  }
+  .quotes-total span {
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  .quotes-total strong {
+    font-size: clamp(1.24rem, 2.8vw, 1.9rem);
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+  }
+  .quotes-summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .quotes-summary p {
+    flex: 1 1 320px;
+    margin: 0;
+    font-weight: 650;
+  }
+  .quotes-summary .button {
+    flex: 0 0 auto;
+  }
+  .quotes-summary .button[hidden] {
+    display: none;
+  }
+  .practice-tool-links a {
+    display: block;
+    width: fit-content;
+    margin-block: 8px;
+  }
+  @media (max-width: 690px) {
+    .quotes-volume-fields,
+    .quotes-list {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .quotes-card fieldset {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .quotes-card .quotes-field + .quotes-field {
+      margin-block-start: 0;
+    }
+  }
+</style>
