@@ -22,8 +22,8 @@
   content: "";
   z-index: -1;
   background:
-    linear-gradient(0deg, #111210ed 0%, #1112109e 40%, #11121024 74%),
-    linear-gradient(90deg, #11121085, #11121013 57%);
+    linear-gradient(0deg, #131a21ed 0%, #131a219e 40%, #131a2124 74%),
+    linear-gradient(90deg, #131a2185, #131a2113 57%);
 }
 .warehouse-front__inner {
   display: grid;
@@ -37,14 +37,14 @@
   margin: 0 0 12px;
   font-size: clamp(3.6rem, 8.2vw, 7.4rem);
   line-height: .91;
-  font-weight: 700;
-  letter-spacing: -.059em;
+  font-weight: 650;
+  letter-spacing: -.041em;
   text-wrap: initial;
 }
 .warehouse-front__masthead h1 span { display: block; }
 .warehouse-front__masthead > p {
   margin: 0;
-  color: #f0e9da;
+  color: var(--on-dark-muted);
   font-size: clamp(.9rem, 1.35vw, 1.1rem);
   font-weight: 500;
 }
@@ -75,7 +75,7 @@
   max-width: 560px;
   min-width: 0;
   padding: 20px 24px 22px;
-  background: #181a1bdc;
+  background: #202931e8;
   border-left: 2px solid var(--bright);
 }
 .warehouse-front__rubric {
@@ -97,7 +97,7 @@
 .warehouse-front__summary {
   max-width: 43ch;
   margin: 0 0 18px;
-  color: #f3ede0;
+  color: var(--surface);
   font-size: clamp(.94rem, 1.4vw, 1.06rem);
 }
 .warehouse-front__action {
@@ -131,7 +131,7 @@
   .warehouse-front__detail { width: min(100%, 320px); }
   .warehouse-front__media img { object-position: 52% 50%; }
   .warehouse-front::after {
-    background: linear-gradient(0deg, #111210dc, #1112106b 76%), linear-gradient(90deg, #11121091, #11121020);
+    background: linear-gradient(0deg, #131a21dc, #131a216b 76%), linear-gradient(90deg, #131a2191, #131a2120);
   }
 }
 @media (max-width: 370px) {

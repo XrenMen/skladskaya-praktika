@@ -1,17 +1,20 @@
 /* Typography, reading pages and the front page. */
 :root {
-  --ink: #181a1b;
-  --muted: #565651;
-  --paper: #f5f3eb;
-  --surface: #fffcf5;
-  --line: #d7d3c6;
-  --dark: #181a1b;
+  --ink: #1e272d;
+  --muted: #4b5a63;
+  --paper: #edf1f3;
+  --surface: #f9fbfc;
+  --line: #c8d2d9;
+  --dark: #202931;
   --bright: #ffb34a;
-  --link: #75400b;
-  --wash: #eae7dc;
+  --link: #68451f;
+  --wash: #e0e7eb;
+  --on-dark-muted: #c9d3da;
+  --field-line: #81909b;
+  --font-sans: "Source Sans 3 Variable", "Segoe UI", sans-serif;
   --radius: 4px;
   --gutter: clamp(18px, 5.1vw, 76px);
-  font-family: "Geist Variable", Arial, sans-serif;
+  font-family: var(--font-sans);
   line-height: 1.55;
 }
 .wrap {
@@ -21,13 +24,13 @@
 h1, h2, h3 {
   font-family: inherit;
   font-weight: 650;
-  letter-spacing: -.045em;
+  letter-spacing: -.028em;
   line-height: 1.09;
   text-wrap: balance;
 }
 h1 { font-size: clamp(2.45rem, 6vw, 5.25rem); }
 h2 { font-size: clamp(1.85rem, 3.7vw, 3.25rem); }
-h3 { font-size: clamp(1.15rem, 2vw, 1.6rem); letter-spacing: -.035em; }
+h3 { font-size: clamp(1.15rem, 2vw, 1.6rem); letter-spacing: -.019em; }
 a:focus-visible, button:focus-visible, input:focus-visible, .table-scroll:focus-visible {
   outline: 2px solid #a35808;
   outline-offset: 4px;
@@ -42,7 +45,7 @@ img { color: var(--muted); }
   padding: 11px 18px;
   font-weight: 650;
 }
-.button:hover { background: #39352f; }
+.button:hover { background: #384651; }
 .button.outline { background: transparent; color: var(--ink); border-color: var(--line); }
 .button.outline:hover { border-color: var(--ink); background: var(--wash); }
 .eyebrow, .kicker {
@@ -129,7 +132,7 @@ img { color: var(--muted); }
 }
 .table-scroll { border-radius: 3px; }
 .calc, .result, .panel, .inputs input, .search-box, .search-results li, .chip { border-radius: 3px; }
-.inputs input, .search-box { min-height: 48px; border-color: #968d7b; }
+.inputs input, .search-box { min-height: 48px; border-color: var(--field-line); }
 .result output { font-variant-numeric: tabular-nums; font-weight: 650; }
 .search-hints .chip { background: transparent; }
 

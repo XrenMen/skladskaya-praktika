@@ -1,10 +1,10 @@
 .site-top,
 .site-foot {
-  --shell-bg: #181a1b;
-  --shell-text: #f8f5ef;
-  --shell-muted: #bdb9b1;
+  --shell-bg: var(--dark);
+  --shell-text: var(--surface);
+  --shell-muted: var(--on-dark-muted);
   --shell-accent: #ffb34a;
-  --shell-line: #414242;
+  --shell-line: #45535d;
   background: var(--shell-bg);
   color: var(--shell-text);
 }
@@ -20,7 +20,7 @@
   flex: 0 0 auto;
   gap: 10px;
   color: var(--shell-text);
-  font: 650 clamp(1rem, 2vw, 1.28rem)/1.15 "Geist Variable", Arial, sans-serif;
+  font: 650 clamp(1rem, 2vw, 1.28rem)/1.15 var(--font-sans);
   letter-spacing: -0.026em;
 }
 
@@ -120,7 +120,7 @@
 .site-foot .footer-name {
   margin-bottom: 6px;
   color: var(--shell-text);
-  font: 650 1.2rem/1.25 "Geist Variable", Arial, sans-serif;
+  font: 650 1.2rem/1.25 var(--font-sans);
   letter-spacing: -0.022em;
 }
 

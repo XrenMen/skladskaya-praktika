@@ -35,7 +35,7 @@
   margin-bottom: .85rem;
   font-size: clamp(2.125rem, 4.15vw, 3.7rem);
   line-height: 1.04;
-  letter-spacing: -.053em;
+  letter-spacing: -.03em;
   overflow-wrap: break-word;
 }
 

@@ -20,7 +20,7 @@
   padding: 10px 13px;
   font: inherit;
   color: var(--ink);
-  border: 1px solid #8c8271;
+  border: 1px solid var(--field-line);
   border-radius: 3px;
   background: var(--surface);
 }
@@ -166,12 +166,12 @@
   font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
 }
-.storage-equation { font-size: .89rem; color: #c7c1b1; margin: 0; }
-.storage-price { margin-top: 22px; padding-top: 16px; border-top: 1px solid #58544a; }
+.storage-equation { font-size: .89rem; color: var(--on-dark-muted); margin: 0; }
+.storage-price { margin-top: 22px; padding-top: 16px; border-top: 1px solid #465763; }
 .storage-price p {
   font-size: clamp(1rem, 1.9vw, 1.27rem);
   margin: 0;
-  color: #e8e2d5;
+  color: var(--on-dark-muted);
   font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
 }

@@ -67,7 +67,7 @@
   text-wrap: initial;
   margin-bottom: 10px;
 }
-.practice-teaser__lead p { color: #e4dfd4; margin: 0 0 15px; max-width: 39ch; }
+.practice-teaser__lead p { color: var(--on-dark-muted); margin: 0 0 15px; max-width: 39ch; }
 .practice-teaser__action { color: var(--bright); font-size: .92rem; font-weight: 650; }
 .practice-teaser__lead:hover .practice-teaser__action { text-decoration: underline; }
 .practice-teaser__lead:focus-visible { outline: 2px solid #a35808; outline-offset: 4px; }
@@ -94,7 +94,7 @@
 .practice-teaser__arrow { color: var(--link); font-size: 1.15rem; }
 .practice-teaser__list a:hover h3 { color: var(--link); }
 
-.practice-index-head h1 { max-width: 20ch; }
+.practice-index-head h1 { max-width: 28ch; }
 .practice-index { border-top: 1px solid var(--line); }
 .practice-index__row {
   display: grid;
@@ -162,7 +162,7 @@
 }
 .practice-index__sample .practice-index__equation {
   margin-top: 7px;
-  color: #cfc8ba;
+  color: var(--on-dark-muted);
   font-variant-numeric: tabular-nums;
   font-size: .88rem;
 }

@@ -11,7 +11,7 @@
   margin: 0 0 10px;
   font-size: clamp(2.65rem, 6vw, 5.5rem);
   font-weight: 650;
-  letter-spacing: -.055em;
+  letter-spacing: -.033em;
   line-height: 1;
 }
 
@@ -183,7 +183,7 @@
   font-size: clamp(1.22rem, 2.4vw, 1.9rem);
   font-weight: 650;
   line-height: 1.17;
-  letter-spacing: -.035em;
+  letter-spacing: -.02em;
   overflow-wrap: break-word;
   text-wrap: pretty;
 }
@@ -205,7 +205,7 @@
 
 .collection-card--lead .collection-card-summary,
 .collection-topic:first-child .collection-card-summary {
-  color: #d4d0c4;
+  color: var(--on-dark-muted);
 }
 
 .collection-arrow {
@@ -293,7 +293,7 @@
 }
 
 .collection-category-copy p {
-  color: #d4d0c4;
+  color: var(--on-dark-muted);
 }
 
 .collection-back {
