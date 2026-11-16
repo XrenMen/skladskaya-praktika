@@ -1,3 +1,4 @@
+import registry from '../src/lib/content.mjs';
 import { readdir,readFile,stat } from 'node:fs/promises';
 import { resolve,join,relative } from 'node:path';
 const dist=resolve('dist'),prefix='/skladskaya-praktika/',origin='https://xrenmen.github.io';
@@ -31,7 +32,7 @@ for(const f of html){
     if(!src.includes('data-pagefind-body'))problems.push(local+' not opted into search');
   }
 }
-if(html.length!==19 || articles!==8)problems.push('Unexpected page counts: '+html.length+' / '+articles);
+if(html.length!==registry.length+11 || articles!==registry.length)problems.push('Unexpected page counts: '+html.length+' / '+articles);
 for(const asset of ['.nojekyll','404.html','rss.xml','pagefind/pagefind.js','pagefind/pagefind-entry.json'])if(!(await stat(join(dist,asset)).catch(()=>null))?.isFile())problems.push('Missing '+asset);
 if(problems.length){console.error(problems.join('\n'));process.exitCode=1;}
 else console.log(JSON.stringify({html:html.length,articles,noindex:html.length,refs,assets:files.length},null,2));

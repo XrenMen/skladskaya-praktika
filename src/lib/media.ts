@@ -23,6 +23,7 @@ export const loadingBay = {
   position: '50% 57%',
 };
 const articlePhotos:Record<string,PhotoKey> = {
+ 'warehouse-site-audit':'cover', 'peak-pallet-capacity':'planning',
  'storage-cost':'storage', 'first-delivery':'operations', 'compare-fulfillment':'fulfillment',
  'returns':'fulfillment', 'choose-operator':'planning',
  'dispatch-slots':'operations', 'own-vs-outsourced':'planning',

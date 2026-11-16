@@ -62,62 +62,7 @@ img { color: var(--muted); }
 }
 .lede { font-size: clamp(1rem, 1.65vw, 1.17rem); max-width: 62ch; }
 
-/* A wide loading bay photograph with live, selectable editorial text. */
 .home-main { width: 100%; }
-.dock-hero {
-  display: grid;
-  align-items: end;
-  isolation: isolate;
-  position: relative;
-  min-height: clamp(510px, 45vw, 690px);
-  background: #272624;
-  color: #fffcf5;
-}
-.dock-hero__media, .dock-hero::after {
-  position: absolute;
-  inset: 0;
-}
-.dock-hero__media { z-index: -2; overflow: hidden; }
-.dock-hero__media img {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-  object-position: center 53%;
-}
-.dock-hero::after {
-  content: "";
-  z-index: -1;
-  background: linear-gradient(90deg, #111210e8 0%, #111210c2 34%, #1112105c 64%, #11121015 100%);
-}
-.dock-hero__inner { padding-block: clamp(66px, 9vw, 132px) clamp(55px, 8vw, 100px); }
-.dock-hero__label {
-  color: #ffe0ab;
-  font-size: clamp(.81rem, 1.25vw, .98rem);
-  font-weight: 550;
-  margin-bottom: 16px;
-}
-.dock-hero h1 {
-  width: min(100%, 730px);
-  font-size: clamp(2.75rem, 6.25vw, 5.25rem);
-  line-height: .99;
-  font-weight: 650;
-  text-wrap: initial;
-  margin-bottom: 18px;
-}
-.dock-hero__summary {
-  max-width: 41ch;
-  color: #f0ece1;
-  font-size: clamp(1rem, 1.75vw, 1.24rem);
-  margin-bottom: 27px;
-}
-.dock-hero__action {
-  background: var(--bright);
-  color: #211a10;
-  gap: 24px;
-}
-.dock-hero__action:hover { background: #ffcf87; }
-.dock-hero__action:focus-visible { outline-color: #ffdb9e; }
 
 .route-guide {
   display: grid;
@@ -147,58 +92,6 @@ img { color: var(--muted); }
 .route-guide__list a:hover h3 { color: var(--link); }
 .route-guide__list p { margin: 0; color: var(--muted); font-size: .92rem; }
 .route-guide__list a > span { font-size: 1.28rem; color: var(--link); }
-
-.work-selection { padding-bottom: clamp(54px, 8vw, 103px); }
-.work-selection__heading {
-  display: flex;
-  justify-content: space-between;
-  gap: 14px;
-  align-items: baseline;
-  margin-bottom: 23px;
-}
-.work-selection__heading h2 { margin: 0; }
-.work-selection__heading > a {
-  flex: none;
-  min-height: 36px;
-  font-weight: 600;
-  text-decoration: none;
-}
-.work-selection__heading > a:hover { text-decoration: underline; }
-.work-selection__grid {
-  display: grid;
-  grid-template-columns: 1.32fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  gap: 14px clamp(16px, 4vw, 58px);
-}
-.work-story {
-  display: grid;
-  grid-template-columns: clamp(95px, 13vw, 176px) minmax(0, 1fr);
-  gap: clamp(13px, 2vw, 25px);
-  align-items: center;
-  border-bottom: 1px solid var(--line);
-  padding-bottom: 14px;
-  color: var(--ink);
-  text-decoration: none;
-}
-.work-story--lead {
-  grid-row: span 2;
-  display: block;
-  border-bottom: 0;
-  padding-bottom: 0;
-}
-.work-story__media {
-  aspect-ratio: 1.35;
-  background: var(--wash);
-  overflow: hidden;
-}
-.work-story--lead .work-story__media { aspect-ratio: 1.88; margin-bottom: 16px; }
-.work-story img { width: 100%; height: 100%; display: block; object-fit: cover; }
-.work-story h3 { text-wrap: initial; margin-bottom: 7px; }
-.work-story--lead h3 { font-size: clamp(1.35rem, 2.45vw, 2rem); max-width: 29ch; }
-.work-story:hover h3 { color: var(--link); }
-.work-story p, .work-story__time { color: var(--muted); font-size: .92rem; }
-.work-story p { margin-bottom: 6px; max-width: 61ch; }
-.work-story__time { font-size: .8rem; }
 
 .pallet-band {
   color: #211a10;
@@ -230,11 +123,6 @@ img { color: var(--muted); }
   font-weight: 650;
 }
 .pallet-band__example span { display: block; margin-top: 6px; font-size: .91rem; }
-
-@media (min-width: 1050px) {
-  .dock-hero h1 { width: min(100%, 880px); font-size: clamp(3.5rem, 5.13vw, 4.8rem); }
-  .dock-hero h1 > span { display: block; }
-}
 
 /* Keep the wide illustrations separate from the text measure. */
 .article-head { max-width: 950px; margin: 0 auto; padding: clamp(28px, 5.5vw, 74px) 0 25px; }
@@ -277,48 +165,20 @@ img { color: var(--muted); }
 .search-hints .chip { background: transparent; }
 
 @media (max-width: 760px) {
-  .dock-hero { min-height: 490px; }
-  .dock-hero::after {
-    background: linear-gradient(90deg, #111210e8, #1112106e 83%), linear-gradient(0deg, #111210de, transparent 71%);
-  }
-  .dock-hero__media img { object-position: 69% center; }
-  .dock-hero__inner { padding-block: 78px 48px; }
   .route-guide { grid-template-columns: 1fr; gap: 21px; }
   .route-guide h2 { margin-bottom: 9px; }
   .route-guide__intro p { max-width: none; }
-  .work-selection__grid { grid-template-columns: 1fr; grid-template-rows: none; gap: 16px; }
-  .work-story--lead { grid-row: auto; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
   .pallet-band { gap: 24px; }
   .article-frame { grid-template-columns: minmax(0,1fr); gap: 27px; }
   .toc { position: static; }
   .article-cover { aspect-ratio: 1.7; }
 }
 @media (max-width: 515px) {
-  .dock-hero { min-height: 494px; }
-  .dock-hero h1 { max-width: 13ch; font-size: clamp(2.45rem, 10.85vw, 3.42rem); line-height: 1; }
-  .dock-hero__media img { object-position: 76% center; }
-  .dock-hero::after {
-    background: linear-gradient(90deg, #111210a3, #11121027 100%), linear-gradient(0deg, #111210fa 2%, #111210a6 51%, #11121022 100%);
-  }
-  .dock-hero__inner { padding-block: 117px 42px; }
-  .dock-hero__label { margin-bottom: 10px; }
-  .dock-hero__summary { margin-bottom: 21px; }
-  .work-selection__heading { display: block; }
-  .work-selection__heading h2 { margin-bottom: 5px; }
-  .work-selection__heading a { display: inline-flex; align-items: center; gap: 6px; }
   .pallet-band { grid-template-columns: 1fr; }
   .pallet-band__example { border: 0; border-top: 1px solid #211a1055; padding: 19px 0 0; }
   .reading { font-size: 1rem; }
 }
-@media (max-width: 355px) and (max-height: 620px) {
-  .dock-hero { min-height: 426px; }
-  .dock-hero__inner { padding-block: 65px 35px; }
-  .dock-hero h1 { max-width: none; font-size: 2.2rem; }
-}
 @media print {
-  .dock-hero { min-height: 0; color: black; background: white; }
-  .dock-hero__media, .dock-hero::after, .dock-hero .button, .toc { display: none; }
-  .dock-hero__inner { padding: 0; }
-  .dock-hero__label, .dock-hero__summary { color: black; }
+  .toc { display: none; }
   .article-frame { display: block; }
 }

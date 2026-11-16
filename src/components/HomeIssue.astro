@@ -1,0 +1,99 @@
+---
+import articles from '../lib/content.mjs';
+import { photoForArticle } from '../lib/media';
+import { articlePath, categories, path } from '../lib/site';
+import '../styles/home-issue.css';
+
+interface Props {
+  featured: string;
+  secondary: string[];
+}
+
+const { featured, secondary } = Astro.props;
+
+function story(slug: string) {
+  const article = articles.find(item => item.slug === slug);
+  if (!article) throw new Error('Unknown homepage article: ' + slug);
+
+  const topic = categories.find(category => category.id === article.category);
+  return { article, topic, image: photoForArticle(slug) };
+}
+
+const lead = story(featured);
+const remaining = secondary.map(story);
+---
+<section class="wrap home-issue" id="issue" aria-labelledby="issue-title">
+  <header class="home-issue__heading">
+    <h2 id="issue-title">Материалы для работы</h2>
+    <a href={path('materials/')}>Все статьи <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <article>
+    <a
+      class="home-issue__lead"
+      href={articlePath(lead.article.slug)}
+      aria-labelledby="issue-lead-title"
+      aria-describedby="issue-lead-deck"
+    >
+      <div class="home-issue__lead-media">
+        <img
+          src={lead.image.small}
+          srcset={lead.image.srcset}
+          sizes="(max-width: 720px) 92vw, (max-width: 1320px) 54vw, 724px"
+          width="640"
+          height="427"
+          loading="lazy"
+          decoding="async"
+          style={{ objectPosition: lead.image.position }}
+          alt={lead.image.alt}
+        />
+      </div>
+      <div class="home-issue__lead-copy">
+        <p class="home-issue__meta">
+          {lead.topic && <span>{lead.topic.name}</span>}
+          <span>{lead.article.minutes} мин чтения</span>
+        </p>
+        <h3 id="issue-lead-title">{lead.article.title}</h3>
+        <p class="home-issue__deck" id="issue-lead-deck">{lead.article.description}</p>
+        <span class="home-issue__read" aria-hidden="true">Читать статью <span>↗</span></span>
+      </div>
+    </a>
+  </article>
+
+  {remaining.length > 0 && (
+    <ul class="home-issue__secondary" aria-label="Другие материалы подборки" role="list">
+      {remaining.map(({ article, topic, image }) => (
+        <li>
+          <a
+            class="home-issue__row"
+            href={articlePath(article.slug)}
+            aria-labelledby={'issue-title-' + article.slug}
+            aria-describedby={'issue-deck-' + article.slug}
+          >
+            <div class="home-issue__thumb">
+              <img
+                src={image.small}
+                width="640"
+                height="427"
+                loading="lazy"
+                decoding="async"
+                style={{ objectPosition: image.position }}
+                alt=""
+              />
+            </div>
+            <div>
+              <p class="home-issue__meta">
+                {topic && <span>{topic.name}</span>}
+                <span>{article.minutes} мин</span>
+              </p>
+              <h3 id={'issue-title-' + article.slug}>{article.title}</h3>
+              <p class="home-issue__deck" id={'issue-deck-' + article.slug}>{article.description}</p>
+            </div>
+            <span class="home-issue__arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  )}
+</section>
+

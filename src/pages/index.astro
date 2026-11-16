@@ -1,69 +1,63 @@
 ---
 import Site from '../layouts/Site.astro';
+import HomeIssue from '../components/HomeIssue.astro';
 import articles from '../lib/content.mjs';
 import { articlePath, categoryPath, path } from '../lib/site';
-import { loadingBay as cover, photoForArticle } from '../lib/media';
+import { loadingBay } from '../lib/media';
+import '../styles/home-front.css';
 
-
+const image = {
+  wide: path('photos/warehouse-front-1536.webp'),
+  narrow: path('photos/warehouse-front-768.webp'),
+};
+const lead = articles.find(article => article.slug === 'warehouse-move')!;
 const routes = [
-  { id: 'storage', title: 'Выбрать склад', description: 'Модели хранения, выбор оператора и расчёт стоимости.' },
+  { id: 'storage', title: 'Выбрать склад', description: 'Как сравнить операторов, посчитать хранение и заложить запас мест.' },
   { id: 'operations', title: 'Подготовить поставку', description: 'Приёмка товара, расписание отгрузок и переезд склада.' },
   { id: 'fulfillment', title: 'Разобраться в фулфилменте', description: 'Тарифы, схемы FBO и FBS, обработка возвратов.' },
 ];
-const selected = ['storage-cost', 'first-delivery', 'compare-fulfillment'].map(slug => {
-  const article = articles.find(item => item.slug === slug)!;
-  return { article, image: photoForArticle(slug) };
-});
 ---
-<Site title="Журнал о складской логистике" description="Практические статьи для тех, кто выбирает склад, организует поставки и сравнивает фулфилмент." image={cover.large} section="home">
-  <section class="dock-hero" aria-labelledby="lead-title">
-    <picture class="dock-hero__media" aria-hidden="true">
-      <img src={cover.large} srcset={cover.srcset} sizes="100vw" width="1536" height="1024" fetchpriority="high" alt="" />
-    </picture>
-    <div class="wrap dock-hero__inner">
-      <p class="dock-hero__label">Журнал о складской логистике</p>
-      <h1 id="lead-title"><span>Переезд склада</span> <span>без остановки отгрузок</span></h1>
-      <p class="dock-hero__summary">Как перенести запасы партиями, проверить новый склад и сохранить график отгрузок.</p>
-      <a class="button dock-hero__action" href={articlePath('warehouse-move')}>Читать статью <span aria-hidden="true">→</span></a>
+<Site title="Журнал о складской логистике" description="Практические статьи для тех, кто выбирает склад, организует поставки и сравнивает фулфилмент." image={image.wide} section="home">
+  <section class="warehouse-front" aria-labelledby="home-title">
+    <div class="warehouse-front__media" aria-hidden="true">
+      <img src={image.wide} srcset={image.narrow + ' 768w, ' + image.wide + ' 1536w'} sizes="100vw" width="1536" height="1024" fetchpriority="high" alt="" />
+    </div>
+    <div class="wrap warehouse-front__inner">
+      <div class="warehouse-front__masthead">
+        <h1 id="home-title"><span>Складская</span> <span>практика</span></h1>
+        <p>Журнал о складской логистике</p>
+      </div>
+      <div class="warehouse-front__feature">
+        <article class="warehouse-front__story" aria-labelledby="lead-title">
+          <p class="warehouse-front__rubric">Складские операции <span aria-hidden="true">/</span> {lead.minutes} мин</p>
+          <h2 id="lead-title">Переезд склада без остановки отгрузок</h2>
+          <p class="warehouse-front__summary">Как перенести запасы партиями, проверить новый склад и сохранить график отгрузок.</p>
+          <a class="button warehouse-front__action" href={articlePath(lead.slug)}>Читать о переезде <span aria-hidden="true">→</span></a>
+        </article>
+        <figure class="warehouse-front__detail">
+          <img src={loadingBay.small} width="768" height="512" decoding="async" alt={loadingBay.alt} />
+        </figure>
+      </div>
     </div>
   </section>
 
-  <section class="wrap route-guide" aria-labelledby="routes-title" id="guides">
-    <div class="route-guide__intro">
-      <h2 id="routes-title">Что нужно сделать?</h2>
+  <section class="home-routes" aria-labelledby="routes-title" id="guides">
+    <div class="wrap route-guide">
+      <div class="route-guide__intro"><h2 id="routes-title">Что нужно сделать?</h2></div>
+      <ul class="route-guide__list">
+        {routes.map(route => (
+          <li>
+            <a href={categoryPath(route.id)}>
+              <div><h3>{route.title}</h3><p>{route.description}</p></div>
+              <span aria-hidden="true">→</span>
+            </a>
+          </li>
+        ))}
+      </ul>
     </div>
-    <ul class="route-guide__list">
-      {routes.map(route => (
-        <li>
-          <a href={categoryPath(route.id)}>
-            <div><h3>{route.title}</h3><p>{route.description}</p></div>
-            <span aria-hidden="true">↗</span>
-          </a>
-        </li>
-      ))}
-    </ul>
   </section>
 
-  <section class="wrap work-selection" aria-labelledby="work-title">
-    <div class="work-selection__heading">
-      <h2 id="work-title">Материалы для работы</h2>
-      <a href={path('materials/')}>Все статьи <span aria-hidden="true">↗</span></a>
-    </div>
-    <div class="work-selection__grid">
-      {selected.map(({article,image}, index) => (
-        <a class:list={['work-story', {'work-story--lead': index === 0}]} href={articlePath(article.slug)}>
-          <div class="work-story__media">
-            <img src={image.small} srcset={image.srcset} sizes={index === 0 ? '(max-width: 700px) 92vw, 690px' : '(max-width: 480px) 28vw, 168px'} width="640" height="427" loading="lazy" style={{objectPosition: image.position}} alt={image.alt}/>
-          </div>
-          <div class="work-story__text">
-            <h3>{article.title}</h3>
-            {index === 0 && <p>{article.description}</p>}
-            <span class="work-story__time">{article.minutes} мин</span>
-          </div>
-        </a>
-      ))}
-    </div>
-  </section>
+  <HomeIssue featured="warehouse-site-audit" secondary={['first-delivery', 'compare-fulfillment']} />
 
   <section class="wrap pallet-band" id="calculator" aria-labelledby="pallet-title">
     <div class="pallet-band__copy">
