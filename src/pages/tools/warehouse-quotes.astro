@@ -37,7 +37,10 @@ const quotes = [
           </label>
         ))}
       </div>
-      <a class="quotes-inline-link" href={path('calculator/')}>Как посчитать паллето-дни</a>
+      <div class="quotes-resources">
+        <a class="quotes-inline-link" href={path('calculator/')}>Как посчитать паллето-дни</a>
+        <a class="quotes-inline-link" href={path('downloads/warehouse-rate-request.xlsx')} download>Запрос тарифа (Excel)</a>
+      </div>
     </fieldset>
 
     <div class="quotes-summary">
@@ -166,7 +169,11 @@ const quotes = [
   .quotes-error[hidden] {
     display: none;
   }
+  .quotes-resources { display: flex; flex-wrap: wrap; column-gap: 20px; }
   .quotes-inline-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
     font-size: 0.95rem;
     text-underline-offset: 3px;
   }

@@ -10,6 +10,26 @@ interface ArticlePhotoSource {
 }
 
 export const articlePhotoSources: Record<string, ArticlePhotoSource> = {
+  "warehouse-returns-case": {
+    "photographer": "Thirdman",
+    "source": "https://www.pexels.com/photo/a-man-opening-a-brown-cardboard-box-7180911/",
+    "alt": "Один человек открывает картонную коробку, другой снимает её на смартфон",
+    "position": "56% 49%",
+    "smallWidth": 640,
+    "smallHeight": 427,
+    "largeWidth": 1280,
+    "largeHeight": 853
+  },
+  "first-warehouse-month": {
+    "photographer": "EqualStock IN",
+    "source": "https://www.pexels.com/photo/female-worker-organizing-warehouse-inventory-31112240/",
+    "alt": "Сотрудница склада сверяет бумажный лист в проходе между стеллажами с синими контейнерами",
+    "position": "42% 56%",
+    "smallWidth": 640,
+    "smallHeight": 427,
+    "largeWidth": 1280,
+    "largeHeight": 853
+  },
   "first-warehouse-invoice": {
     "photographer": "Daniel Andraski",
     "source": "https://www.pexels.com/photo/close-up-shot-of-a-person-doing-a-checklist-12234106/",

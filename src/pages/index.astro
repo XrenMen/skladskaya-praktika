@@ -10,10 +10,25 @@ import '../styles/notebook-home.css';
 const featuredSlug = 'receiving-discrepancies';
 const featuredPhoto = photoForArticle(featuredSlug);
 const orderedSlugs = [
-  'first-warehouse-invoice', 'order-picking-check', 'warehouse-location-labels',
+  'first-warehouse-month', 'warehouse-returns-case', 'first-warehouse-invoice', 'order-picking-check',
+  'warehouse-location-labels',
   'cycle-counting', 'warehouse-site-audit', 'compare-fulfillment', 'first-delivery',
   'warehouse-move', 'storage-cost', 'returns', 'peak-pallet-capacity',
   'dispatch-slots', 'choose-operator', 'own-vs-outsourced', featuredSlug,
+];
+const entryPaths = [
+  { title: 'Выбираю склад', links: [
+    { label: 'Опросник', href: articlePath('choose-operator') },
+    { label: 'Сравнить сметы', href: path('tools/warehouse-quotes/') },
+  ] },
+  { title: 'Готовлю первую поставку', links: [
+    { label: 'Приёмка', href: articlePath('first-delivery') },
+    { label: 'Журнал расхождений', href: articlePath('receiving-discrepancies') + '#razdel-2' },
+  ] },
+  { title: 'Проверяю первый счёт', links: [
+    { label: 'Сверка счёта', href: articlePath('first-warehouse-invoice') },
+    { label: 'Расчёт хранения', href: path('calculator/') },
+  ] },
 ];
 const topics = [
   { id: 'all', title: 'Все темы' },
@@ -50,24 +65,41 @@ const featuredTitle = featuredStory ? articleTeaserTitle(featuredStory) : 'Не�
       </form>
     </header>
 
-    <figure class="nb-lead nb-width" id="issue" aria-labelledby="lead-title">
-      <a class="nb-lead__link" href={articlePath(featuredSlug)} aria-labelledby="lead-title" aria-describedby="lead-deck">
-        <img
-          src={featuredPhoto.large}
-          srcset={featuredPhoto.srcset}
-          sizes="(max-width: 1560px) 94vw, 1480px"
-          width={featuredPhoto.largeWidth}
-          height={featuredPhoto.largeHeight}
-          alt={featuredPhoto.alt}
-          fetchpriority="high"
-        />
-        <div class="nb-lead__text">
-          <h2 id="lead-title">{featuredTitle}</h2>
-          <p id="lead-deck">Что делать, если в накладной 40 коробов, а нужного артикула приехало 37.</p>
-        </div>
-      </a>
-      <figcaption class="nb-credit">Фото <a href={featuredPhoto.source}>{featuredPhoto.photographer}</a> · <a href={photoLicenseUrl}>Pexels</a></figcaption>
-    </figure>
+    <div class="nb-opening nb-width">
+      <figure class="nb-lead" id="issue" aria-labelledby="lead-title">
+        <a class="nb-lead__link" href={articlePath(featuredSlug)} aria-labelledby="lead-title" aria-describedby="lead-deck">
+          <img
+            src={featuredPhoto.large}
+            srcset={featuredPhoto.srcset}
+            sizes="(max-width: 1050px) 94vw, (max-width: 1560px) 68vw, 1060px"
+            width={featuredPhoto.largeWidth}
+            height={featuredPhoto.largeHeight}
+            alt={featuredPhoto.alt}
+            fetchpriority="high"
+          />
+          <div class="nb-lead__text">
+            <h2 id="lead-title">{featuredTitle}</h2>
+            <p id="lead-deck">Что делать, если в накладной 40 коробов, а нужного артикула приехало 37.</p>
+          </div>
+        </a>
+        <figcaption class="nb-credit">Фото <a href={featuredPhoto.source}>{featuredPhoto.photographer}</a> · <a href={photoLicenseUrl}>Pexels</a></figcaption>
+      </figure>
+      <nav class="nb-routes" aria-labelledby="nb-routes-title">
+        <h2 id="nb-routes-title">С чего начать</h2>
+        <ul>
+          {entryPaths.map(route => (
+            <li class="nb-route">
+              <h3>{route.title}</h3>
+              <div class="nb-route__links">
+                {route.links.map(link => (
+                  <a href={link.href}>{link.label} <span aria-hidden="true">→</span></a>
+                ))}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </div>
 
     <section id="articles" class="nb-width nb-feed" aria-labelledby="nb-feed-title">
       <div class="nb-feed__header" id="guides">
@@ -139,7 +171,7 @@ const featuredTitle = featuredStory ? articleTeaserTitle(featuredStory) : 'Не�
   const query = document.querySelector<HTMLInputElement>('#nb-query');
   const filters = document.querySelector<HTMLElement>('.nb-filters');
   const cards = [...document.querySelectorAll<HTMLElement>('.nb-story')];
-  const lead = document.querySelector<HTMLElement>('.nb-lead');
+  const opening = document.querySelector<HTMLElement>('.nb-opening');
   const feed = document.querySelector<HTMLElement>('#articles');
   const status = document.querySelector<HTMLElement>('#nb-status');
   const feedback = document.querySelector<HTMLElement>('#nb-feedback');
@@ -147,7 +179,7 @@ const featuredTitle = featuredStory ? articleTeaserTitle(featuredStory) : 'Не�
   const reset = document.querySelector<HTMLButtonElement>('#nb-reset');
   const searchAll = document.querySelector<HTMLAnchorElement>('#nb-search-all');
 
-  if (form && query && filters && lead && feed && status && feedback && actions && reset && searchAll) {
+  if (form && query && filters && opening && feed && status && feedback && actions && reset && searchAll) {
     const buttons = [...filters.querySelectorAll<HTMLButtonElement>('button[data-topic]')];
     const topicIds = new Set(buttons.map(button => button.dataset.topic));
     const normalize = (value: string) => value.toLocaleLowerCase('ru').replaceAll('ё', 'е').trim();
@@ -168,7 +200,7 @@ const featuredTitle = featuredStory ? articleTeaserTitle(featuredStory) : 'Не�
       }
 
       for (const button of buttons) button.setAttribute('aria-pressed', String(button.dataset.topic === activeTopic));
-      lead.hidden = filtering;
+      opening.hidden = filtering;
       feedback.toggleAttribute('data-active', filtering);
       actions.hidden = !filtering;
       searchAll.hidden = !phrase;

@@ -70,7 +70,14 @@ export const articleRoutes: Record<string, EditorialPath | undefined> = {
   },
   'first-delivery': {
     guides: [
+      { slug: 'first-warehouse-month', reason: 'После первой поставки назначьте еженедельную сверку со складом.' },
       { slug: 'cycle-counting', reason: 'Организуйте повторную проверку запасов после запуска.' },
+    ],
+  },
+  'first-warehouse-month': {
+    guides: [
+      { slug: 'dispatch-slots', reason: 'Пересмотрите расписание, если отгрузки регулярно выходят за свои окна.' },
+      { slug: 'receiving-discrepancies', reason: 'Проверьте, как зафиксированы расхождения, возникшие на приёмке.' },
     ],
   },
   'compare-fulfillment': {
@@ -82,8 +89,15 @@ export const articleRoutes: Record<string, EditorialPath | undefined> = {
   },
   returns: {
     guides: [
+      { slug: 'warehouse-returns-case', reason: 'Посмотрите, как оператор разделил регулярные возвраты и разовую доработку партии.' },
       { slug: 'cycle-counting', reason: 'Проверьте остатки после возврата товара в годный запас.' },
       { slug: 'compare-fulfillment', reason: 'Включите обработку возвратов в сравнение тарифов FBO и FBS.' },
+    ],
+  },
+  'warehouse-returns-case': {
+    guides: [
+      { slug: 'compare-fulfillment', reason: 'Уточните, какие операции с возвратами включены в предложение подрядчика.' },
+      { slug: 'receiving-discrepancies', reason: 'Сверьте, какие сведения зафиксировать при повреждении товара на приёмке.' },
     ],
   },
   'choose-operator': {
