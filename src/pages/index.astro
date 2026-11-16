@@ -8,9 +8,10 @@ import { articlePath, path } from '../lib/site';
 import '../styles/notebook-home.css';
 
 const featuredSlug = 'receiving-discrepancies';
+const spotlightSlug = 'warehouse-returns-case';
 const featuredPhoto = photoForArticle(featuredSlug);
 const orderedSlugs = [
-  'first-warehouse-month', 'warehouse-returns-case', 'first-warehouse-invoice', 'order-picking-check',
+  spotlightSlug, 'first-warehouse-month', 'first-warehouse-invoice', 'order-picking-check',
   'warehouse-location-labels',
   'cycle-counting', 'warehouse-site-audit', 'compare-fulfillment', 'first-delivery',
   'warehouse-move', 'storage-cost', 'returns', 'peak-pallet-capacity',
@@ -37,6 +38,10 @@ const topics = [
   { id: 'fulfillment', title: 'Фулфилмент' },
 ];
 const previewCount = 4;
+const templates = [
+  { file: 'warehouse-rate-request.xlsx', label: 'Запрос тарифа у склада' },
+  { file: 'receiving-discrepancy-log.xlsx', label: 'Журнал расхождений' },
+];
 const categoryLabels: Record<string, string> = {
   operations: 'Складские операции',
   storage: 'Хранение',
@@ -68,15 +73,17 @@ const featuredTitle = featuredStory ? articleTeaserTitle(featuredStory) : 'Не�
     <div class="nb-opening nb-width">
       <figure class="nb-lead" id="issue" aria-labelledby="lead-title">
         <a class="nb-lead__link" href={articlePath(featuredSlug)} aria-labelledby="lead-title" aria-describedby="lead-deck">
-          <img
-            src={featuredPhoto.large}
-            srcset={featuredPhoto.srcset}
-            sizes="(max-width: 1050px) 94vw, (max-width: 1560px) 68vw, 1060px"
-            width={featuredPhoto.largeWidth}
-            height={featuredPhoto.largeHeight}
-            alt={featuredPhoto.alt}
-            fetchpriority="high"
-          />
+          <div class="nb-lead__media">
+            <img
+              src={featuredPhoto.large}
+              srcset={featuredPhoto.srcset}
+              sizes="(max-width: 1050px) 94vw, (max-width: 1560px) 68vw, 1060px"
+              width={featuredPhoto.largeWidth}
+              height={featuredPhoto.largeHeight}
+              alt={featuredPhoto.alt}
+              fetchpriority="high"
+            />
+          </div>
           <div class="nb-lead__text">
             <h2 id="lead-title">{featuredTitle}</h2>
             <p id="lead-deck">Что делать, если в накладной 40 коробов, а нужного артикула приехало 37.</p>
@@ -92,7 +99,7 @@ const featuredTitle = featuredStory ? articleTeaserTitle(featuredStory) : 'Не�
               <h3>{route.title}</h3>
               <div class="nb-route__links">
                 {route.links.map(link => (
-                  <a href={link.href}>{link.label} <span aria-hidden="true">→</span></a>
+                  <a href={link.href}>{link.label} <span class="nb-arrow" aria-hidden="true">→</span></a>
                 ))}
               </div>
             </li>
@@ -105,7 +112,7 @@ const featuredTitle = featuredStory ? articleTeaserTitle(featuredStory) : 'Не�
       <div class="nb-feed__header" id="guides">
         <div class="nb-feed__title">
           <h2 id="nb-feed-title">Статьи</h2>
-          <a class="nb-archive-link" href={path('materials/')}>Все {articles.length} статей <span aria-hidden="true">→</span></a>
+          <a class="nb-archive-link" href={path('materials/')}>Все {articles.length} статей <span class="nb-arrow" aria-hidden="true">→</span></a>
         </div>
         <div class="nb-filters" role="group" aria-label="Темы статей" hidden>
           {topics.map(topic => (
@@ -116,7 +123,7 @@ const featuredTitle = featuredStory ? articleTeaserTitle(featuredStory) : 'Не�
       <div class="nb-feedback" id="nb-feedback">
         <p class="nb-status" id="nb-status" role="status" aria-atomic="true"></p>
         <div class="nb-feedback__actions" id="nb-feedback-actions" hidden>
-          <a id="nb-search-all" href={path('search/')} hidden>Искать по текстам статей <span aria-hidden="true">→</span></a>
+          <a id="nb-search-all" href={path('search/')} hidden>Искать по текстам статей <span class="nb-arrow" aria-hidden="true">→</span></a>
           <button id="nb-reset" type="button">Сбросить фильтр</button>
         </div>
       </div>
@@ -126,14 +133,15 @@ const featuredTitle = featuredStory ? articleTeaserTitle(featuredStory) : 'Не�
           const title = articleTeaserTitle(article);
           const label = categoryLabels[article.category] ?? article.category;
           const isPreview = index < previewCount && article.slug !== featuredSlug;
+          const isSpotlight = article.slug === spotlightSlug;
 
           return (
-            <article class="nb-story" data-category={article.category} data-search={title + ' ' + article.title + ' ' + article.description + ' ' + label} data-preview={String(isPreview)} hidden={!isPreview}>
+            <article class="nb-story" data-category={article.category} data-search={title + ' ' + article.title + ' ' + article.description + ' ' + label} data-preview={String(isPreview)} data-spotlight={String(isSpotlight)} hidden={!isPreview}>
               <a class="nb-story__link" href={articlePath(article.slug)} aria-labelledby={'nb-title-' + article.slug} aria-describedby={'nb-deck-' + article.slug}>
                 <img
                   src={photo.small}
                   srcset={photo.srcset}
-                  sizes="(max-width: 520px) 94vw, (max-width: 880px) 46vw, (max-width: 1160px) 30vw, 23vw"
+                  sizes={isSpotlight ? '(max-width: 720px) 94vw, (max-width: 1560px) 57vw, 900px' : '(max-width: 520px) 94vw, (max-width: 880px) 46vw, (max-width: 1160px) 30vw, 23vw'}
                   width={photo.smallWidth}
                   height={photo.smallHeight}
                   alt={photo.alt}
@@ -141,9 +149,14 @@ const featuredTitle = featuredStory ? articleTeaserTitle(featuredStory) : 'Не�
                   decoding="async"
                   style={{ objectPosition: photo.position }}
                 />
-                <p class="nb-story__meta">{label} · {article.minutes} мин</p>
-                <h3 id={'nb-title-' + article.slug}>{title}</h3>
-                <p class="nb-story__deck" id={'nb-deck-' + article.slug}>{article.description}</p>
+                <div class="nb-story__body">
+                  <p class="nb-story__meta">
+                    {isSpotlight && <span class="nb-story__edition">Из практики · </span>}
+                    {label} · {article.minutes} мин
+                  </p>
+                  <h3 id={'nb-title-' + article.slug}>{title}</h3>
+                  <p class="nb-story__deck" id={'nb-deck-' + article.slug}>{article.description}</p>
+                </div>
               </a>
               <p class="nb-credit">Фото <a href={photo.source}>{photo.photographer}</a> · <a href={photoLicenseUrl}>Pexels</a></p>
             </article>
@@ -155,12 +168,30 @@ const featuredTitle = featuredStory ? articleTeaserTitle(featuredStory) : 'Не�
     <section id="tools" class="nb-tools" aria-labelledby="nb-tools-title">
       <div class="nb-width nb-tools__inner" id="calculator">
         <div class="nb-tools__title">
-          <h2 id="nb-tools-title">Инструменты</h2>
-          <a class="nb-archive-link" href={path('tools/')}>Все инструменты <span aria-hidden="true">→</span></a>
+          <h2 id="nb-tools-title">Инструменты и шаблоны</h2>
+          <a class="nb-archive-link" href={path('tools/')}>Все инструменты <span class="nb-arrow" aria-hidden="true">→</span></a>
         </div>
-        <ul>
-          {practiceTools.map(tool => <li><a href={path(tool.path)}>{tool.action}</a></li>)}
-        </ul>
+        <div class="nb-tools__example">
+          <h3>Пример расчёта хранения</h3>
+          <p class="nb-tools__equation"><span>80 паллет × 30 дней =</span> <strong>2 400 паллето-дней</strong></p>
+          <a class="nb-tools__action" href={path('calculator/')}>Посчитать свой объём <span class="nb-arrow" aria-hidden="true">→</span></a>
+        </div>
+        <div class="nb-tools__links">
+          <h3>Другие инструменты</h3>
+          <ul>
+            {practiceTools.filter(tool => tool.path !== 'calculator/').map(tool => (
+              <li><a href={path(tool.path)}>{tool.action} <span class="nb-arrow" aria-hidden="true">→</span></a></li>
+            ))}
+          </ul>
+        </div>
+        <div class="nb-tools__links">
+          <h3>Шаблоны Excel</h3>
+          <ul>
+            {templates.map(template => (
+              <li><a href={path('downloads/' + template.file)} download>{template.label} <span aria-hidden="true">↓</span></a></li>
+            ))}
+          </ul>
+        </div>
       </div>
     </section>
   </div>
@@ -173,20 +204,28 @@ const featuredTitle = featuredStory ? articleTeaserTitle(featuredStory) : 'Не�
   const cards = [...document.querySelectorAll<HTMLElement>('.nb-story')];
   const opening = document.querySelector<HTMLElement>('.nb-opening');
   const feed = document.querySelector<HTMLElement>('#articles');
+  const grid = document.querySelector<HTMLElement>('#nb-grid');
   const status = document.querySelector<HTMLElement>('#nb-status');
   const feedback = document.querySelector<HTMLElement>('#nb-feedback');
   const actions = document.querySelector<HTMLElement>('#nb-feedback-actions');
   const reset = document.querySelector<HTMLButtonElement>('#nb-reset');
   const searchAll = document.querySelector<HTMLAnchorElement>('#nb-search-all');
 
-  if (form && query && filters && opening && feed && status && feedback && actions && reset && searchAll) {
+  if (form && query && filters && opening && feed && grid && status && feedback && actions && reset && searchAll) {
     const buttons = [...filters.querySelectorAll<HTMLButtonElement>('button[data-topic]')];
     const topicIds = new Set(buttons.map(button => button.dataset.topic));
     const normalize = (value: string) => value.toLocaleLowerCase('ru').replaceAll('ё', 'е').trim();
     const searchableStories = cards.map(card => ({ card, text: normalize(card.dataset.search ?? '') }));
+    const motion = matchMedia('(prefers-reduced-motion: reduce)');
     let activeTopic = 'all';
+    let filterAnimation: Animation | undefined;
 
-    const updateFeed = () => {
+    motion.addEventListener?.('change', () => {
+      if (motion.matches) filterAnimation?.cancel();
+    });
+
+    const updateFeed = (animate = false) => {
+      filterAnimation?.cancel();
       const phrase = query.value.trim();
       const words = normalize(phrase).split(/\s+/).filter(Boolean);
       const filtering = Boolean(phrase) || activeTopic !== 'all';
@@ -201,12 +240,16 @@ const featuredTitle = featuredStory ? articleTeaserTitle(featuredStory) : 'Не�
 
       for (const button of buttons) button.setAttribute('aria-pressed', String(button.dataset.topic === activeTopic));
       opening.hidden = filtering;
+      grid.toggleAttribute('data-filtered', filtering);
       feedback.toggleAttribute('data-active', filtering);
       actions.hidden = !filtering;
       searchAll.hidden = !phrase;
       if (phrase) searchUrl.searchParams.set('q', phrase);
       searchAll.href = searchUrl.href;
       status.textContent = filtering ? (count ? 'Найдено: ' + count : 'В ленте ничего не нашлось.') : '';
+      if (animate && count && !motion.matches && typeof grid.animate === 'function') {
+        filterAnimation = grid.animate([{ opacity: .75 }, { opacity: 1 }], { duration: 170, easing: 'ease-out' });
+      }
     };
 
     const restoreFilters = () => {
@@ -243,8 +286,10 @@ const featuredTitle = featuredStory ? articleTeaserTitle(featuredStory) : 'Не�
 
     for (const button of buttons) {
       button.addEventListener('click', () => {
-        activeTopic = button.dataset.topic ?? 'all';
-        updateFeed();
+        const topic = button.dataset.topic ?? 'all';
+        if (topic === activeTopic) return;
+        activeTopic = topic;
+        updateFeed(true);
         saveFilters(true);
       });
     }
