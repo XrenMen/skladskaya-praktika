@@ -10,6 +10,26 @@ interface ArticlePhotoSource {
 }
 
 export const articlePhotoSources: Record<string, ArticlePhotoSource> = {
+  "order-picking-check": {
+    "photographer": "RDNE Stock project",
+    "source": "https://www.pexels.com/photo/deliveryman-scanning-the-barcode-7363196/",
+    "alt": "Сотрудник сканирует штрихкод на посылке смартфоном",
+    "position": "50% 52%",
+    "smallWidth": 640,
+    "smallHeight": 427,
+    "largeWidth": 1280,
+    "largeHeight": 854
+  },
+  "warehouse-location-labels": {
+    "photographer": "Engin Akyurt",
+    "source": "https://www.pexels.com/photo/green-metal-shelves-with-construction-materials-4170172/",
+    "alt": "Проход между высокими складскими стеллажами с металлическими деталями и коробками",
+    "position": "50% 52%",
+    "smallWidth": 640,
+    "smallHeight": 427,
+    "largeWidth": 1280,
+    "largeHeight": 854
+  },
   "receiving-discrepancies": {
     "photographer": "Artem Podrez",
     "source": "https://www.pexels.com/photo/man-writing-on-a-clipboard-while-near-the-cardboard-boxes-5025647/",

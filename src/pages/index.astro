@@ -10,11 +10,14 @@ const featuredSlug = 'receiving-discrepancies';
 const featuredTitle = 'Недостача и пересорт на приёмке';
 const featuredPhoto = photoForArticle(featuredSlug);
 const orderedSlugs = [
+  'order-picking-check', 'warehouse-location-labels',
   'cycle-counting', 'warehouse-site-audit', 'compare-fulfillment', 'first-delivery',
   'warehouse-move', 'storage-cost', 'returns', 'peak-pallet-capacity',
   'dispatch-slots', 'choose-operator', 'own-vs-outsourced', featuredSlug,
 ];
 const shortTitles: Record<string, string> = {
+  'order-picking-check': 'Проверка комплектации перед упаковкой',
+  'warehouse-location-labels': 'Как разметить ячейки склада',
   'cycle-counting': 'Как пересчитывать остатки по зонам',
   'warehouse-site-audit': 'Что проверить на складе перед договором',
   'compare-fulfillment': 'Как сравнить тарифы FBO и FBS',
@@ -88,7 +91,10 @@ const orderedStories = [
           ))}
         </div>
       </div>
-      <p class="nb-status" id="nb-status" role="status" hidden></p>
+      <div class="nb-feedback" id="nb-feedback" hidden>
+        <p class="nb-status" id="nb-status" role="status" aria-atomic="true"></p>
+        <button id="nb-reset" type="button">Сбросить поиск и тему</button>
+      </div>
       <div class="nb-grid" id="nb-grid">
         {orderedStories.map((article, index) => {
           const photo = photoForArticle(article.slug);
@@ -140,8 +146,10 @@ const orderedStories = [
   const lead = document.querySelector<HTMLElement>('.nb-lead');
   const feed = document.querySelector<HTMLElement>('#articles');
   const status = document.querySelector<HTMLElement>('#nb-status');
+  const feedback = document.querySelector<HTMLElement>('#nb-feedback');
+  const reset = document.querySelector<HTMLButtonElement>('#nb-reset');
 
-  if (form && query && filters && lead && feed && status) {
+  if (form && query && filters && lead && feed && status && feedback && reset) {
     const buttons = [...filters.querySelectorAll<HTMLButtonElement>('button[data-topic]')];
     const normalize = (value: string) => value.toLocaleLowerCase('ru').replaceAll('ё', 'е').trim();
     const searchableStories = cards.map(card => ({
@@ -164,8 +172,14 @@ const orderedStories = [
       }
 
       lead.hidden = filtering;
-      status.hidden = !filtering;
+      feedback.hidden = !filtering;
       status.textContent = count ? 'Найдено: ' + count : 'Ничего не нашлось. Уточните запрос или выберите другую тему.';
+    };
+
+    const selectTopic = (topic: string) => {
+      activeTopic = topic;
+      for (const item of buttons) item.setAttribute('aria-pressed', String(item.dataset.topic === topic));
+      updateFeed();
     };
 
     filters.hidden = false;
@@ -178,11 +192,15 @@ const orderedStories = [
 
     for (const button of buttons) {
       button.addEventListener('click', () => {
-        activeTopic = button.dataset.topic ?? 'all';
-        for (const item of buttons) item.setAttribute('aria-pressed', String(item === button));
-        updateFeed();
+        selectTopic(button.dataset.topic ?? 'all');
       });
     }
+
+    reset.addEventListener('click', () => {
+      query.value = '';
+      selectTopic('all');
+      query.focus();
+    });
 
     updateFeed();
   }

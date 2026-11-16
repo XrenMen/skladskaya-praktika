@@ -29,10 +29,23 @@ const peakCapacity: Tool = {
 };
 
 export const articleRoutes: Record<string, EditorialPath | undefined> = {
+  'order-picking-check': {
+    guides: [
+      { slug: 'compare-fulfillment', reason: 'Уточните, входит ли проверка комплектации в ставку за заказ.' },
+      { slug: 'cycle-counting', reason: 'Если при сборке товар систематически не находится по адресу, сверьте остатки в этой зоне.' },
+    ],
+  },
+  'warehouse-location-labels': {
+    guides: [
+      { slug: 'warehouse-site-audit', reason: 'При осмотре проверьте, как устроены адреса и насколько легко найти место на площадке.' },
+      { slug: 'warehouse-move', reason: 'Заранее нанесите адреса на новой площадке и проверьте их в учёте до первого рейса.' },
+    ],
+  },
   'warehouse-site-audit': {
     guides: [
       { slug: 'peak-pallet-capacity', reason: 'Проверьте, хватит ли доступных мест в самый загруженный день.' },
       { slug: 'first-delivery', reason: 'Запланируйте пилотную приёмку и сверку остатков.' },
+      { slug: 'warehouse-location-labels', reason: 'Проверьте схему адресов стеллажей и читаемость этикеток до завоза товара.' },
     ],
   },
   'peak-pallet-capacity': {
@@ -57,6 +70,7 @@ export const articleRoutes: Record<string, EditorialPath | undefined> = {
   'compare-fulfillment': {
     guides: [
       { slug: 'returns', reason: 'Уточните, какие операции с возвратами войдут в договор.' },
+      { slug: 'order-picking-check', reason: 'Согласуйте, как склад проверяет состав заказа до передачи.' },
       { slug: 'choose-operator', reason: 'Проведите одинаковый пилот и сравните фактический результат.' },
     ],
   },

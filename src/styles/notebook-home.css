@@ -151,10 +151,27 @@
   font-weight: 600;
 }
 
-.nb-status {
-  color: var(--muted);
-  padding-top: 12px;
+.nb-feedback {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0 16px;
+  padding-top: 8px;
 }
+
+.nb-status { color: var(--muted); margin: 0; }
+
+.nb-feedback button {
+  min-height: 44px;
+  padding-inline: 4px;
+  border: 0;
+  background: transparent;
+  color: var(--link);
+  font-weight: 550;
+}
+
+.nb-feedback button:hover { color: var(--ink); }
 
 .nb-grid {
   display: grid;
