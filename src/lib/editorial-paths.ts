@@ -63,7 +63,6 @@ export const articleRoutes: Record<string, EditorialPath | undefined> = {
   },
   'first-delivery': {
     guides: [
-      { slug: 'receiving-discrepancies', reason: 'Зафиксируйте недостачу, пересорт или повреждение на приёмке.' },
       { slug: 'cycle-counting', reason: 'Организуйте повторную проверку запасов после запуска.' },
     ],
   },
@@ -85,7 +84,6 @@ export const articleRoutes: Record<string, EditorialPath | undefined> = {
       { slug: 'warehouse-site-audit', reason: 'Проверьте ответы из опросника во время осмотра площадки.' },
       { slug: 'own-vs-outsourced', reason: 'Сравните предложение оператора со своими складскими затратами.' },
     ],
-    tool: compareQuotes,
   },
   'warehouse-move': {
     guides: [
