@@ -27,18 +27,30 @@ const dateLabel = new Intl.DateTimeFormat('ru-RU', {
 }).format(new Date(releaseDate + 'T00:00:00Z'));
 
 const sections: Array<{ id: string; label: string }> = [];
+let tableNumber = 0;
 const body = article.body
   .replace(/href="#storage-calculator"/g, 'href="' + path('calculator/') + '#storage-calculator"')
   .replace(/href="\.\.\/([a-z0-9-]+)\/"/g, (_match, slug: string) => 'href="' + articlePath(slug) + '"')
   .replace(/href="\.\.\/\.\.\/tools\/([a-z0-9-]+)\/"/g, (_match, slug: string) => 'href="' + path('tools/' + slug + '/') + '"')
-  .replace(/<h2>(.*?)<\/h2>/gs, (_match, inner: string) => {
-    const id = 'razdel-' + (sections.length + 1);
-    const label = inner.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&');
-    sections.push({ id, label });
-    return '<h2 id="' + id + '" tabindex="-1">' + inner + '</h2>';
-  })
-  .replace(/<table(?:\s[^>]*)?>/g, tag => '<div class="table-scroll" role="region" aria-label="Таблица примера" tabindex="0">' + tag)
-  .replace(/<\/table>/g, '</table></div>');
+  .replace(/<h2>(.*?)<\/h2>|<table\b[^>]*>.*?<\/table>/gs, (markup, heading) => {
+    if (heading !== undefined) {
+      const id = 'razdel-' + (sections.length + 1);
+      const label = heading.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&');
+      sections.push({ id, label });
+      return '<h2 id="' + id + '" tabindex="-1">' + heading + '</h2>';
+    }
+
+    const id = 'reading-table-' + ++tableNumber;
+    const columns = markup.match(/<thead\b[^>]*>.*?<\/thead>/s)?.[0].match(/<th(?=[\s>])/g)?.length;
+    const numeric = /^<table\s+data-numeric[\s>]/.test(markup);
+    const compact = numeric || columns === 2 ? ' data-compact' : '';
+    const hasCaption = /<caption\b[^>]*>/.test(markup);
+    const title = hasCaption ? id + '-caption' : sections.at(-1)?.id;
+    const name = title ? 'aria-labelledby="' + title + '"' : 'aria-label="Таблица ' + tableNumber + '"';
+    const table = hasCaption ? markup.replace(/<caption\b/, '<caption id="' + title + '"') : markup;
+    const hint = '<p class="table-scroll-hint" id="' + id + '-hint" hidden data-pagefind-ignore>Таблицу можно прокручивать по горизонтали.</p>';
+    return hint + '<div class="table-scroll" role="region" ' + name + compact + ' tabindex="0">' + table + '</div>';
+  });
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -147,6 +159,31 @@ const jsonLd = {
 
 <script>
   import { categories, path } from '../../lib/site';
+
+  for (const region of document.querySelectorAll<HTMLElement>('.table-scroll')) {
+    const hint = region.previousElementSibling;
+    const table = region.querySelector('table');
+    if (!(hint instanceof HTMLElement) || !table) continue;
+
+    const updateScrollState = () => {
+      const scrolls = region.scrollWidth > region.clientWidth;
+      hint.hidden = !scrolls;
+      if (scrolls) {
+        region.tabIndex = 0;
+        region.setAttribute('aria-describedby', hint.id);
+      } else {
+        region.removeAttribute('tabindex');
+        region.removeAttribute('aria-describedby');
+      }
+    };
+
+    updateScrollState();
+    if (typeof ResizeObserver !== 'undefined') {
+      const observer = new ResizeObserver(updateScrollState);
+      observer.observe(region);
+      observer.observe(table);
+    }
+  }
 
   const link = document.querySelector<HTMLAnchorElement>('#article-return');
   if (link && document.referrer) {

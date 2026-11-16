@@ -235,8 +235,17 @@
   border-radius: 0;
 }
 
+.article-copy .reading .table-scroll-hint {
+  margin: 23px 0 7px;
+  color: var(--muted);
+  font-size: .875rem;
+  line-height: 1.35;
+}
+
+.article-copy .table-scroll-hint:not([hidden]) + .table-scroll { margin-top: 0; }
+
 .article-copy .reading table {
-  min-width: 535px;
+  min-width: 27rem;
   font-size: .94rem;
   line-height: 1.42;
   font-variant-numeric: tabular-nums;
@@ -259,6 +268,16 @@
 .article-copy .reading th {
   font-weight: 620;
 }
+
+.article-copy .table-scroll[data-compact] table { min-width: 0; }
+
+.article-copy .table-scroll[data-compact] :is(th, td) {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.article-copy .reading table[data-numeric] tr > :last-child { text-align: end; }
+.article-copy .reading table[data-numeric] tr > td:last-child { white-space: nowrap; }
 
 .article-up {
   margin: 24px 0 0;
@@ -340,6 +359,8 @@
   .article-mast h1 {
     font-size: clamp(1.9rem, 8vw, 2.2rem);
   }
+
+  .article-copy .table-scroll[data-compact] :is(th, td) { padding-inline-end: 8px; }
 }
 
 @media print {
@@ -349,6 +370,10 @@
     padding: 0;
   }
 
+  .article-copy .table-scroll { overflow: visible; }
+  .article-copy .reading table,
+  .article-copy .reading table :is(th, td) { min-width: 0; }
+  .article-copy .reading .table-scroll-hint,
   .article-return:not([hidden]),
   .article-media,
   .article-guide,
