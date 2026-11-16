@@ -89,7 +89,6 @@
 }
 .search-results a:hover h2 {
   color: var(--link);
-  text-decoration: underline;
 }
 .search-results p {
   font-size: .92rem;

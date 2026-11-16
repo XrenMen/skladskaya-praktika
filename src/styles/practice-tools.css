@@ -22,7 +22,7 @@
   font-weight: 550;
   text-decoration: none;
 }
-.practice-tool-back:hover, .practice-back:hover { text-decoration: underline; }
+.practice-tool-back:hover, .practice-back:hover { color: var(--ink); }
 .practice-tool-links { margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--line); }
 .practice-tool-links a { font-weight: 550; }
 
@@ -44,7 +44,7 @@
   text-decoration: none;
   flex: none;
 }
-.practice-teaser__header > a:hover { text-decoration: underline; }
+.practice-teaser__header > a:hover { color: var(--ink); }
 .practice-teaser__content {
   display: grid;
   align-items: stretch;
@@ -69,7 +69,7 @@
 }
 .practice-teaser__lead p { color: var(--on-dark-muted); margin: 0 0 15px; max-width: 39ch; }
 .practice-teaser__action { color: var(--bright); font-size: .92rem; font-weight: 650; }
-.practice-teaser__lead:hover .practice-teaser__action { text-decoration: underline; }
+.practice-teaser__lead:hover .practice-teaser__action { color: var(--surface); }
 .practice-teaser__lead:focus-visible { outline: 2px solid #a35808; outline-offset: 4px; }
 .practice-teaser__list {
   margin: 0;

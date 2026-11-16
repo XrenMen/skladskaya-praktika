@@ -19,11 +19,8 @@
   font-weight: 650;
 }
 
-.article-route .article-followups a:hover strong,
 .editorial-tool:hover strong {
-  text-decoration: underline;
-  text-decoration-thickness: .06em;
-  text-underline-offset: .15em;
+  color: var(--link);
 }
 
 .editorial-tool {

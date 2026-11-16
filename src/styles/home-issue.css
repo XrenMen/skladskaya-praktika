@@ -27,7 +27,6 @@
 
 .home-issue__heading > a:hover {
   color: var(--link);
-  text-decoration: underline;
 }
 
 .home-issue__lead {
@@ -173,8 +172,6 @@
 .home-issue__lead:hover h3,
 .home-issue__row:hover h3 {
   color: var(--link);
-  text-decoration: underline;
-  text-underline-offset: .16em;
 }
 
 .home-issue :is(.home-issue__lead, .home-issue__row, .home-issue__heading > a):focus-visible {

@@ -144,7 +144,6 @@
 
 .site-foot nav a:hover {
   color: var(--shell-accent);
-  text-decoration: underline;
 }
 
 @media (max-width: 760px) {

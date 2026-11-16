@@ -91,7 +91,7 @@ img { color: var(--muted); }
 }
 .route-guide__list h3 { margin: 0 0 3px; text-wrap: initial; }
 .route-guide__list h3 a { color: var(--ink); text-decoration: none; }
-.route-guide__list h3 a:hover { color: var(--link); text-decoration: underline; }
+.route-guide__list h3 a:hover { color: var(--link); }
 .route-guide__list p { margin: 0; color: var(--muted); font-size: .92rem; }
 .route-guide__start {
   display: inline-flex;

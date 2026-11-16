@@ -176,7 +176,6 @@
 
 .article-guide a:hover {
   color: var(--link);
-  text-decoration: underline;
 }
 
 .article-copy {

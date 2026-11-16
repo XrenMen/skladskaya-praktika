@@ -226,9 +226,7 @@
 
 .collection-card:hover .collection-card-title,
 .collection-topic:hover .collection-card-title {
-  text-decoration: underline;
-  text-underline-offset: .14em;
-  text-decoration-thickness: 1px;
+  color: var(--link);
 }
 
 .collection-list-section {
@@ -309,7 +307,7 @@
 }
 
 .collection-back:hover {
-  text-decoration: underline;
+  color: var(--surface);
 }
 
 .collection-back:focus-visible {
