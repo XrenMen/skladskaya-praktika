@@ -1,63 +1,189 @@
 ---
 import Site from '../layouts/Site.astro';
-import HomeIssue from '../components/HomeIssue.astro';
-import HomePractice from '../components/HomePractice.astro';
 import articles from '../lib/content.mjs';
-import { articlePath, categoryPath, path } from '../lib/site';
-import { photoForArticle } from '../lib/media';
-import '../styles/home-front.css';
+import { photoForArticle, photoLicenseUrl } from '../lib/media';
+import { practiceTools } from '../lib/practice-tools';
+import { articlePath, path } from '../lib/site';
+import '../styles/notebook-home.css';
 
-const image = {
-  wide: path('photos/warehouse-front-1536.webp'),
-  narrow: path('photos/warehouse-front-768.webp'),
+const featuredSlug = 'receiving-discrepancies';
+const featuredTitle = 'Недостача и пересорт на приёмке';
+const featuredPhoto = photoForArticle(featuredSlug);
+const orderedSlugs = [
+  'cycle-counting', 'warehouse-site-audit', 'compare-fulfillment', 'first-delivery',
+  'warehouse-move', 'storage-cost', 'returns', 'peak-pallet-capacity',
+  'dispatch-slots', 'choose-operator', 'own-vs-outsourced', featuredSlug,
+];
+const shortTitles: Record<string, string> = {
+  'cycle-counting': 'Как пересчитывать остатки по зонам',
+  'warehouse-site-audit': 'Что проверить на складе перед договором',
+  'compare-fulfillment': 'Как сравнить тарифы FBO и FBS',
+  'first-delivery': 'Первая поставка на склад',
+  'warehouse-move': 'Переезд склада без остановки отгрузок',
+  'storage-cost': 'Как посчитать стоимость хранения',
+  returns: 'Как организовать возвраты на складе',
+  'peak-pallet-capacity': 'Сколько паллетомест нужно в пик',
+  'dispatch-slots': 'Как распределить отгрузку по окнам',
+  'choose-operator': 'Что спросить у складского оператора',
+  'own-vs-outsourced': 'Свой склад или аутсорсинг',
+  [featuredSlug]: featuredTitle,
 };
-const lead = articles.find(article => article.slug === 'warehouse-move')!;
-const leadPhoto = photoForArticle(lead.slug);
-const routes = [
-  { id: 'storage', title: 'Выбрать склад', description: 'Как сравнить операторов, посчитать хранение и заложить запас мест.', start: 'warehouse-site-audit', startLabel: 'Как осмотреть склад' },
-  { id: 'operations', title: 'Подготовить поставку', description: 'Приёмка товара, расписание отгрузок и переезд склада.', start: 'first-delivery', startLabel: 'Первая поставка по шагам' },
-  { id: 'fulfillment', title: 'Разобраться в фулфилменте', description: 'Тарифы, схемы FBO и FBS, обработка возвратов.', start: 'returns', startLabel: 'Разобрать процесс возвратов' },
+const topics = [
+  { id: 'all', title: 'Все темы' },
+  { id: 'operations', title: 'Операции' },
+  { id: 'storage', title: 'Хранение' },
+  { id: 'fulfillment', title: 'Фулфилмент' },
+];
+const categoryLabels: Record<string, string> = {
+  operations: 'Складские операции',
+  storage: 'Хранение',
+  fulfillment: 'Фулфилмент',
+};
+const articlesBySlug = new Map(articles.map(article => [article.slug, article]));
+const orderedStories = [
+  ...orderedSlugs.flatMap(slug => {
+    const article = articlesBySlug.get(slug);
+    return article ? [article] : [];
+  }),
+  ...articles.filter(article => !orderedSlugs.includes(article.slug)),
 ];
 ---
-<Site title="Журнал о складской логистике" description="Практические статьи для тех, кто выбирает склад, организует поставки и сравнивает фулфилмент." image={image.wide} section="home">
-  <section class="warehouse-front" aria-labelledby="home-title">
-    <div class="warehouse-front__media" aria-hidden="true">
-      <img src={image.wide} srcset={image.narrow + ' 768w, ' + image.wide + ' 1536w'} sizes="100vw" width="1536" height="1024" fetchpriority="high" alt="" />
-    </div>
-    <div class="wrap warehouse-front__inner">
-      <div class="warehouse-front__masthead">
-        <h1 id="home-title"><span>Складская</span> <span>практика</span></h1>
-        <p>Журнал о складской логистике</p>
+
+<Site title="Журнал о работе склада" description="Практические статьи для тех, кто выбирает склад, организует поставки и сравнивает фулфилмент." image={featuredPhoto.large} section="home">
+  <div class="nb-home">
+    <header class="nb-masthead nb-width">
+      <h1 id="home-title">Журнал о работе склада</h1>
+      <form class="nb-search" id="nb-search" role="search" action={path('search/')}>
+        <label class="nb-visually-hidden" for="nb-query">Поиск по статьям</label>
+        <input id="nb-query" name="q" type="search" placeholder="Поиск по статьям" autocomplete="off" maxlength="120" aria-controls="nb-grid" />
+        <button type="submit">Найти</button>
+      </form>
+    </header>
+
+    <figure class="nb-lead nb-width" id="issue" aria-labelledby="lead-title">
+      <a class="nb-lead__link" href={articlePath(featuredSlug)} aria-labelledby="lead-title" aria-describedby="lead-deck">
+        <img
+          src={featuredPhoto.large}
+          srcset={featuredPhoto.srcset}
+          sizes="(max-width: 1560px) 94vw, 1480px"
+          width={featuredPhoto.largeWidth}
+          height={featuredPhoto.largeHeight}
+          alt={featuredPhoto.alt}
+          fetchpriority="high"
+        />
+        <div class="nb-lead__text">
+          <h2 id="lead-title">{featuredTitle}</h2>
+          <p id="lead-deck">Что делать, если в накладной 40 коробов, а нужного артикула приехало 37.</p>
+        </div>
+      </a>
+      <figcaption class="nb-credit">Фото <a href={featuredPhoto.source}>{featuredPhoto.photographer}</a> · <a href={photoLicenseUrl}>Pexels</a></figcaption>
+    </figure>
+
+    <section id="articles" class="nb-width nb-feed" aria-labelledby="nb-feed-title">
+      <div class="nb-feed__header" id="guides">
+        <h2 id="nb-feed-title">Статьи</h2>
+        <div class="nb-filters" role="group" aria-label="Темы статей" hidden>
+          {topics.map(topic => (
+            <button type="button" data-topic={topic.id} aria-pressed={topic.id === 'all' ? 'true' : 'false'}>{topic.title}</button>
+          ))}
+        </div>
       </div>
-      <div class="warehouse-front__feature">
-        <article class="warehouse-front__story" aria-labelledby="lead-title">
-          <p class="warehouse-front__rubric">Складские операции <span aria-hidden="true">/</span> {lead.minutes} мин</p>
-          <h2 id="lead-title">Переезд склада без остановки отгрузок</h2>
-          <p class="warehouse-front__summary">Как перенести запасы партиями, проверить новый склад и сохранить график отгрузок.</p>
-          <a class="button warehouse-front__action" href={articlePath(lead.slug)}>Читать о переезде <span aria-hidden="true">→</span></a>
-        </article>
-        <figure class="warehouse-front__detail">
-          <img src={leadPhoto.small} width={leadPhoto.smallWidth} height={leadPhoto.smallHeight} decoding="async" alt={leadPhoto.alt} style={{ objectPosition: leadPhoto.position }} />
-        </figure>
+      <p class="nb-status" id="nb-status" role="status" hidden></p>
+      <div class="nb-grid" id="nb-grid">
+        {orderedStories.map((article, index) => {
+          const photo = photoForArticle(article.slug);
+          const title = shortTitles[article.slug] ?? article.title;
+          const label = categoryLabels[article.category] ?? article.category;
+          const isFeatured = article.slug === featuredSlug;
+
+          return (
+            <article class="nb-story" data-category={article.category} data-search={title + ' ' + article.title + ' ' + article.description + ' ' + label} data-featured={String(isFeatured)} hidden={isFeatured}>
+              <a class="nb-story__link" href={articlePath(article.slug)} aria-labelledby={'nb-title-' + article.slug} aria-describedby={'nb-deck-' + article.slug}>
+                <img
+                  src={photo.small}
+                  srcset={photo.srcset}
+                  sizes="(max-width: 520px) 94vw, (max-width: 920px) 48vw, 24vw"
+                  width={photo.smallWidth}
+                  height={photo.smallHeight}
+                  alt={photo.alt}
+                  loading={index < 4 ? 'eager' : 'lazy'}
+                  decoding="async"
+                  style={{ objectPosition: photo.position }}
+                />
+                <p class="nb-story__meta">{label} · {article.minutes} мин</p>
+                <h3 id={'nb-title-' + article.slug}>{title}</h3>
+                <p class="nb-story__deck" id={'nb-deck-' + article.slug}>{article.description}</p>
+              </a>
+              <p class="nb-credit">Фото <a href={photo.source}>{photo.photographer}</a> · <a href={photoLicenseUrl}>Pexels</a></p>
+            </article>
+          );
+        })}
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="home-routes" aria-labelledby="routes-title" id="guides">
-    <div class="wrap route-guide">
-      <div class="route-guide__intro"><h2 id="routes-title">Что нужно сделать?</h2></div>
-      <ul class="route-guide__list">
-        {routes.map(route => (
-          <li>
-            <div><h3><a href={categoryPath(route.id)}>{route.title}</a></h3><p>{route.description}</p></div>
-            <a class="route-guide__start" href={articlePath(route.start)}>{route.startLabel} <span aria-hidden="true">→</span></a>
-          </li>
-        ))}
-      </ul>
-    </div>
-  </section>
-
-  <HomeIssue featured="receiving-discrepancies" secondary={['cycle-counting', 'compare-fulfillment']} />
-
-  <HomePractice />
+    <section id="tools" class="nb-tools" aria-labelledby="nb-tools-title">
+      <div class="nb-width nb-tools__inner" id="calculator">
+        <h2 id="nb-tools-title">Инструменты</h2>
+        <ul>
+          {practiceTools.map(tool => <li><a href={path(tool.path)}>{tool.action}</a></li>)}
+        </ul>
+      </div>
+    </section>
+  </div>
 </Site>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('#nb-search');
+  const query = document.querySelector<HTMLInputElement>('#nb-query');
+  const filters = document.querySelector<HTMLElement>('.nb-filters');
+  const cards = [...document.querySelectorAll<HTMLElement>('.nb-story')];
+  const lead = document.querySelector<HTMLElement>('.nb-lead');
+  const feed = document.querySelector<HTMLElement>('#articles');
+  const status = document.querySelector<HTMLElement>('#nb-status');
+
+  if (form && query && filters && lead && feed && status) {
+    const buttons = [...filters.querySelectorAll<HTMLButtonElement>('button[data-topic]')];
+    const normalize = (value: string) => value.toLocaleLowerCase('ru').replaceAll('ё', 'е').trim();
+    const searchableStories = cards.map(card => ({
+      card,
+      text: normalize(card.dataset.search ?? ''),
+    }));
+    let activeTopic = 'all';
+
+    const updateFeed = () => {
+      const search = normalize(query.value);
+      const words = search ? search.split(/\s+/) : [];
+      const filtering = Boolean(search) || activeTopic !== 'all';
+      let count = 0;
+
+      for (const { card, text } of searchableStories) {
+        const matchesTopic = activeTopic === 'all' || card.dataset.category === activeTopic;
+        const matchesText = words.every(word => text.includes(word));
+        card.hidden = !(matchesTopic && matchesText && (filtering || card.dataset.featured !== 'true'));
+        if (!card.hidden) count++;
+      }
+
+      lead.hidden = filtering;
+      status.hidden = !filtering;
+      status.textContent = count ? 'Найдено: ' + count : 'Ничего не нашлось. Уточните запрос или выберите другую тему.';
+    };
+
+    filters.hidden = false;
+    query.addEventListener('input', updateFeed);
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+      updateFeed();
+      feed.scrollIntoView({ block: 'start' });
+    });
+
+    for (const button of buttons) {
+      button.addEventListener('click', () => {
+        activeTopic = button.dataset.topic ?? 'all';
+        for (const item of buttons) item.setAttribute('aria-pressed', String(item === button));
+        updateFeed();
+      });
+    }
+
+    updateFeed();
+  }
+</script>

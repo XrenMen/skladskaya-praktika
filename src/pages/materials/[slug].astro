@@ -5,7 +5,6 @@ import { articleRoutes } from '../../lib/editorial-paths';
 import { articlePath, categories, categoryPath, path, releaseDate, siteName } from '../../lib/site';
 import { photoForArticle, photoLicenseUrl } from '../../lib/media';
 import '../../styles/reading.css';
-import '../../styles/editorial-paths.css';
 
 export function getStaticPaths() {
   return articles.map(article => ({ params: { slug: article.slug }, props: { article } }));
@@ -61,27 +60,28 @@ const jsonLd = {
 ---
 <Site title={article.title} description={article.description} section="materials" type="article" image={image.large} jsonLd={jsonLd}>
   <article class="journal-article" data-pagefind-body>
-    <nav class="article-trail" aria-label="Путь к статье" data-pagefind-ignore>
-      <a href={path('materials/')}>Статьи</a>
-      <span aria-hidden="true">/</span>
-      <a href={categoryPath(category.id)}>{category.name}</a>
-    </nav>
-
-    <header class="article-mast">
-      <div class="article-intro">
+    <div class="article-column">
+      <header class="article-mast">
+        <nav class="article-trail" aria-label="Путь к статье" data-pagefind-ignore>
+          <a href={path('materials/')}>Статьи</a>
+          <span aria-hidden="true">/</span>
+          <a href={categoryPath(category.id)}>{category.name}</a>
+          <span aria-hidden="true">·</span>
+          <span>{article.minutes} мин чтения</span>
+        </nav>
         <h1 data-pagefind-meta="title">{article.title}</h1>
         <p class="lede">{article.description}</p>
         <p class="article-byline" data-pagefind-ignore>
           <a href={path('editorial/')}>Редакция «Складская практика»</a>
           <time datetime={releaseDate}>{dateLabel}</time>
-          <span>{article.minutes} мин чтения</span>
         </p>
-      </div>
+      </header>
+
       <figure class="article-media">
         <img
           src={image.large}
           srcset={image.srcset}
-          sizes="(max-width: 800px) 90vw, (max-width: 1400px) 36vw, 500px"
+          sizes="(max-width: 720px) 94vw, (max-width: 1040px) 68vw, 661px"
           width={image.largeWidth}
           height={image.largeHeight}
           fetchpriority="high"
@@ -94,21 +94,18 @@ const jsonLd = {
           <a href={photoLicenseUrl}>Условия использования Pexels</a>
         </figcaption>
       </figure>
-    </header>
 
-    <div class:list={["article-content", { "article-content--with-guide": sections.length > 0 }]}>
       {sections.length > 0 && (
-        <aside class="article-guide" data-pagefind-ignore>
-          <details open>
-            <summary id="article-sections">Оглавление</summary>
-            <nav aria-label="Разделы статьи">
-              <ol>
-                {sections.map(section => <li><a href={'#' + section.id}>{section.label}</a></li>)}
-              </ol>
-            </nav>
-          </details>
-        </aside>
+        <details class="article-guide" data-pagefind-ignore>
+          <summary id="article-sections">Оглавление</summary>
+          <nav aria-label="Разделы статьи">
+            <ol>
+              {sections.map(section => <li><a href={'#' + section.id}>{section.label}</a></li>)}
+            </ol>
+          </nav>
+        </details>
       )}
+
       <div class="article-copy">
         <div class="reading" set:html={body} />
         {sections.length > 0 && (
@@ -118,39 +115,31 @@ const jsonLd = {
         )}
       </div>
     </div>
-  </article>
 
-  {(related.length > 0 || tool) && (
-    <section class="article-next" aria-labelledby="related">
-      <div class="article-next-heading">
-        <h2 id="related">Что дальше</h2>
-        <a href={categoryPath(category.id)}>Все статьи рубрики <span aria-hidden="true">↗</span></a>
-      </div>
-      <div class:list={["article-route", { "article-route--with-tool": tool }]}>
-        {related.length > 0 && (
-          <ul class="article-followups">
-            {related.map(item => (
-              <li>
-                <a href={articlePath(item.slug)}>
-                  <div>
-                    <strong>{item.title}</strong>
-                    <p>{item.reason}</p>
-                  </div>
-                  <span aria-hidden="true">→</span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        )}
-        {tool && (
-          <a class="editorial-tool" href={path(tool.route)}>
-            <span class="editorial-tool-label">Инструмент</span>
-            <strong>{tool.label}</strong>
-            <span class="editorial-tool-detail">{tool.reason}</span>
-            <span class="editorial-tool-arrow" aria-hidden="true">↗</span>
-          </a>
-        )}
-      </div>
-    </section>
-  )}
+    {(related.length > 0 || tool) && (
+      <aside class="article-next" aria-labelledby="related" data-pagefind-ignore>
+        <h2 id="related">По теме</h2>
+        <ul class="article-followups">
+          {related.map(item => (
+            <li>
+              <a href={articlePath(item.slug)}>
+                <strong>{item.title}</strong>
+                <span class="article-followup-detail">{item.reason}</span>
+              </a>
+            </li>
+          ))}
+          {tool && (
+            <li>
+              <a href={path(tool.route)}>
+                <span class="article-followup-label">Инструмент</span>
+                <strong>{tool.label}</strong>
+                <span class="article-followup-detail">{tool.reason}</span>
+              </a>
+            </li>
+          )}
+        </ul>
+        <a class="article-category" href={categoryPath(category.id)}>Все статьи рубрики <span aria-hidden="true">↗</span></a>
+      </aside>
+    )}
+  </article>
 </Site>

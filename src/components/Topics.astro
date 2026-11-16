@@ -1,38 +1,37 @@
 ---
 import { categoryPath, categories } from '../lib/site';
-import { photoForCategory } from '../lib/media';
+import { photoForCategory, photoLicenseUrl } from '../lib/media';
 import articles from '../lib/content.mjs';
 import '../styles/factory-collections.css';
 
 const plural = new Intl.PluralRules('ru');
-const articleLabel = { one: 'статья', few: 'статьи', many: 'статей', other: 'статьи', zero: 'статей', two: 'статьи' };
+const articleLabel = { one: 'статья', few: 'статьи', many: 'статей', other: 'статей', zero: 'статей', two: 'статьи' };
 ---
-<div class="collection-topics">
+<ul class="collection-topics">
   {categories.map(category => {
     const image = photoForCategory(category.id);
     const count = articles.filter(article => article.category === category.id).length;
     return (
-      <a class="collection-topic" href={categoryPath(category.id)}>
-        <div class="collection-topic-photo">
-          <img
-            src={image.small}
-            srcset={image.srcset}
-            width={image.smallWidth}
-            height={image.smallHeight}
-            sizes="(max-width: 680px) 94vw, (max-width: 1300px) 52vw, 670px"
-            loading="lazy"
-            decoding="async"
-            style={{ objectPosition: image.position }}
-            alt=""
-          />
-        </div>
-        <div class="collection-topic-copy">
+      <li class="collection-card collection-topic">
+        <a class="collection-card-link" href={categoryPath(category.id)}>
+          <div class="collection-card-photo">
+            <img
+              src={image.small}
+              srcset={image.srcset}
+              width={image.smallWidth}
+              height={image.smallHeight}
+              sizes="(max-width: 520px) 94vw, (max-width: 920px) 46vw, (max-width: 1560px) 31vw, 480px"
+              decoding="async"
+              style={{ objectPosition: image.position }}
+              alt={image.alt}
+            />
+          </div>
           <p class="collection-meta">{count} {articleLabel[plural.select(count)]}</p>
           <h2 class="collection-card-title">{category.title}</h2>
           <p class="collection-card-summary">{category.description}</p>
-          <span class="collection-arrow" aria-hidden="true">↗</span>
-        </div>
-      </a>
+        </a>
+        <p class="collection-credit">Фото <a href={image.source}>{image.photographer}</a> · <a href={photoLicenseUrl} aria-label="Лицензия фотографий Pexels">Pexels</a></p>
+      </li>
     );
   })}
-</div>
+</ul>

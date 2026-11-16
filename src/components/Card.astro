@@ -1,44 +1,37 @@
 ---
 import { articlePath, categories, type Article } from '../lib/site';
-import { photoForArticle } from '../lib/media';
+import { photoForArticle, photoLicenseUrl } from '../lib/media';
 import '../styles/factory-collections.css';
 
 interface Props {
   item: Article;
-  emphasis?: 'lead' | 'side';
-  compact?: boolean;
   hideTopic?: boolean;
+  eager?: boolean;
   heading?: 'h2' | 'h3';
 }
 
-const { item, emphasis, compact = false, hideTopic = false, heading: Heading = 'h3' } = Astro.props;
+const { item, hideTopic = false, eager = false, heading: Heading = 'h3' } = Astro.props;
 const topic = categories.find(category => category.id === item.category);
 const image = photoForArticle(item.slug);
-const sizes = compact
-  ? '(max-width: 680px) 100px, 200px'
-  : emphasis === 'lead'
-    ? '(max-width: 680px) 92vw, (max-width: 1300px) 54vw, 740px'
-    : '(max-width: 680px) 92vw, (max-width: 1300px) 46vw, 620px';
 ---
-<a class:list={['collection-card', { 'collection-card--lead': emphasis === 'lead', 'collection-card--side': emphasis === 'side', 'collection-card--compact': compact }]} href={articlePath(item.slug)}>
-  <div class="collection-card-photo">
-    <img
-      src={image.small}
-      srcset={image.srcset}
-      sizes={sizes}
-      width={image.smallWidth}
-      height={image.smallHeight}
-      loading={emphasis === 'lead' ? 'eager' : 'lazy'}
-      fetchpriority={emphasis === 'lead' ? 'high' : undefined}
-      decoding="async"
-      style={{ objectPosition: image.position }}
-      alt=""
-    />
-  </div>
-  <div class="collection-card-copy">
-    <p class="collection-meta">{!hideTopic && topic && <span>{topic.name}</span>}<span>{item.minutes} мин<span class="collection-reading-label"> чтения</span></span></p>
+<article class="collection-card">
+  <a class="collection-card-link" href={articlePath(item.slug)}>
+    <div class="collection-card-photo">
+      <img
+        src={image.small}
+        srcset={image.srcset}
+        sizes="(max-width: 520px) 94vw, (max-width: 920px) 46vw, (max-width: 1560px) 23vw, 355px"
+        width={image.smallWidth}
+        height={image.smallHeight}
+        loading={eager ? 'eager' : 'lazy'}
+        decoding="async"
+        style={{ objectPosition: image.position }}
+        alt={image.alt}
+      />
+    </div>
+    <p class="collection-meta">{!hideTopic && topic && <span>{topic.name}</span>}<span>{item.minutes} мин</span></p>
     <Heading class="collection-card-title">{item.title}</Heading>
     <p class="collection-card-summary">{item.description}</p>
-    <span class="collection-arrow" aria-hidden="true">↗</span>
-  </div>
-</a>
+  </a>
+  <p class="collection-credit">Фото <a href={image.source}>{image.photographer}</a> · <a href={photoLicenseUrl} aria-label="Лицензия фотографий Pexels">Pexels</a></p>
+</article>

@@ -38,13 +38,11 @@ const nav = [
 <header class="site-top">
   <div class="mast wrap">
     <a href={path()} class="brand" aria-label="Складская практика — главная">
-      <img src={path('favicon.svg')} width="38" height="38" alt="" />
       <span>Складская практика</span>
     </a>
     <nav aria-label="Главное меню">
       {nav.map(item => (
         <a href={item.href} aria-current={section === item.id ? 'page' : undefined}>
-          {item.id === 'search' && <span class="shell-search-mark" aria-hidden="true"></span>}
           {item.title}
         </a>
       ))}

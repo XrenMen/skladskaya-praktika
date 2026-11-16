@@ -2,7 +2,7 @@
   padding-block: clamp(39px, 6.8vw, 84px) clamp(23px, 4vw, 44px);
 }
 .tool-head h1 {
-  font-size: clamp(2.4rem, 5.1vw, 4.25rem);
+  font-size: clamp(2.03rem, 4vw, 3.25rem);
   max-width: 22ch;
   margin-bottom: 0;
   text-wrap: initial;
@@ -21,7 +21,7 @@
   font: inherit;
   color: var(--ink);
   border: 1px solid var(--field-line);
-  border-radius: 3px;
+  border-radius: 0;
   background: var(--surface);
 }
 .search-main .search-form { max-width: none; }
@@ -98,7 +98,7 @@
 }
 .search-result-arrow { color: var(--link); }
 .search-results mark {
-  background: #ffe5b6;
+  background: #e8ebfa;
   color: var(--ink);
   font-weight: 600;
 }
@@ -139,8 +139,9 @@
 .storage-field .field-error { margin: 5px 0 0; color: #8b2922; font-size: .78rem; }
 .storage-receipt {
   padding: clamp(23px, 4.4vw, 56px);
-  background: var(--dark);
-  color: var(--paper);
+  background: var(--surface);
+  border-inline-start: 1px solid var(--line);
+  color: var(--ink);
   min-width: 0;
 }
 .storage-receipt h2, .storage-receipt h3 {
@@ -159,18 +160,18 @@
 .storage-total strong {
   font-size: clamp(2rem, 4.5vw, 4.1rem);
   line-height: 1;
-  color: var(--bright);
+  color: var(--link);
   font-weight: 650;
   letter-spacing: -.06em;
   font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
 }
-.storage-equation { font-size: .89rem; color: var(--on-dark-muted); margin: 0; }
-.storage-price { margin-top: 22px; padding-top: 16px; border-top: 1px solid #465763; }
+.storage-equation { font-size: .89rem; color: var(--muted); margin: 0; }
+.storage-price { margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--line); }
 .storage-price p {
   font-size: clamp(1rem, 1.9vw, 1.27rem);
   margin: 0;
-  color: var(--on-dark-muted);
+  color: var(--muted);
   font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
 }
@@ -194,7 +195,7 @@
   .search-workspace, .storage-tool, .storage-help { grid-template-columns: minmax(0, 1fr); }
   .search-examples { max-width: 390px; }
   .storage-fields { padding: 19px; }
-  .storage-receipt { padding: 24px 19px; }
+  .storage-receipt { padding: 24px 19px; border-inline-start: 0; border-top: 1px solid var(--line); }
 }
 @media (max-width: 400px) {
   .tool-head h1 { font-size: 2.18rem; }

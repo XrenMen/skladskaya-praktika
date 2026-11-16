@@ -33,7 +33,7 @@
   gap: .25rem;
   padding: clamp(1rem, 2.5vw, 1.65rem) 3rem clamp(1rem, 2.5vw, 1.65rem) clamp(1rem, 2.5vw, 1.65rem);
   border: 1px solid var(--line);
-  background: var(--wash);
+  background: var(--paper);
   color: var(--ink);
   text-decoration: none;
 }

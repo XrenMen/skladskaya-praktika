@@ -5,28 +5,18 @@ import CollectionNav from '../../components/CollectionNav.astro';
 import articles from '../../lib/content.mjs';
 import { path } from '../../lib/site';
 import { photoForArticle } from '../../lib/media';
-
-const lead = articles.find(article => article.slug === 'receiving-discrepancies');
-const second = articles.find(article => article.slug === 'storage-cost');
-const archive = articles.filter(article => article !== lead && article !== second);
 ---
 <Site title="Все статьи журнала" description="Руководства по выбору склада, расчёту хранения, запуску фулфилмента и приёмке товара." section="materials" image={photoForArticle('receiving-discrepancies').large}>
-  <header class="collection-head">
-    <div>
-      <h1>Статьи</h1>
-      <p>Выбор склада, хранение, обработка заказов и отгрузка.</p>
-    </div>
-    <a class="collection-search" href={path('search/')}>Поиск по статьям <span aria-hidden="true">↗</span></a>
+  <header class="collection-head collection-head--archive">
+    <h1>Статьи</h1>
+    <form class="collection-search-form" action={path('search/')} role="search" aria-label="Поиск по статьям">
+      <label class="collection-visually-hidden" for="archive-query">Поиск по статьям</label>
+      <input id="archive-query" name="q" type="search" maxlength="120" autocomplete="off" placeholder="Поиск по статьям" />
+      <button type="submit">Найти</button>
+    </form>
   </header>
   <CollectionNav />
-  <div class="collection-featured">
-    {lead && <Card item={lead} emphasis="lead" heading="h2" />}
-    {second && <Card item={second} emphasis="side" heading="h2" />}
-  </div>
-  <section class="collection-list-section" aria-labelledby="archive-title">
-    <h2 id="archive-title">Ещё в журнале</h2>
-    <ul class="collection-list">
-      {archive.map(item => <li><Card item={item} compact /></li>)}
-    </ul>
-  </section>
+  <ul class="collection-list">
+    {articles.map((item, index) => <li><Card item={item} heading="h2" eager={index < 4} /></li>)}
+  </ul>
 </Site>

@@ -5,7 +5,7 @@ import CollectionNav from '../../components/CollectionNav.astro';
 import articles from '../../lib/content.mjs';
 import { articlePath, categories, path } from '../../lib/site';
 import { topicRoutes } from '../../lib/editorial-paths';
-import { photoForCategory } from '../../lib/media';
+import { photoForCategory, photoLicenseUrl } from '../../lib/media';
 import '../../styles/editorial-paths.css';
 
 export function getStaticPaths() {
@@ -30,17 +30,20 @@ const image = photoForCategory(category.id);
       <h1>{category.title}</h1>
       <p>{category.description}</p>
     </div>
-    <img
-      src={image.small}
-      srcset={image.srcset}
-      width={image.smallWidth}
-      height={image.smallHeight}
-      sizes="(max-width: 680px) 90vw, (max-width: 1300px) 48vw, 620px"
-      fetchpriority="high"
-      decoding="async"
-      style={{ objectPosition: image.position }}
-      alt={image.alt}
-    />
+    <figure class="collection-category-photo">
+      <img
+        src={image.small}
+        srcset={image.srcset}
+        width={image.smallWidth}
+        height={image.smallHeight}
+        sizes="(max-width: 680px) 94vw, (max-width: 1560px) 48vw, 730px"
+        fetchpriority="high"
+        decoding="async"
+        style={{ objectPosition: image.position }}
+        alt={image.alt}
+      />
+      <figcaption class="collection-credit">Фото <a href={image.source}>{image.photographer}</a> · <a href={photoLicenseUrl} aria-label="Лицензия фотографии Pexels">Pexels</a></figcaption>
+    </figure>
   </header>
   <CollectionNav active={category.id} />
   {lead && (
@@ -66,7 +69,7 @@ const image = photoForCategory(category.id);
     <section class="topic-archive" aria-labelledby="topic-archive-title">
       <h2 id="topic-archive-title">Ещё по теме</h2>
       <ul class="collection-list">
-        {archive.map(item => <li><Card item={item} compact hideTopic heading="h3" /></li>)}
+        {archive.map(item => <li><Card item={item} hideTopic heading="h3" /></li>)}
       </ul>
     </section>
   )}
