@@ -3,12 +3,17 @@ import Site from '../../layouts/Site.astro';
 import Card from '../../components/Card.astro';
 import articles from '../../lib/content.mjs';
 import { categories, path } from '../../lib/site';
+import { photoForCategory } from '../../lib/media';
 export function getStaticPaths(){return categories.map(category=>({params:{topic:category.id},props:{category}}));}
 const {category}=Astro.props;
 const selected=articles.filter(a=>a.category===category.id);
+const image=photoForCategory(category.id);
 ---
-<Site title={category.title} description={category.description} section="topics">
-  <header class="inner-head"><p class="crumb"><a href={path()}>Главная</a><span>/</span><a href={path('topics/')}>Рубрики</a></p>
-  <p class="eyebrow">Рубрика {category.mark}</p><h1>{category.title}</h1><p class="lede">{category.description}</p></header>
-  <div class="cards">{selected.map(item=><Card item={item}/>)}</div>
+<Site title={category.title} description={category.description} image={image.large} section="topics">
+  <header class="category-head">
+    <div><p class="crumb"><a href={path()}>Главная</a><span>/</span><a href={path('topics/')}>Рубрики</a></p>
+    <p class="eyebrow">Рубрика {category.mark}</p><h1>{category.title}</h1><p class="lede">{category.description}</p></div>
+    <img src={image.small} srcset={image.srcset} width="640" height="426" sizes="(max-width: 850px) 90vw, 500px" alt={image.alt} />
+  </header>
+  <section class="section" aria-labelledby="category-articles"><h2 id="category-articles">Статьи рубрики</h2><div class="cards">{selected.map(item=><Card item={item}/>)}</div></section>
 </Site>

@@ -1,14 +1,16 @@
 ---
-import { articlePath, categories, path, type Article } from '../lib/site';
+import { articlePath, categories, type Article } from '../lib/site';
+import { photoForArticle } from '../lib/media';
 const {item} = Astro.props as {item:Article};
 const topic = categories.find(c=>c.id===item.category);
+const image = photoForArticle(item.slug);
 ---
 <a class="card" href={articlePath(item.slug)}>
-  <img class="card-art" loading="lazy" width="560" height="316" src={path('illustrations/'+item.slug+'.svg')} alt="" />
+  <div class="card-media"><img class="card-art" loading="lazy" decoding="async" width="640" height="426" src={image.small} srcset={image.srcset} sizes="(max-width: 580px) 92vw, (max-width: 870px) 44vw, 370px" style={{objectPosition:image.position}} alt="" /></div>
   <div class="card-content">
     <p class="meta"><span>{topic?.name}</span><span>{item.minutes} мин</span></p>
     <h3>{item.title}</h3>
     <p class="muted">{item.description}</p>
-    <span class="card-link">Читать <span aria-hidden="true">↗</span></span>
+    <span class="card-link">Читать статью <span aria-hidden="true">↗</span></span>
   </div>
 </a>

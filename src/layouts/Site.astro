@@ -1,13 +1,14 @@
 ---
 import { path, siteName } from '../lib/site';
 import '../styles/site.css';
+import '../styles/editorial.css';
 interface Props { title: string; description: string; section?: string; type?: 'website'|'article'; image?: string; jsonLd?: Record<string,unknown>; notFound?: boolean }
-const {title,description,section,type='website',image=path('illustrations/warehouse.svg'),jsonLd,notFound=false}=Astro.props;
+const {title,description,section,type='website',image=path('photos/cover-1280.webp'),jsonLd,notFound=false}=Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const fullTitle = title + ' — ' + siteName;
 const nav = [
   { id:'topics', title:'Рубрики', href:path('topics/') },
-  { id:'materials', title:'Материалы', href:path('materials/') },
+  { id:'materials', title:'Блог', href:path('materials/') },
   { id:'calculator', title:'Калькулятор', href:path('calculator/') },
   { id:'search', title:'Поиск', href:path('search/') }
 ];
@@ -45,7 +46,7 @@ const nav = [
 <footer class="foot">
   <div class="wrap footer-inner"><div>
     <p class="footer-name">Складская практика</p>
-    <p>Памятки для команд складской логистики</p>
+    <p>Информационный журнал для команд складской логистики</p>
   </div><nav aria-label="О справочнике">
     <a href={path('about/')}>О проекте</a>
     <a href={path('editorial/')}>Редакция</a>

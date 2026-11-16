@@ -2,9 +2,12 @@
 import Site from '../../layouts/Site.astro';
 import Card from '../../components/Card.astro';
 import articles from '../../lib/content.mjs';
-import { path } from '../../lib/site';
+import { path, categories, categoryPath } from '../../lib/site';
+import { photo } from '../../lib/media';
+const image=photo('cover');
 ---
-<Site title="Все материалы" description="Пошаговые руководства по выбору склада, расчёту хранения, запуску фулфилмента и приёмке товара." section="materials">
-  <header class="inner-head"><p class="eyebrow">Библиотека</p><h1>Материалы</h1><p class="lede">Разберите свою задачу по шагам. <a href={path('search/')}>Найти статью по ключевому слову</a>.</p></header>
+<Site title="Блог: все статьи" description="Пошаговые руководства по выбору склада, расчёту хранения, запуску фулфилмента и приёмке товара." section="materials" image={image.large}>
+  <header class="inner-head blog-head"><p class="eyebrow">Библиотека журнала</p><h1>Блог</h1><p class="lede">Примеры расчётов, рабочие чек-листы и вопросы к подрядчикам. Выберите тему или <a href={path('search/')}>найдите материал по слову</a>.</p>
+  <nav class="search-hints" aria-label="Рубрики блога"><a class="chip active" aria-current="page" href={path('materials/')}>Все статьи · {articles.length}</a>{categories.map(c=><a class="chip" href={categoryPath(c.id)}>{c.name}</a>)}</nav></header>
   <div class="cards">{articles.map(item=><Card item={item}/>)}</div>
 </Site>

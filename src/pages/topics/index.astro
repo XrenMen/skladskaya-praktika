@@ -1,9 +1,8 @@
 ---
 import Site from '../../layouts/Site.astro';
-import articles from '../../lib/content.mjs';
-import { categories, categoryPath } from '../../lib/site';
+import Topics from '../../components/Topics.astro';
 ---
-<Site title="Рубрики справочника" description="Выберите направление: хранение, фулфилмент или складские операции." section="topics">
-  <header class="inner-head"><p class="eyebrow">Навигация</p><h1>Рубрики</h1><p class="lede">Материалы сгруппированы по рабочим задачам.</p></header>
-  <div class="topics">{categories.map(c=><a href={categoryPath(c.id)} class="topic"><small>{c.mark} / {articles.filter(a=>a.category===c.id).length} материала</small><strong>{c.title} <span aria-hidden="true">↗</span></strong><p>{c.description}</p></a>)}</div>
+<Site title="Рубрики журнала" description="Практические материалы по выбору склада, фулфилменту и складским операциям." section="topics">
+  <header class="inner-head"><p class="eyebrow">Темы</p><h1>Рубрики журнала</h1><p class="lede">От оценки затрат до приёмки и отгрузки. Выберите направление, которое нужно разобрать сейчас.</p></header>
+  <Topics />
 </Site>

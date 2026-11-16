@@ -1,0 +1,15 @@
+---
+import {categoryPath,categories} from '../lib/site';
+import {photoForCategory} from '../lib/media';
+import articles from '../lib/content.mjs';
+---
+<div class="topic-grid">
+  {categories.map(c=>{
+    const image=photoForCategory(c.id);
+    const count=articles.filter(a=>a.category===c.id).length;
+    return <a class="topic" href={categoryPath(c.id)}>
+      <img src={image.small} srcset={image.srcset} width="640" height="426" sizes="(max-width: 580px) 92vw, (max-width: 870px) 44vw, 370px" loading="lazy" decoding="async" alt="" />
+      <div class="topic-info"><p class="meta"><span>Рубрика {c.mark}</span><span>{count} материала</span></p><h3>{c.title} <span aria-hidden="true">↗</span></h3><p>{c.description}</p></div>
+    </a>;
+  })}
+</div>
