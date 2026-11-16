@@ -1,14 +1,19 @@
 ---
 import { path, siteName } from '../lib/site';
 import '../styles/site.css';
-import '../styles/editorial.css';
+import '@fontsource/pt-serif/cyrillic-400.css';
+import '@fontsource/pt-serif/cyrillic-700.css';
+import '@fontsource/pt-serif/latin-400.css';
+import '@fontsource/pt-serif/latin-700.css';
+import '@fontsource-variable/golos-text';
+import '../styles/journal.css';
 interface Props { title: string; description: string; section?: string; type?: 'website'|'article'; image?: string; jsonLd?: Record<string,unknown>; notFound?: boolean }
 const {title,description,section,type='website',image=path('photos/cover-1280.webp'),jsonLd,notFound=false}=Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const fullTitle = title + ' — ' + siteName;
 const nav = [
   { id:'topics', title:'Рубрики', href:path('topics/') },
-  { id:'materials', title:'Блог', href:path('materials/') },
+  { id:'materials', title:'Статьи', href:path('materials/') },
   { id:'calculator', title:'Калькулятор', href:path('calculator/') },
   { id:'search', title:'Поиск', href:path('search/') }
 ];
@@ -36,7 +41,7 @@ const nav = [
 <header class="mast wrap">
   <a href={path()} class="brand" aria-label="Складская практика — главная">
     <img src={path('favicon.svg')} width="38" height="38" alt="" />
-    <span>Складская<br />практика</span>
+    <span>Складская практика</span>
   </a>
   <nav aria-label="Главное меню">
     {nav.map(n => <a href={n.href} aria-current={section===n.id?'page':undefined}>{n.title}</a>)}

@@ -4,6 +4,6 @@ export default defineConfig({
   base: '/skladskaya-praktika',
   trailingSlash: 'always',
   output: 'static',
-  build: { inlineStylesheets: 'always' },
+  build: { inlineStylesheets: 'never' },
   devToolbar: { enabled: false },
 });

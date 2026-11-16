@@ -1,49 +1,57 @@
 ---
 import Site from '../layouts/Site.astro';
-import Card from '../components/Card.astro';
-import Topics from '../components/Topics.astro';
 import articles from '../lib/content.mjs';
-import { articlePath, path } from '../lib/site';
+import { articlePath, categories, categoryPath, path } from '../lib/site';
 import { photo } from '../lib/media';
 const hero=photo('cover');
-const toolArt=photo('planning');
 const featured=articles.find(a=>a.slug==='warehouse-move')!;
-const selection=['storage-cost','compare-fulfillment','first-delivery'];
-const picks=selection.map(slug=>articles.find(a=>a.slug===slug)!);
-const paths=[
- {title:'Выбираю склад',purpose:'От сравнения моделей до запроса расчёта.',slugs:['own-vs-outsourced','choose-operator','storage-cost']},
- {title:'Запускаю отгрузки',purpose:'От выбора схемы фулфилмента до возвратов.',slugs:['compare-fulfillment','dispatch-slots','returns']}
+const topics=[
+ {label:'Нужно выбрать склад', description:'Свой склад или аутсорсинг, как сравнить операторов и посчитать хранение.', category:'storage', slugs:['own-vs-outsourced','choose-operator','storage-cost']},
+ {label:'Готовлю первую поставку', description:'Что передать оператору, как принять товар и развести машины по времени.', category:'operations', slugs:['first-delivery','dispatch-slots']},
+ {label:'Сравниваю фулфилмент', description:'Что входит в FBO и FBS, как считаются услуги и возвраты.', category:'fulfillment', slugs:['compare-fulfillment','returns']}
 ];
+const order=['storage-cost','first-delivery','compare-fulfillment','choose-operator','dispatch-slots','returns','own-vs-outsourced'];
 ---
-<Site title="Журнал о складской логистике" description="Практические статьи о выборе склада, фулфилменте и складских операциях. Чек-листы, примеры расчётов и калькулятор паллето-дней." image={hero.large} section="home">
-  <section class="feature" aria-labelledby="intro-title">
-    <div class="feature-lead">
-      <p class="eyebrow"><span class="dot"></span> Журнал о складской логистике</p>
-      <h1 id="intro-title">От первой поставки до переезда склада</h1>
-      <p class="lede">Практические статьи для тех, кто выбирает склад, готовит поставки и выстраивает фулфилмент. С расчётами, примерами и чек-листами.</p>
-      <div class="buttons"><a class="button" href={path('materials/')}>Читать блог <span aria-hidden="true">↗</span></a><a class="button outline" href={path('topics/')}>Смотреть рубрики</a></div>
+<Site title="Журнал о складской логистике" description="Журнал для логистов и закупщиков: как оценить склад, провести поставку и сравнить условия фулфилмента." image={hero.large} section="home">
+  <div class="edition-line"><p>Журнал для логистов, закупщиков и команд электронной торговли</p><span>Первый выпуск</span></div>
+  <section class="front-grid" aria-labelledby="lead-title">
+    <article class="front-story">
+      <figure class="lead-figure">
+        <a href={articlePath(featured.slug)} aria-label="Читать статью о переезде склада"><img src={hero.large} srcset={hero.srcset} sizes="(max-width: 790px) 94vw, 745px" width="1280" height="853" fetchpriority="high" alt={hero.alt} /></a>
+      </figure>
+      <p class="kicker"><a href={categoryPath('operations')}>Складские операции</a><span>{featured.minutes} мин чтения</span></p>
+      <h1 id="lead-title"><a href={articlePath(featured.slug)}>Переезд склада без остановки отгрузок</a></h1>
+      <p class="lead-summary">Как перенести остатки партиями, провести пробный рейс и сохранить отгрузки в дни переезда.</p>
+      <a class="story-link" href={articlePath(featured.slug)}>Читать статью <span aria-hidden="true">↗</span></a>
+    </article>
+    <aside class="front-index" aria-labelledby="task-index-title" id="guides">
+      <h2 id="task-index-title">С чего начать</h2>
+      <ol class="scenario-list">
+        {topics.map((group,i)=>{
+          const first=articles.find(a=>a.slug===group.slugs[0])!;
+          return <li><span class="scenario-number" aria-hidden="true">{String(i+1).padStart(2,'0')}</span><div>
+            <h3>{group.label}</h3><p>{group.description}</p>
+            <a class="scenario-link" href={articlePath(first.slug)}>{first.title.split(':')[0]} <span aria-hidden="true">↗</span></a>
+          </div></li>;
+        })}
+      </ol>
+      <a class="text-link index-footer" href={path('topics/')}>Смотреть все рубрики <span aria-hidden="true">↗</span></a>
+    </aside>
+  </section>
+  <section class="journal-section" aria-labelledby="archive-title">
+    <div class="rule-title"><h2 id="archive-title">В этом выпуске</h2><a href={path('materials/')}>Все статьи <span aria-hidden="true">↗</span></a></div>
+    <div class="article-index">
+      {order.map((slug,i)=>{
+        const item=articles.find(a=>a.slug===slug)!;
+        const category=categories.find(c=>c.id===item.category)!;
+        return <a class="article-line" href={articlePath(slug)}><span class="line-n" aria-hidden="true">{String(i+1).padStart(2,'0')}</span><div><p>{category.name} · {item.minutes} мин</p><h3>{item.title}</h3></div><span class="line-arrow" aria-hidden="true">↗</span></a>;
+      })}
     </div>
-    <a href={articlePath(featured.slug)} class="feature-image" aria-label={'Главный материал: '+featured.title}>
-      <img src={hero.large} srcset={hero.srcset} sizes="(max-width: 900px) 93vw, 680px" width="1280" height="853" fetchpriority="high" alt={hero.alt} />
-      <div class="feature-caption"><span>Главный материал</span><strong>{featured.title}</strong><span class="feature-arrow" aria-hidden="true">↗</span></div>
-    </a>
   </section>
-  <section class="section" aria-labelledby="picks-title">
-    <div class="section-head"><div><p class="eyebrow">Выбор редакции</p><h2 id="picks-title">С чего начать</h2></div><a class="text-link" href={path('materials/')}>Все статьи <span aria-hidden="true">↗</span></a></div>
-    <div class="cards">{picks.map(item=><Card item={item}/>)}</div>
-  </section>
-  <section class="section" aria-labelledby="topics-title" id="guides">
-    <div class="section-head"><div><p class="eyebrow">По задачам</p><h2 id="topics-title">Рубрики журнала</h2></div><a class="text-link" href={path('topics/')}>К рубрикам <span aria-hidden="true">↗</span></a></div>
-    <Topics />
-  </section>
-  <section class="section" aria-labelledby="calc-title" id="calculator">
-    <div class="workbench">
-      <div><p class="eyebrow">Инструмент</p><h2 id="calc-title">Посчитайте объём хранения</h2><p>Рассчитайте паллето-дни по сроку и среднему остатку. Если знаете ставку, добавьте её, чтобы оценить стоимость хранения.</p><a href={path('calculator/')} class="button pale">Открыть калькулятор <span aria-hidden="true">↗</span></a></div>
-      <img src={toolArt.small} width="640" height="426" loading="lazy" decoding="async" alt="" />
-    </div>
-  </section>
-  <section class="section" aria-labelledby="reading-paths">
-    <div class="section-head"><div><p class="eyebrow">Маршруты чтения</p><h2 id="reading-paths">От задачи к решению</h2></div></div>
-    <div class="reading-paths">{paths.map(p=><div class="reading-path"><h3>{p.title}</h3><p class="muted">{p.purpose}</p><ol>{p.slugs.map(slug=>{const a=articles.find(i=>i.slug===slug)!;return <li><a href={articlePath(slug)}>{a.title} <span aria-hidden="true">↗</span></a></li>;})}</ol></div>)}</div>
+  <section class="journal-section" id="calculator">
+    <div class="calculation-note"><div><p class="kicker">Рабочий инструмент</p><h2>Калькулятор паллето-дней</h2><p>Введите средний остаток и число дней. Если знаете тариф, калькулятор покажет и стоимость хранения.</p><a class="story-link" href={path('calculator/')}>Открыть калькулятор <span aria-hidden="true">↗</span></a></div>
+    <div class="formula-sheet" aria-label="Пример: 80 паллет за 30 дней — 2 400 паллето-дней">
+      <div><span>Средний остаток</span><strong>80 паллет</strong></div><div><span>Период</span><strong>30 дней</strong></div><div><span>Объём хранения</span><strong>2 400 паллето-дней</strong></div>
+    </div></div>
   </section>
 </Site>

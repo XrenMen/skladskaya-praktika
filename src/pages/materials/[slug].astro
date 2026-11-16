@@ -22,13 +22,13 @@ const jsonLd={'@context':'https://schema.org','@type':'Article',headline:article
 <Site title={article.title} description={article.description} section="materials" type="article" image={image.large} jsonLd={jsonLd}>
   <article data-pagefind-body>
     <header class="article-head">
-      <p class="crumb" data-pagefind-ignore><a href={path('materials/')}>Блог</a><span>/</span><a href={categoryPath(category.id)}>{category.name}</a></p>
-      <p class="eyebrow"><span class="dot"></span> {category.name}</p>
+      <p class="crumb" data-pagefind-ignore><a href={path('materials/')}>Статьи</a><span>/</span><a href={categoryPath(category.id)}>{category.name}</a></p>
+      <p class="eyebrow">{category.name}</p>
       <h1 data-pagefind-meta="title">{article.title}</h1>
       <p class="lede">{article.description}</p>
       <p class="article-meta" data-pagefind-ignore><a href={path('editorial/')}>Редакция «Складская практика»</a><time datetime={releaseDate}>{new Intl.DateTimeFormat('ru-RU',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(releaseDate+'T00:00:00Z'))}</time><span>{article.minutes} мин чтения</span></p>
     </header>
-    <figure class="article-figure"><img class="article-cover" src={image.large} srcset={image.srcset} sizes="(max-width: 1240px) 94vw, 1190px" width="1280" height="853" fetchpriority="high" style={{objectPosition:image.position}} alt={image.alt} /><figcaption>Иллюстрация к материалу</figcaption></figure>
+    <figure class="article-figure"><img class="article-cover" src={image.large} srcset={image.srcset} sizes="(max-width: 1240px) 94vw, 1190px" width="1280" height="853" fetchpriority="high" style={{objectPosition:image.position}} alt={image.alt} /><figcaption>Иллюстрация</figcaption></figure>
     <div class="article-frame">
       {sections.length>0&&<aside class="toc" data-pagefind-ignore><nav aria-label="В этой статье"><div class="toc-title">В этой статье</div><ol>{sections.map(s=><li><a href={'#'+s.id}>{s.label}</a></li>)}</ol></nav></aside>}
       <div class="reading" set:html={body} />
