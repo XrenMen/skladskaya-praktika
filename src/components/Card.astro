@@ -6,16 +6,21 @@ import '../styles/factory-collections.css';
 interface Props {
   item: Article;
   emphasis?: 'lead' | 'side';
+  compact?: boolean;
   hideTopic?: boolean;
   heading?: 'h2' | 'h3';
 }
 
-const { item, emphasis, hideTopic = false, heading: Heading = 'h3' } = Astro.props;
+const { item, emphasis, compact = false, hideTopic = false, heading: Heading = 'h3' } = Astro.props;
 const topic = categories.find(category => category.id === item.category);
 const image = photoForArticle(item.slug);
-const sizes = emphasis === 'lead' ? '(max-width: 680px) 94vw, (max-width: 1300px) 54vw, 740px' : '(max-width: 680px) 94vw, (max-width: 1300px) 46vw, 620px';
+const sizes = compact
+  ? '(max-width: 680px) 100px, 200px'
+  : emphasis === 'lead'
+    ? '(max-width: 680px) 92vw, (max-width: 1300px) 54vw, 740px'
+    : '(max-width: 680px) 92vw, (max-width: 1300px) 46vw, 620px';
 ---
-<a class:list={['collection-card', emphasis && `collection-card--${emphasis}`]} href={articlePath(item.slug)}>
+<a class:list={['collection-card', { 'collection-card--lead': emphasis === 'lead', 'collection-card--side': emphasis === 'side', 'collection-card--compact': compact }]} href={articlePath(item.slug)}>
   <div class="collection-card-photo">
     <img
       src={image.small}
@@ -31,7 +36,7 @@ const sizes = emphasis === 'lead' ? '(max-width: 680px) 94vw, (max-width: 1300px
     />
   </div>
   <div class="collection-card-copy">
-    <p class="collection-meta">{!hideTopic && topic && <span>{topic.name}</span>}<span>{item.minutes} мин чтения</span></p>
+    <p class="collection-meta">{!hideTopic && topic && <span>{topic.name}</span>}<span>{item.minutes} мин<span class="collection-reading-label"> чтения</span></span></p>
     <Heading class="collection-card-title">{item.title}</Heading>
     <p class="collection-card-summary">{item.description}</p>
     <span class="collection-arrow" aria-hidden="true">↗</span>

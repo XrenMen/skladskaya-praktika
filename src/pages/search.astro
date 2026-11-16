@@ -1,13 +1,36 @@
 ---
 import Site from '../layouts/Site.astro';
-import {path} from '../lib/site';
+import { path } from '../lib/site';
+import '../styles/tools.css';
+
+const examples = [
+  { label: 'Стоимость хранения', query: 'паллето-дни' },
+  { label: 'Первая поставка', query: 'приёмка' },
+  { label: 'Возвраты товара', query: 'возвраты' },
+  { label: 'Переезд склада', query: 'переезд' },
+];
 ---
 <Site title="Поиск по статьям" description="Найдите нужную памятку по слову или теме: хранение, поставка, возвраты и другие складские операции." section="search">
-  <header class="inner-head"><p class="eyebrow">Справочник</p><h1>Поиск по статьям</h1><p class="lede">Например: «паллето-дни», «возвраты» или «переезд».</p></header>
-  <form id="article-search" class="search-form" action={path('search/')} role="search"><label class="search-label" for="query">Запрос<input class="search-box" type="search" id="query" name="q" autocomplete="off" maxlength="120" placeholder="Что хотите найти?"></label><button class="button" type="submit">Найти</button></form>
-  <div class="search-hints">{['Хранение','Возвраты','Переезд','Отгрузка'].map(q=><a class="chip" href={path('search/?q='+encodeURIComponent(q))}>{q}</a>)}</div>
-  <p class="search-status muted" id="search-status" role="status"></p>
-  <ul class="search-results" id="search-results"></ul>
-  <noscript><p>Поиск требует JavaScript. Откройте <a href={path('materials/')}>перечень всех материалов</a>.</p></noscript>
+  <header class="tool-head"><h1>Поиск по статьям</h1></header>
+  <div class="search-workspace">
+    <div class="search-main">
+      <form id="article-search" class="search-form" action={path('search/')} role="search">
+        <label class="search-label" for="query">Тема или ключевое слово
+          <input class="search-box" type="search" id="query" name="q" autocomplete="off" maxlength="120" placeholder="Например, FBO" />
+        </label>
+        <button class="button" type="submit">Найти</button>
+      </form>
+      <noscript><p>Откройте <a href={path('materials/')}>список всех статей</a> для просмотра материалов.</p></noscript>
+      <p class="search-status muted" id="search-status" role="status"></p>
+      <ul class="search-results" id="search-results"></ul>
+      <a class="search-fallback" id="search-fallback" href={path('materials/')} hidden>Посмотреть все статьи <span aria-hidden="true">→</span></a>
+    </div>
+    <aside class="search-examples" aria-labelledby="search-examples-title">
+      <h2 id="search-examples-title">Быстрые запросы</h2>
+      <ul>
+        {examples.map(example => <li><a href={path('search/?q=' + encodeURIComponent(example.query))}>{example.label} <span aria-hidden="true">↗</span></a></li>)}
+      </ul>
+    </aside>
+  </div>
   <script is:inline type="module" src={path('assets/search.js')}></script>
 </Site>

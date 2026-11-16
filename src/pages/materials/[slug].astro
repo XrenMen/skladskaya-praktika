@@ -1,37 +1,124 @@
 ---
 import Site from '../../layouts/Site.astro';
-import Card from '../../components/Card.astro';
 import articles from '../../lib/content.mjs';
-import { categories, categoryPath, path, releaseDate, siteName } from '../../lib/site';
+import { articlePath, categories, categoryPath, path, releaseDate, siteName } from '../../lib/site';
 import { photoForArticle } from '../../lib/media';
-export function getStaticPaths(){return articles.map(article=>({params:{slug:article.slug},props:{article}}));}
-const {article}=Astro.props;
-const category=categories.find(c=>c.id===article.category)!;
-const related=[...articles.filter(a=>a.category===article.category && a.slug!==article.slug),...articles.filter(a=>a.category!==article.category)].slice(0,2);
-const image=photoForArticle(article.slug);
-const sections:Array<{id:string;label:string}>=[];
-const body=article.body.replace(/href="#storage-calculator"/g,'href="'+path('calculator/')+'#storage-calculator"')
-  .replace(/<h2>(.*?)<\/h2>/gs,(_match,inner:string)=>{
-    const id='razdel-'+(sections.length+1), label=inner.replace(/<[^>]+>/g,'').replace(/&amp;/g,'&');
-    sections.push({id,label});
-    return '<h2 id="'+id+'">'+inner+'</h2>';
+import '../../styles/reading.css';
+
+export function getStaticPaths() {
+  return articles.map(article => ({ params: { slug: article.slug }, props: { article } }));
+}
+
+const { article } = Astro.props;
+const category = categories.find(item => item.id === article.category)!;
+const related = [
+  ...articles.filter(item => item.category === article.category && item.slug !== article.slug),
+  ...articles.filter(item => item.category !== article.category),
+].slice(0, 2);
+const image = photoForArticle(article.slug);
+const dateLabel = new Intl.DateTimeFormat('ru-RU', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+  timeZone: 'UTC',
+}).format(new Date(releaseDate + 'T00:00:00Z'));
+
+const sections: Array<{ id: string; label: string }> = [];
+const body = article.body
+  .replace(/href="#storage-calculator"/g, 'href="' + path('calculator/') + '#storage-calculator"')
+  .replace(/<h2>(.*?)<\/h2>/gs, (_match, inner: string) => {
+    const id = 'razdel-' + (sections.length + 1);
+    const label = inner.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&');
+    sections.push({ id, label });
+    return '<h2 id="' + id + '" tabindex="-1">' + inner + '</h2>';
   })
-  .replace(/<table(?:\s[^>]*)?>/g,m=>'<div class="table-scroll" role="region" aria-label="Таблица примера" tabindex="0">'+m).replace(/<\/table>/g,'</table></div>');
-const jsonLd={'@context':'https://schema.org','@type':'Article',headline:article.title,description:article.description,inLanguage:'ru',datePublished:releaseDate,dateModified:releaseDate,image:new URL(image.large,Astro.site).href,author:{'@type':'Organization',name:'Редакция «Складская практика»',url:new URL(path('editorial/'),Astro.site).href},publisher:{'@type':'Organization',name:siteName,url:new URL(path(),Astro.site).href},mainEntityOfPage:new URL(Astro.url.pathname,Astro.site).href};
+  .replace(/<table(?:\s[^>]*)?>/g, tag => '<div class="table-scroll" role="region" aria-label="Таблица примера" tabindex="0">' + tag)
+  .replace(/<\/table>/g, '</table></div>');
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: article.title,
+  description: article.description,
+  inLanguage: 'ru',
+  datePublished: releaseDate,
+  dateModified: releaseDate,
+  image: new URL(image.large, Astro.site).href,
+  author: {
+    '@type': 'Organization',
+    name: 'Редакция «Складская практика»',
+    url: new URL(path('editorial/'), Astro.site).href,
+  },
+  publisher: { '@type': 'Organization', name: siteName, url: new URL(path(), Astro.site).href },
+  mainEntityOfPage: new URL(Astro.url.pathname, Astro.site).href,
+};
 ---
 <Site title={article.title} description={article.description} section="materials" type="article" image={image.large} jsonLd={jsonLd}>
-  <article data-pagefind-body>
-    <header class="article-head">
-      <p class="crumb" data-pagefind-ignore><a href={path('materials/')}>Статьи</a><span>/</span><a href={categoryPath(category.id)}>{category.name}</a></p>
-      <h1 data-pagefind-meta="title">{article.title}</h1>
-      <p class="lede">{article.description}</p>
-      <p class="article-meta" data-pagefind-ignore><a href={path('editorial/')}>Редакция «Складская практика»</a><time datetime={releaseDate}>{new Intl.DateTimeFormat('ru-RU',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(releaseDate+'T00:00:00Z'))}</time><span>{article.minutes} мин чтения</span></p>
+  <article class="journal-article" data-pagefind-body>
+    <nav class="article-trail" aria-label="Путь к статье" data-pagefind-ignore>
+      <a href={path('materials/')}>Статьи</a>
+      <span aria-hidden="true">/</span>
+      <a href={categoryPath(category.id)}>{category.name}</a>
+    </nav>
+
+    <header class="article-mast">
+      <div class="article-intro">
+        <h1 data-pagefind-meta="title">{article.title}</h1>
+        <p class="lede">{article.description}</p>
+        <p class="article-byline" data-pagefind-ignore>
+          <a href={path('editorial/')}>Редакция «Складская практика»</a>
+          <time datetime={releaseDate}>{dateLabel}</time>
+          <span>{article.minutes} мин чтения</span>
+        </p>
+      </div>
+      <figure class="article-media">
+        <img
+          src={image.large}
+          srcset={image.srcset}
+          sizes="(max-width: 800px) 90vw, (max-width: 1400px) 36vw, 500px"
+          width="1280"
+          height="853"
+          fetchpriority="high"
+          style={{ objectPosition: image.position }}
+          alt={image.alt}
+        />
+        <figcaption data-pagefind-ignore>Иллюстрация</figcaption>
+      </figure>
     </header>
-    <figure class="article-figure"><img class="article-cover" src={image.large} srcset={image.srcset} sizes="(max-width: 1240px) 94vw, 1190px" width="1280" height="853" fetchpriority="high" style={{objectPosition:image.position}} alt={image.alt} /><figcaption>Иллюстрация</figcaption></figure>
-    <div class="article-frame">
-      {sections.length>0&&<aside class="toc" data-pagefind-ignore><nav aria-label="В этой статье"><div class="toc-title">В этой статье</div><ol>{sections.map(s=><li><a href={'#'+s.id}>{s.label}</a></li>)}</ol></nav></aside>}
-      <div class="reading" set:html={body} />
+
+    <div class:list={["article-content", { "article-content--with-guide": sections.length > 0 }]}>
+      {sections.length > 0 && (
+        <aside class="article-guide" data-pagefind-ignore>
+          <details open>
+            <summary id="article-sections">Оглавление</summary>
+            <nav aria-label="Разделы статьи">
+              <ol>
+                {sections.map(section => <li><a href={'#' + section.id}>{section.label}</a></li>)}
+              </ol>
+            </nav>
+          </details>
+        </aside>
+      )}
+      <div class="article-copy">
+        <div class="reading" set:html={body} />
+        {sections.length > 0 && (
+          <p class="article-up" data-pagefind-ignore>
+            <a href="#article-sections">К оглавлению <span aria-hidden="true">↑</span></a>
+          </p>
+        )}
+      </div>
     </div>
   </article>
-  <section class="section" aria-labelledby="related"><h2 id="related">Продолжить по теме</h2><div class="cards related-cards">{related.map(item=><Card item={item}/>)}</div></section>
+
+  <section class="article-next" aria-labelledby="related">
+    <div class="article-next-heading">
+      <h2 id="related">Продолжить по теме</h2>
+      <a href={categoryPath(category.id)}>Все статьи рубрики <span aria-hidden="true">↗</span></a>
+    </div>
+    <ul class="article-followups">
+      {related.map(item => (
+        <li><a href={articlePath(item.slug)}><span>{item.title}</span><span aria-hidden="true">→</span></a></li>
+      ))}
+    </ul>
+  </section>
 </Site>

@@ -1,18 +1,49 @@
 ---
 import Site from '../layouts/Site.astro';
 import { articlePath, path } from '../lib/site';
+import '../styles/tools.css';
 ---
 <Site title="Калькулятор паллето-дней" description="Рассчитайте объём хранения в паллето-днях и его стоимость по собственному тарифу." section="calculator">
-  <header class="inner-head"><p class="eyebrow">Инструмент</p><h1>Калькулятор паллето-дней</h1><p class="lede">При равномерном запасе достаточно среднего остатка и числа дней. Для переменного запаса разбейте период на интервалы и сложите результаты.</p></header>
-  <form class="calc" id="storage-calculator">
-    <div><div class="inputs">
-      <label>Средний остаток, паллет<input name="pallets" type="number" min="0" max="1000000" step="0.1" value="80" required></label>
-      <label>Период, дней<input name="days" type="number" min="1" max="366" step="1" value="30" required></label>
-      <label>Тариф, ₽ за паллето-день<input name="rate" type="number" min="0" max="1000000" step="0.01" placeholder="Необязательно"></label>
-    </div><p class="hint">Расчёт выполняется в браузере. Приёмка, отгрузка, дополнительные операции и налоги не учтены.</p>
-    <noscript><p class="hint">Формула: средний остаток × число дней. Стоимость: полученный объём × ваш тариф.</p></noscript></div>
-    <div class="result" aria-live="polite"><output id="storage-volume">2 400 паллето-дней</output><p id="storage-cost">Введите тариф для оценки суммы</p></div>
+  <header class="tool-head">
+    <h1>Калькулятор паллето-дней</h1>
+    <p class="lede">Введите средний остаток и срок хранения. Если знаете тариф, калькулятор оценит стоимость.</p>
+  </header>
+  <form class="storage-tool" id="storage-calculator">
+    <div class="storage-fields">
+      <div class="storage-field">
+        <label for="storage-pallets">Средний остаток <span>паллеты</span></label>
+        <input id="storage-pallets" name="pallets" type="number" inputmode="decimal" min="0" max="1000000" step="0.1" value="80" required aria-describedby="storage-pallets-error" />
+        <p class="field-error" id="storage-pallets-error" hidden>Введите число от 0 до 1 000 000 с точностью до 0,1.</p>
+      </div>
+      <div class="storage-field">
+        <label for="storage-days">Срок хранения <span>дни</span></label>
+        <input id="storage-days" name="days" type="number" inputmode="numeric" min="1" max="366" step="1" value="30" required aria-describedby="storage-days-error" />
+        <p class="field-error" id="storage-days-error" hidden>Введите целое число от 1 до 366.</p>
+      </div>
+      <div class="storage-field">
+        <label for="storage-rate">Тариф <span>₽ за паллето-день</span></label>
+        <input id="storage-rate" name="rate" type="number" inputmode="decimal" min="0" max="1000000" step="0.01" placeholder="Необязательно" aria-describedby="storage-rate-error" />
+        <p class="field-error" id="storage-rate-error" hidden>Введите сумму от 0 до 1 000 000 ₽ с точностью до копейки.</p>
+      </div>
+    </div>
+    <div class="storage-receipt" aria-live="polite" aria-atomic="true">
+      <h2>Объём хранения</h2>
+      <p class="storage-total"><strong id="storage-volume">2 400</strong> <span>паллето-дней</span></p>
+      <p class="storage-equation" id="storage-equation">80 паллет × 30 дней</p>
+      <div class="storage-price">
+        <h3>Стоимость хранения</h3>
+        <p id="storage-cost">Введите тариф для расчёта</p>
+      </div>
+    </div>
   </form>
-  <section class="section"><div class="panel"><h2>Что ещё входит в смету?</h2><p>Кроме хранения, проверьте единицы тарификации приёмки, отбора, возвратов и расходных материалов.</p><a href={articlePath('storage-cost')}>Как подготовить вводные для склада ↗</a></div></section>
+  <p class="storage-scope">Оценка включает только хранение. Приёмка, отгрузка, обработка и налоги рассчитываются отдельно.</p>
+  <noscript><p>Для расчёта вручную умножьте средний остаток на число дней. Стоимость получится, если умножить объём на тариф.</p></noscript>
+  <section class="storage-help" aria-labelledby="storage-help-title">
+    <h2 id="storage-help-title">Если остатки меняются</h2>
+    <div>
+      <p>Разбейте срок на интервалы с близкими остатками, посчитайте объём для каждого и сложите результаты.</p>
+      <a href={articlePath('storage-cost')}>Как проверить полную смету склада <span aria-hidden="true">↗</span></a>
+    </div>
+  </section>
   <script is:inline type="module" src={path('assets/calculator.js')}></script>
 </Site>

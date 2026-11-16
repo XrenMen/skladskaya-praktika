@@ -1,27 +1,32 @@
 ---
 import Site from '../../layouts/Site.astro';
 import Card from '../../components/Card.astro';
+import CollectionNav from '../../components/CollectionNav.astro';
 import articles from '../../lib/content.mjs';
-import { path, categories, categoryPath } from '../../lib/site';
-import { photo } from '../../lib/media';
+import { path } from '../../lib/site';
+import { loadingBay } from '../../lib/media';
 
-const image = photo('cover');
 const lead = articles.find(article => article.slug === 'warehouse-move');
 const second = articles.find(article => article.slug === 'storage-cost');
 const archive = articles.filter(article => article !== lead && article !== second);
 ---
-<Site title="Все статьи журнала" description="Руководства по выбору склада, расчёту хранения, запуску фулфилмента и приёмке товара." section="materials" image={image.large}>
+<Site title="Все статьи журнала" description="Руководства по выбору склада, расчёту хранения, запуску фулфилмента и приёмке товара." section="materials" image={loadingBay.large}>
   <header class="collection-head">
-    <h1>Статьи</h1>
-    <p>Практические руководства по хранению, обработке заказов и работе склада. <a href={path('search/')}>Поиск по статьям</a></p>
+    <div>
+      <h1>Статьи</h1>
+      <p>Выбор склада, хранение, обработка заказов и отгрузка.</p>
+    </div>
+    <a class="collection-search" href={path('search/')}>Поиск по статьям <span aria-hidden="true">↗</span></a>
   </header>
-  <nav class="collection-filter" aria-label="Рубрики журнала">
-    <a aria-current="page" href={path('materials/')}>Все статьи</a>
-    {categories.map(category => <a href={categoryPath(category.id)}>{category.name}</a>)}
-  </nav>
-  <div class="collection-grid">
+  <CollectionNav />
+  <div class="collection-featured">
     {lead && <Card item={lead} emphasis="lead" heading="h2" />}
     {second && <Card item={second} emphasis="side" heading="h2" />}
-    {archive.map(item => <Card item={item} heading="h2" />)}
   </div>
+  <section class="collection-list-section" aria-labelledby="archive-title">
+    <h2 id="archive-title">Ещё в журнале</h2>
+    <ul class="collection-list">
+      {archive.map(item => <li><Card item={item} compact /></li>)}
+    </ul>
+  </section>
 </Site>

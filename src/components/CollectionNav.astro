@@ -1,0 +1,26 @@
+---
+import articles from '../lib/content.mjs';
+import { categories, categoryPath, path } from '../lib/site';
+
+interface Props {
+  active?: string;
+}
+
+const { active } = Astro.props;
+const links = [
+  { id: undefined, name: 'Все статьи', href: path('materials/'), count: articles.length },
+  ...categories.map(category => ({
+    id: category.id,
+    name: category.name,
+    href: categoryPath(category.id),
+    count: articles.filter(article => article.category === category.id).length,
+  })),
+];
+---
+<nav class="collection-filter" aria-label="Статьи по рубрикам">
+  {links.map(({ id, name, href, count }) => (
+    <a aria-current={id === active ? 'page' : undefined} href={href}>
+      <span>{name}</span><span class="collection-count">{count}</span>
+    </a>
+  ))}
+</nav>

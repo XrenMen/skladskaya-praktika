@@ -1,8 +1,9 @@
 ---
 import Site from '../../layouts/Site.astro';
 import Card from '../../components/Card.astro';
+import CollectionNav from '../../components/CollectionNav.astro';
 import articles from '../../lib/content.mjs';
-import { categories, categoryPath, path } from '../../lib/site';
+import { categories, path } from '../../lib/site';
 import { photoForCategory } from '../../lib/media';
 
 export function getStaticPaths() {
@@ -25,18 +26,15 @@ const image = photoForCategory(category.id);
       srcset={image.srcset}
       width="640"
       height="426"
-      sizes="(max-width: 680px) 94vw, (max-width: 1300px) 52vw, 670px"
+      sizes="(max-width: 680px) 90vw, (max-width: 1300px) 48vw, 620px"
       fetchpriority="high"
       decoding="async"
       style={{ objectPosition: image.position }}
       alt={image.alt}
     />
   </header>
-  <nav class="collection-filter" aria-label="Рубрики журнала">
-    <a href={path('materials/')}>Все статьи</a>
-    {categories.map(item => <a aria-current={item.id === category.id ? 'page' : undefined} href={categoryPath(item.id)}>{item.name}</a>)}
-  </nav>
-  <div class="collection-grid collection-grid--topic">
-    {selected.map(item => <Card item={item} hideTopic heading="h2" />)}
-  </div>
+  <CollectionNav active={category.id} />
+  <ul class="collection-list">
+    {selected.map(item => <li><Card item={item} compact hideTopic heading="h2" /></li>)}
+  </ul>
 </Site>
