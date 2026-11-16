@@ -1,0 +1,272 @@
+---
+import Site from '../../layouts/Site.astro';
+import { articlePath, path } from '../../lib/site';
+import '../../styles/practice-tools.css';
+
+const sections = [
+  {
+    name: 'Въезд и разгрузка',
+    checks: [
+      { id: 'vehicle-route', text: 'Машина с вашим типом кузова может проехать от въезда к доку.' },
+      { id: 'dock-slot', text: 'Есть контакт для подтверждения слота и понятное место ожидания.' },
+      { id: 'late-delivery', text: 'Оператор объяснил порядок действий при опоздании машины.' }
+    ]
+  },
+  {
+    name: 'Приёмка',
+    checks: [
+      { id: 'counting-point', text: 'Оператор показал, где пересчитывают товар и сверяют маркировку.' },
+      { id: 'hold-area', text: 'Повреждённый и спорный товар размещают отдельно от доступного к выдаче.' },
+      { id: 'receipt-report', text: 'В отчёте о приёмке видны количество, расхождения и статус спорного товара.' }
+    ]
+  },
+  {
+    name: 'Хранение',
+    checks: [
+      { id: 'location-fit', text: 'Оператор показал адреса мест для ваших паллет и ограничения по габаритам и нагрузке.' },
+      { id: 'available-capacity', text: 'Есть расчёт вместимости с учётом закрытых и зарезервированных ячеек.' },
+      { id: 'storage-tracking', text: 'Согласовано, какие данные отслеживают по вашему товару. Оператор показал пример в системе.' }
+    ]
+  },
+  {
+    name: 'Комплектование и выдача',
+    checks: [
+      { id: 'picking-confirmation', text: 'Оператор показал, как подтверждает отбор нужной партии в складской системе.' },
+      { id: 'dispatch-area', text: 'Понятно, где собирают готовую отгрузку и кто фиксирует передачу товара.' },
+      { id: 'test-receipt-and-dispatch', text: 'Согласованы критерии пробной поставки и выдачи: адреса, количество и статусы в отчётах.' }
+    ]
+  }
+];
+const total = sections.reduce((count, section) => count + section.checks.length, 0);
+---
+<Site
+  title="Чек-лист осмотра склада"
+  description="Двенадцать пунктов для осмотра склада от въезда до выдачи товара. Отмечайте выполненное на площадке или распечатайте список."
+  section="tools"
+>
+  <header class="practice-tool-head">
+    <a class="practice-tool-back" href={path('tools/')}>← Все инструменты</a>
+    <h1>Чек-лист осмотра склада</h1>
+    <p class="lede">Пройдите путь одной паллеты от въезда до отгрузки. Отмечайте пункт, когда оператор показал зону, документ или запись в системе.</p>
+  </header>
+
+  <section class="warehouse-checklist" id="warehouse-checklist" aria-label="Пункты осмотра склада">
+    <div class="checklist-toolbar" data-checklist-controls hidden>
+      <div class="checklist-status">
+        <p data-checklist-count role="status">Отмечено 0 из {total}</p>
+        <progress data-checklist-progress max={total} value="0" aria-label="Ход осмотра"></progress>
+        <p class="checklist-storage-note" data-checklist-storage hidden></p>
+      </div>
+      <div class="checklist-actions">
+        <button class="button" type="button" data-checklist-print>Распечатать</button>
+        <button class="checklist-reset" type="button" data-checklist-reset disabled>Сбросить отметки</button>
+      </div>
+    </div>
+    <noscript>
+      <p class="checklist-storage-note">Отмечайте пункты прямо на странице. Для печати откройте меню браузера.</p>
+    </noscript>
+    <div class="checklist-stops">
+      {sections.map(({ name, checks }) => (
+        <fieldset class="checklist-stop">
+          <legend>{name}</legend>
+          <div class="checklist-items">
+            {checks.map(({ id, text }) => (
+              <label class="checklist-item">
+                <input type="checkbox" value={id} data-checklist-item />
+                <span>{text}</span>
+              </label>
+            ))}
+          </div>
+          <p class="checklist-print-note">Замечания</p>
+        </fieldset>
+      ))}
+    </div>
+  </section>
+
+  <section class="practice-tool-links checklist-reading" aria-labelledby="checklist-reading-title">
+    <h2 id="checklist-reading-title">Что записать после осмотра</h2>
+    <div>
+      <p>Для каждого открытого вопроса зафиксируйте участок или номер дока, наблюдение, нужное подтверждение и срок ответа.</p>
+      <a href={articlePath('warehouse-site-audit')}>Подробнее о маршруте осмотра <span aria-hidden="true">↗</span></a>
+    </div>
+  </section>
+
+  <script is:inline type="module" src={path('assets/warehouse-checklist.js')}></script>
+</Site>
+
+<style>
+  .warehouse-checklist {
+    margin-top: 2rem;
+  }
+
+  .checklist-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 1.5rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--line);
+    background: var(--wash);
+  }
+
+  .checklist-toolbar[hidden] {
+    display: none;
+  }
+
+  .checklist-status {
+    flex: 1 1 14rem;
+    min-width: 0;
+    max-width: 25rem;
+    display: grid;
+    gap: .4rem;
+  }
+
+  .checklist-status > p {
+    margin: 0;
+  }
+
+  .checklist-status > p:first-child {
+    font-weight: 650;
+  }
+
+  .checklist-status progress {
+    display: block;
+    width: 100%;
+    height: .55rem;
+    accent-color: var(--link);
+  }
+
+  .checklist-storage-note {
+    color: var(--muted);
+    font-size: .875rem;
+  }
+
+  .checklist-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .5rem 1rem;
+  }
+
+  .checklist-actions button {
+    min-height: 2.75rem;
+  }
+
+  .checklist-reset {
+    padding: .25rem .1rem;
+    border: 0;
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    font: inherit;
+    text-decoration: underline;
+    text-underline-offset: .2em;
+  }
+
+  .checklist-reset:disabled {
+    color: var(--muted);
+    cursor: default;
+    text-decoration: none;
+  }
+
+  .checklist-stops {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .checklist-stop {
+    min-width: 0;
+    margin: 0;
+    padding: 1rem 1.15rem;
+    border: 1px solid var(--line);
+  }
+
+  .checklist-stop legend {
+    padding: 0 .3rem;
+    font-size: 1.2rem;
+    font-weight: 650;
+  }
+
+  .checklist-items {
+    display: grid;
+  }
+
+  .checklist-item {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    gap: .75rem;
+    min-height: 2.75rem;
+    padding: .65rem 0;
+    cursor: pointer;
+  }
+
+  .checklist-item + .checklist-item {
+    border-top: 1px solid var(--line);
+  }
+
+  .checklist-item input {
+    width: 1.1rem;
+    height: 1.1rem;
+    margin: .15rem 0 0;
+    accent-color: var(--link);
+  }
+
+  .checklist-item :is(input:focus-visible, span:focus-visible),
+  .checklist-reset:focus-visible {
+    outline: 2px solid var(--link);
+    outline-offset: 3px;
+  }
+
+  .checklist-print-note {
+    display: none;
+  }
+
+  @media (max-width: 700px) {
+    .checklist-stops {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .checklist-toolbar,
+    .checklist-stop {
+      padding-inline: .85rem;
+    }
+  }
+
+  @media print {
+    :global(.site-top), :global(.site-foot), .practice-tool-back, .checklist-toolbar, .checklist-reading {
+      display: none !important;
+    }
+
+    .warehouse-checklist {
+      margin-top: 1rem;
+    }
+
+    .checklist-stops {
+      gap: .65rem 1rem;
+    }
+
+    .checklist-stop {
+      break-inside: avoid;
+      padding: .5rem .75rem;
+    }
+
+    .checklist-item {
+      min-height: 0;
+      padding: .45rem 0;
+      line-height: 1.35;
+    }
+
+    .checklist-print-note {
+      display: block;
+      margin: .5rem 0 .25rem;
+      padding-bottom: .4rem;
+      border-bottom: 1px solid currentColor;
+      font-size: .85rem;
+    }
+  }
+</style>

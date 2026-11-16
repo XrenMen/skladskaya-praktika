@@ -1,0 +1,237 @@
+---
+import Site from '../../layouts/Site.astro';
+import { articlePath, path } from '../../lib/site';
+import '../../styles/practice-tools.css';
+
+const example = [
+  { direction: 'in', amount: 35, balance: 121, peak: true },
+  { direction: 'out', amount: 28, balance: 93, peak: false },
+  { direction: 'in', amount: 16, balance: 109, peak: false }
+];
+---
+<Site title="Расчёт запаса паллетомест" description="Посчитайте пиковый остаток по очереди приёмок и отгрузок. Калькулятор покажет, когда склад заполнится и сколько мест понадобится." section="tools">
+  <header class="practice-tool-head">
+    <a class="practice-tool-back" href={path('tools/')}>← Все инструменты</a>
+    <h1>Расчёт запаса паллетомест</h1>
+    <p class="lede">Укажите начальный остаток и число пригодных мест в одной зоне. Расставьте приёмки и отгрузки в порядке выполнения.</p>
+    <a class="peak-result-jump" href="#peak-result-heading">К результату <span aria-hidden="true">↓</span></a>
+  </header>
+
+  <form class="peak-form" id="peak-capacity" novalidate>
+    <div class="peak-workspace">
+      <fieldset class="peak-inputs" data-peak-inputs disabled>
+        <legend class="peak-sr">Данные для расчёта</legend>
+        <div class="peak-base">
+          <label class="peak-field">
+            <span>Начальный остаток</span>
+            <input data-peak-initial type="number" inputmode="numeric" min="0" max="1000000" step="1" required value="86" aria-describedby="peak-initial-error" />
+            <small class="peak-error" id="peak-initial-error" data-peak-initial-error hidden></small>
+          </label>
+          <label class="peak-field">
+            <span>Пригодные места</span>
+            <input data-peak-capacity type="number" inputmode="numeric" min="0" max="1000000" step="1" required value="130" aria-describedby="peak-capacity-error" />
+            <small class="peak-error" id="peak-capacity-error" data-peak-capacity-error hidden></small>
+          </label>
+        </div>
+
+        <div class="peak-movements">
+          <h2>Очередь операций</h2>
+          <p class="muted">Если отгрузка задержится, переместите её ниже и проверьте запас заново.</p>
+          <ol class="peak-rows" data-peak-rows>
+            {example.map((row, index) => (
+              <li class="peak-row" data-peak-row>
+                <label class="peak-field">
+                  <span>Операция <span data-peak-index>{index + 1}</span></span>
+                  <select data-peak-direction>
+                    <option value="in" selected={row.direction === 'in'}>Приёмка</option>
+                    <option value="out" selected={row.direction === 'out'}>Отгрузка</option>
+                  </select>
+                </label>
+                <label class="peak-field">
+                  <span>Паллеты <span class="peak-sr" data-peak-amount-index>{index + 1}</span></span>
+                  <input data-peak-amount type="number" inputmode="numeric" min="1" max="1000000" step="1" required value={row.amount} aria-describedby={'peak-movement-error-' + index} />
+                  <small class="peak-error" id={'peak-movement-error-' + index} data-peak-error hidden></small>
+                </label>
+                <p class="peak-row-total">
+                  <span>Остаток</span>
+                  <strong data-peak-row-balance>{row.balance}</strong>
+                  <span class="peak-indicator" data-peak-indicator hidden={!row.peak}>Пик</span>
+                </p>
+                <div class="peak-row-actions" data-peak-controls hidden>
+                  <button type="button" data-peak-action="up" aria-label="Переместить операцию выше" title="Выше">↑</button>
+                  <button type="button" data-peak-action="down" aria-label="Переместить операцию ниже" title="Ниже">↓</button>
+                  <button type="button" data-peak-action="remove" aria-label="Удалить операцию" title="Удалить">×</button>
+                </div>
+              </li>
+            ))}
+          </ol>
+          <p class="peak-empty muted" data-peak-empty hidden>Добавьте приёмку или отгрузку для расчёта по графику.</p>
+          <div class="peak-controls" data-peak-controls hidden>
+            <button type="button" class="button" data-peak-action="add">Добавить операцию</button>
+            <button type="button" class="button outline" data-peak-action="example">Вернуть пример</button>
+          </div>
+          <p class="peak-limit muted" data-peak-limit hidden>В расчёт можно добавить до 50 операций.</p>
+        </div>
+      </fieldset>
+
+      <section class="peak-result" aria-labelledby="peak-result-heading">
+        <h2 id="peak-result-heading" tabindex="-1">Пиковый остаток</h2>
+        <div role="status" aria-atomic="true">
+          <p class="peak-total"><strong data-peak-total>121</strong> <span data-peak-unit>паллета</span></p>
+          <p class="peak-when" data-peak-when>После операции №1 · приёмка 35 паллет</p>
+          <div class="peak-balance">
+            <h3 data-peak-balance-title>Запас мест в пик</h3>
+            <p data-peak-balance-result>9 мест</p>
+          </div>
+          <p class="peak-end" data-peak-end>Остаток после всех операций · 109 паллет</p>
+          <p class="peak-result-error" data-peak-status-error hidden></p>
+        </div>
+      </section>
+    </div>
+  </form>
+
+  <noscript>
+    <p class="peak-note">Для интерактивного расчёта включите JavaScript. Вручную прибавляйте каждую приёмку и вычитайте каждую отгрузку. Сравните наибольший остаток, включая начальный, с числом пригодных мест.</p>
+  </noscript>
+
+  <section class="practice-tool-links">
+    <h2>Как проверить расчёт</h2>
+    <p>В примере после приёмки 35 паллет остаток вырастает с 86 до 121. Если отгрузка 28 паллет уйдёт после следующей приёмки, пик составит 137. При 130 пригодных местах тогда потребуется ещё 7.</p>
+    <p>Считайте зоны по отдельности и исключайте недоступные места. <a href={articlePath('peak-pallet-capacity')}>Как посчитать вместимость и согласовать резерв</a></p>
+  </section>
+
+  <script is:inline type="module" src={path('assets/peak-capacity.js')}></script>
+</Site>
+
+<style>
+  .peak-result-jump { display: none; }
+  #peak-result-heading { scroll-margin-top: 1rem; }
+  .peak-workspace {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(240px, .43fr);
+    align-items: start;
+    border-top: 1px solid var(--line);
+  }
+  .peak-inputs {
+    min-inline-size: 0;
+    margin: 0;
+    padding: clamp(16px, 3vw, 32px);
+    border: 0;
+    background: var(--wash);
+  }
+  .peak-base {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .peak-field {
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    min-width: 0;
+    font-size: .875rem;
+    font-weight: 600;
+  }
+  .peak-field input, .peak-field select {
+    min-width: 0;
+    width: 100%;
+    min-height: 44px;
+    padding: 8px 10px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    background: var(--surface);
+    color: var(--ink);
+    font: inherit;
+    font-weight: 400;
+  }
+  .peak-field :is(input, select):focus-visible {
+    outline: 2px solid var(--link);
+    outline-offset: 2px;
+  }
+  .peak-field input[aria-invalid="true"] { border-color: #9a3027; }
+  .peak-movements { margin-top: clamp(20px, 3vw, 32px); }
+  .peak-movements h2, .peak-result h2 { font-size: clamp(1.2rem, 2.2vw, 1.65rem); }
+  .peak-movements h2 { margin-bottom: 8px; }
+  .peak-movements > p { font-size: .88rem; max-width: 56ch; }
+  .peak-rows { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+  .peak-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1.12fr) minmax(0, .78fr) minmax(4.1rem, .58fr) auto;
+    align-items: start;
+    gap: 8px;
+    padding-block: 13px;
+    border-top: 1px solid var(--line);
+  }
+  .peak-row-total {
+    display: grid;
+    justify-items: start;
+    gap: 6px;
+    margin: 0;
+    font-size: .8rem;
+    color: var(--muted);
+  }
+  .peak-row-total > strong {
+    font-size: 1.04rem;
+    line-height: 1.2;
+    color: var(--ink);
+    overflow-wrap: anywhere;
+  }
+  .peak-row-actions, .peak-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+  .peak-row-actions { padding-top: 24px; }
+  .peak-row-actions button {
+    flex: 0 0 auto;
+    width: 36px;
+    min-height: 44px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 1.05rem;
+  }
+  .peak-row-actions button:hover:not(:disabled) { border-color: var(--link); }
+  .peak-row-actions button:disabled { opacity: .4; cursor: default; }
+  .peak-indicator { padding: 1px 5px; background: var(--bright); color: var(--dark); font-size: .7rem; font-weight: 700; }
+  .peak-controls { gap: 9px; margin-top: 9px; }
+  .peak-controls .button:disabled { cursor: default; opacity: .5; }
+  .peak-result {
+    padding: clamp(18px, 4vw, 40px);
+    background: var(--dark);
+    color: var(--surface);
+    min-width: 0;
+  }
+  .peak-result h2, .peak-result h3 { color: inherit; margin-bottom: 9px; }
+  .peak-result h3 { font-size: 1rem; }
+  .peak-total { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 8px; margin: 0 0 6px; }
+  .peak-total > strong {
+    font-size: clamp(2rem, 4.3vw, 4.1rem);
+    font-weight: 650;
+    line-height: 1;
+    letter-spacing: -.05em;
+    color: var(--bright);
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+  }
+  .peak-balance { padding-top: 13px; border-top: 1px solid #6b6559; }
+  .peak-balance p { margin: 0; font-size: 1.18rem; font-variant-numeric: tabular-nums; }
+  .peak-when, .peak-end, .peak-result-error { font-size: .86rem; color: var(--paper); }
+  .peak-end { margin: 12px 0 0; }
+  .peak-result-error { margin: 10px 0 0; }
+  .peak-error { color: #8b2922; font-size: .75rem; }
+  .peak-note, .peak-limit { margin: 12px 0 0; }
+  .peak-empty { margin: 0 0 10px; }
+  .peak-form [hidden] { display: none; }
+  .peak-sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(100%); white-space: nowrap; }
+  @media (max-width: 940px) {
+    .peak-result-jump { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; margin-top: 4px; font-weight: 550; }
+    .peak-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(3.7rem, .62fr); }
+    .peak-row-actions { grid-column: 1 / -1; padding-top: 0; }
+  }
+  @media (max-width: 660px) {
+    .peak-workspace { grid-template-columns: minmax(0, 1fr); }
+    .peak-row-actions button { width: 44px; }
+  }
+  @media (max-width: 410px) {
+    .peak-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .peak-row-total { grid-column: 1 / -1; display: flex; align-items: baseline; flex-wrap: wrap; }
+  }
+</style>

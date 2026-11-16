@@ -1,0 +1,63 @@
+---
+import Site from '../../layouts/Site.astro';
+import { articlePath, path } from '../../lib/site';
+import { practiceTools } from '../../lib/practice-tools';
+import { photoForArticle } from '../../lib/media';
+import '../../styles/practice-tools.css';
+
+const [checklist, peak, storage] = practiceTools;
+---
+<Site title="Инструменты для склада" description="Чек-лист осмотра склада, расчёт запаса паллетомест на пик и калькулятор стоимости хранения." section="tools" image={photoForArticle('warehouse-site-audit').large}>
+  <header class="practice-tool-head practice-index-head">
+    <h1>Инструменты для склада</h1>
+    <p class="lede">Что проверить на площадке, сколько мест понадобится в пик и во сколько обойдётся хранение.</p>
+  </header>
+
+  <div class="practice-index" aria-label="Инструменты">
+    <article class="practice-index__row" aria-labelledby="tool-checklist">
+      <div class="practice-index__copy">
+        <h2 id="tool-checklist">{checklist.title}</h2>
+        <p>{checklist.description}</p>
+        <a class="button" href={path(checklist.path)}>{checklist.action} <span aria-hidden="true">→</span></a>
+        <a class="practice-index__article" href={articlePath(checklist.article)}>{checklist.articleTitle}</a>
+      </div>
+      <div class="practice-index__sample practice-index__sample--check">
+        <p>Лист осмотра</p>
+        <ul>
+          <li><span aria-hidden="true"></span> Въезд и погрузочный док</li>
+          <li><span aria-hidden="true"></span> Приёмка и хранение</li>
+          <li><span aria-hidden="true"></span> Пробная поставка и выдача</li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="practice-index__row practice-index__row--reverse" aria-labelledby="tool-peak">
+      <div class="practice-index__copy">
+        <h2 id="tool-peak">{peak.title}</h2>
+        <p>{peak.description}</p>
+        <a class="button" href={path(peak.path)}>{peak.action} <span aria-hidden="true">→</span></a>
+        <a class="practice-index__article" href={articlePath(peak.article)}>{peak.articleTitle}</a>
+      </div>
+      <div class="practice-index__sample practice-index__sample--peak">
+        <p>Пример · доступно 130 мест</p>
+        <strong>121</strong>
+        <p>место понадобится в пик</p>
+        <p class="practice-index__equation">Остаток · 86 → 121 → 93 → 109</p>
+      </div>
+    </article>
+
+    <article class="practice-index__row" aria-labelledby="tool-storage">
+      <div class="practice-index__copy">
+        <h2 id="tool-storage">{storage.title}</h2>
+        <p>{storage.description}</p>
+        <a class="button" href={path(storage.path)}>{storage.action} <span aria-hidden="true">→</span></a>
+        <a class="practice-index__article" href={articlePath(storage.article)}>{storage.articleTitle}</a>
+      </div>
+      <div class="practice-index__sample practice-index__sample--storage">
+        <p>Пример · 80 паллет на 30 дней</p>
+        <strong>2 400</strong>
+        <p>паллето-дней</p>
+      </div>
+    </article>
+  </div>
+</Site>

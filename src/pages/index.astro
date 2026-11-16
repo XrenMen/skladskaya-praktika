@@ -1,6 +1,7 @@
 ---
 import Site from '../layouts/Site.astro';
 import HomeIssue from '../components/HomeIssue.astro';
+import HomePractice from '../components/HomePractice.astro';
 import articles from '../lib/content.mjs';
 import { articlePath, categoryPath, path } from '../lib/site';
 import { photoForArticle } from '../lib/media';
@@ -60,12 +61,5 @@ const routes = [
 
   <HomeIssue featured="warehouse-site-audit" secondary={['first-delivery', 'compare-fulfillment']} />
 
-  <section class="wrap pallet-band" id="calculator" aria-labelledby="pallet-title">
-    <div class="pallet-band__copy">
-      <h2 id="pallet-title">Калькулятор паллето-дней</h2>
-      <p>Оцените объём и стоимость хранения по среднему остатку, сроку и тарифу.</p>
-      <a href={path('calculator/')}>Открыть калькулятор <span aria-hidden="true">→</span></a>
-    </div>
-    <p class="pallet-band__example"><strong>2 400</strong><span>паллето-дней<br/>80 паллет × 30 дней</span></p>
-  </section>
+  <HomePractice />
 </Site>

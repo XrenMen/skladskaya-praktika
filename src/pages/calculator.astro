@@ -2,9 +2,11 @@
 import Site from '../layouts/Site.astro';
 import { articlePath, path } from '../lib/site';
 import '../styles/tools.css';
+import '../styles/practice-tools.css';
 ---
-<Site title="Калькулятор паллето-дней" description="Рассчитайте объём хранения в паллето-днях и его стоимость по собственному тарифу." section="calculator">
+<Site title="Калькулятор паллето-дней" description="Рассчитайте объём хранения в паллето-днях и его стоимость по собственному тарифу." section="tools">
   <header class="tool-head">
+    <a href={path('tools/')} class="practice-tool-back"><span aria-hidden="true">←</span> Все инструменты</a>
     <h1>Калькулятор паллето-дней</h1>
     <p class="lede">Введите средний остаток и срок хранения. Если знаете тариф, калькулятор оценит стоимость.</p>
   </header>
