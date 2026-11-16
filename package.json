@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "@astrojs/check": "0.9.12",
+    "astro": "6.4.8",
+    "pagefind": "1.6.0",
+    "typescript": "6.0.3"
+  },
+  "scripts": {
+    "check": "astro check",
+    "build": "astro build && pagefind --site dist && node scripts/qa.mjs",
+    "preview": "astro preview"
+  },
+  "private": true
+}

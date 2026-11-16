@@ -1,0 +1,18 @@
+---
+import Site from '../layouts/Site.astro';
+import { articlePath, path } from '../lib/site';
+---
+<Site title="Калькулятор паллето-дней" description="Рассчитайте объём хранения в паллето-днях и его стоимость по собственному тарифу." section="calculator">
+  <header class="inner-head"><p class="eyebrow">Инструмент</p><h1>Калькулятор паллето-дней</h1><p class="lede">При равномерном запасе достаточно среднего остатка и числа дней. Для переменного запаса разбейте период на интервалы и сложите результаты.</p></header>
+  <form class="calc" id="storage-calculator">
+    <div><div class="inputs">
+      <label>Средний остаток, паллет<input name="pallets" type="number" min="0" max="1000000" step="0.1" value="80" required></label>
+      <label>Период, дней<input name="days" type="number" min="1" max="366" step="1" value="30" required></label>
+      <label>Тариф, ₽ за паллето-день<input name="rate" type="number" min="0" max="1000000" step="0.01" placeholder="Необязательно"></label>
+    </div><p class="hint">Расчёт выполняется в браузере. Приёмка, отгрузка, дополнительные операции и налоги не учтены.</p>
+    <noscript><p class="hint">Формула: средний остаток × число дней. Стоимость: полученный объём × ваш тариф.</p></noscript></div>
+    <div class="result" aria-live="polite"><output id="storage-volume">2 400 паллето-дней</output><p id="storage-cost">Введите тариф для оценки суммы</p></div>
+  </form>
+  <section class="section"><div class="panel"><h2>Что ещё входит в смету?</h2><p>Кроме хранения, проверьте единицы тарификации приёмки, отбора, возвратов и расходных материалов.</p><a href={articlePath('storage-cost')}>Как подготовить вводные для склада ↗</a></div></section>
+  <script is:inline type="module" src={path('assets/calculator.js')}></script>
+</Site>

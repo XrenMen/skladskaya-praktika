@@ -1,0 +1,14 @@
+---
+import Site from '../../layouts/Site.astro';
+import Card from '../../components/Card.astro';
+import articles from '../../lib/content.mjs';
+import { categories, path } from '../../lib/site';
+export function getStaticPaths(){return categories.map(category=>({params:{topic:category.id},props:{category}}));}
+const {category}=Astro.props;
+const selected=articles.filter(a=>a.category===category.id);
+---
+<Site title={category.title} description={category.description} section="topics">
+  <header class="inner-head"><p class="crumb"><a href={path()}>Главная</a><span>/</span><a href={path('topics/')}>Рубрики</a></p>
+  <p class="eyebrow">Рубрика {category.mark}</p><h1>{category.title}</h1><p class="lede">{category.description}</p></header>
+  <div class="cards">{selected.map(item=><Card item={item}/>)}</div>
+</Site>

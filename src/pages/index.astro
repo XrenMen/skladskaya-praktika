@@ -1,0 +1,29 @@
+---
+import Site from '../layouts/Site.astro';
+import Card from '../components/Card.astro';
+import articles from '../lib/content.mjs';
+import { categories, categoryPath, path } from '../lib/site';
+const picks = ['storage-cost','compare-fulfillment','warehouse-move'].map(slug=>articles.find(a=>a.slug===slug)!);
+---
+<Site title="Практический справочник по складской логистике" description="Восемь прикладных материалов о хранении, фулфилменте и складских операциях. Чек-листы, примеры расчётов и калькулятор паллето-дней.">
+  <section class="hero" aria-labelledby="intro-title">
+    <div><p class="eyebrow">Справочник для команд логистики</p>
+    <h1 id="intro-title">Складская практика</h1>
+    <p class="lede">Всё, что пригодится, когда нужно выбрать склад, проверить предложение оператора или принять первую поставку.</p>
+    <div class="buttons"><a class="button" href={path('materials/')}>Открыть материалы <span aria-hidden="true">↗</span></a>
+    <a class="button outline" href={path('calculator/')}>Рассчитать объём хранения</a></div></div>
+    <img src={path('illustrations/warehouse.svg')} width="640" height="452" fetchpriority="high" alt="Схема склада: маршрут товара от приёмки через хранение до отгрузки" />
+  </section>
+  <section class="section" aria-labelledby="topics-title" id="guides">
+    <p class="eyebrow">По задачам</p><h2 id="topics-title">Три рубрики</h2>
+    <div class="topics">{categories.map(c=><a class="topic" href={categoryPath(c.id)}><small>{c.mark} / {articles.filter(a=>a.category===c.id).length} материала</small><strong>{c.name} <span aria-hidden="true">↗</span></strong><p>{c.description}</p></a>)}</div>
+  </section>
+  <section class="section" aria-labelledby="picks-title">
+    <p class="eyebrow">Стартовая подборка</p>
+    <div class="section-head"><h2 id="picks-title">С чего начать</h2><a href={path('materials/')}>Все материалы ↗</a></div>
+    <div class="cards">{picks.map(item=><Card item={item}/>)}</div>
+  </section>
+  <section class="section" aria-labelledby="calc-title" id="calculator">
+    <div class="panel"><p class="eyebrow">Инструмент</p><h2 id="calc-title">Сколько паллето-дней нужно?</h2><p class="muted">Введите средний остаток и срок, чтобы быстро оценить объём хранения. Подставьте свой тариф, если известен.</p><a href={path('calculator/')} class="button">Открыть калькулятор ↗</a></div>
+  </section>
+</Site>

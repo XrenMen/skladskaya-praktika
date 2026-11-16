@@ -1,0 +1,7 @@
+---
+import Site from '../layouts/Site.astro';
+import {path} from '../lib/site';
+---
+<Site title="Страница не найдена" description="Запрошенный адрес не существует. Перейдите к рубрикам или найдите нужную статью через поиск." notFound>
+  <header class="inner-head"><p class="eyebrow">Ошибка 404</p><h1>Страница не найдена</h1><p class="lede">Возможно, адрес изменился или был введён с ошибкой. Выберите материал в справочнике.</p><div class="buttons"><a class="button" href={path()}>На главную</a><a class="button outline" href={path('search/')}>Искать статью</a></div></header>
+</Site>

@@ -1,0 +1,14 @@
+---
+import { articlePath, categories, path, type Article } from '../lib/site';
+const {item} = Astro.props as {item:Article};
+const topic = categories.find(c=>c.id===item.category);
+---
+<a class="card" href={articlePath(item.slug)}>
+  <img class="card-art" loading="lazy" width="560" height="316" src={path('illustrations/'+item.slug+'.svg')} alt="" />
+  <div class="card-content">
+    <p class="meta"><span>{topic?.name}</span><span>{item.minutes} мин</span></p>
+    <h3>{item.title}</h3>
+    <p class="muted">{item.description}</p>
+    <span class="card-link">Читать <span aria-hidden="true">↗</span></span>
+  </div>
+</a>

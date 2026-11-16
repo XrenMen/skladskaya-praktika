@@ -1,0 +1,26 @@
+---
+import Site from '../../layouts/Site.astro';
+import Card from '../../components/Card.astro';
+import articles from '../../lib/content.mjs';
+import { categories, categoryPath, path, releaseDate, siteName } from '../../lib/site';
+export function getStaticPaths(){return articles.map(article=>({params:{slug:article.slug},props:{article}}));}
+const { article } = Astro.props;
+const category = categories.find(c=>c.id===article.category)!;
+const related = [...articles.filter(a=>a.category===article.category && a.slug!==article.slug),...articles.filter(a=>a.category!==article.category)].slice(0,2);
+const image = path('illustrations/' + article.slug + '.svg');
+const body = article.body.replace(/href="#storage-calculator"/g, 'href="' + path('calculator/') + '#storage-calculator"').replace(/<table(?:\s[^>]*)?>/g, m=>'<div class="table-scroll" role="region" aria-label="Таблица примера" tabindex="0">'+m).replace(/<\/table>/g,'</table></div>');
+const jsonLd = { '@context':'https://schema.org', '@type':'Article', headline:article.title, description:article.description, inLanguage:'ru', datePublished:releaseDate, dateModified:releaseDate, image:new URL(image,Astro.site).href, author:{'@type':'Organization',name:'Редакция «Складская практика»',url:new URL(path('editorial/'),Astro.site).href},publisher:{'@type':'Organization',name:siteName,url:new URL(path(),Astro.site).href},mainEntityOfPage:new URL(Astro.url.pathname,Astro.site).href };
+---
+<Site title={article.title} description={article.description} section="materials" type="article" image={image} jsonLd={jsonLd}>
+  <article data-pagefind-body>
+    <header class="article-head">
+      <p class="crumb" data-pagefind-ignore><a href={path()}>Главная</a><span>/</span><a href={categoryPath(category.id)}>{category.name}</a></p>
+      <h1 data-pagefind-meta="title">{article.title}</h1>
+      <p class="lede">{article.description}</p>
+      <p class="article-meta"><a href={path('editorial/')}>Редакция «Складская практика»</a><time datetime={releaseDate}>16 ноября 2026</time><span>{article.minutes} мин</span></p>
+    </header>
+    <img class="article-cover" src={image} width="560" height="316" alt="" />
+    <div class="reading" set:html={body} />
+  </article>
+  <section class="section" aria-labelledby="related"><h2 id="related">Продолжить по теме</h2><div class="cards">{related.map(item=><Card item={item} />)}</div></section>
+</Site>
