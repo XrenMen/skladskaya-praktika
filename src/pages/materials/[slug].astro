@@ -2,7 +2,7 @@
 import Site from '../../layouts/Site.astro';
 import articles from '../../lib/content.mjs';
 import { articlePath, categories, categoryPath, path, releaseDate, siteName } from '../../lib/site';
-import { photoForArticle } from '../../lib/media';
+import { photoForArticle, photoLicenseUrl } from '../../lib/media';
 import '../../styles/reading.css';
 
 export function getStaticPaths() {
@@ -76,13 +76,17 @@ const jsonLd = {
           src={image.large}
           srcset={image.srcset}
           sizes="(max-width: 800px) 90vw, (max-width: 1400px) 36vw, 500px"
-          width="1280"
-          height="853"
+          width={image.largeWidth}
+          height={image.largeHeight}
           fetchpriority="high"
           style={{ objectPosition: image.position }}
           alt={image.alt}
         />
-        <figcaption data-pagefind-ignore>Иллюстрация</figcaption>
+        <figcaption data-pagefind-ignore>
+          <a href={image.source}>Фото {image.photographer}</a>
+          <span aria-hidden="true">·</span>
+          <a href={photoLicenseUrl}>Условия использования Pexels</a>
+        </figcaption>
       </figure>
     </header>
 

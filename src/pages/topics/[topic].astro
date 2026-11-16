@@ -24,8 +24,8 @@ const image = photoForCategory(category.id);
     <img
       src={image.small}
       srcset={image.srcset}
-      width="640"
-      height="426"
+      width={image.smallWidth}
+      height={image.smallHeight}
       sizes="(max-width: 680px) 90vw, (max-width: 1300px) 48vw, 620px"
       fetchpriority="high"
       decoding="async"

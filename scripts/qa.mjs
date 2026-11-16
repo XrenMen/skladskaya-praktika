@@ -27,8 +27,20 @@ for(const f of html){
   }
   if(local.startsWith('materials/')&&local!=='materials/index.html'){
     articles++;
+
+    const slug=local.split('/')[1];
+    const photoPath=prefix+'photos/articles/'+slug;
+    const credit=src.match(/<figcaption\b[^>]*>(.*?)<\/figcaption>/s)?.[1]||'';
+    if(!credit.includes('https://www.pexels.com/photo/')||!credit.includes('https://www.pexels.com/license/'))problems.push(local+' photo credit missing');
+    for(const width of [640,1280]){
+      const asset='photos/articles/'+slug+'-'+width+'.webp';
+      if(!src.includes(prefix+asset)||!(await stat(join(dist,asset)).catch(()=>null))?.isFile())problems.push(local+' missing article photo '+width);
+    }
     const schema=src.match(/<script type="application\/ld\+json">(.+?)<\/script>/s)?.[1];
-    try{if(JSON.parse(schema)['@type']!=='Article')throw Error();}catch{problems.push(local+' invalid Article data');}
+    try{
+      const data=JSON.parse(schema);
+      if(data['@type']!=='Article'||data.image!==origin+photoPath+'-1280.webp')throw Error();
+    }catch{problems.push(local+' invalid Article data or photo');}
     if(!src.includes('data-pagefind-body'))problems.push(local+' not opted into search');
   }
 }

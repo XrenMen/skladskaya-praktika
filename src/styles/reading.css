@@ -71,12 +71,19 @@
 }
 
 .article-media figcaption {
-  position: absolute;
-  inset: auto 0 0 auto;
-  padding: .24rem .6rem;
-  background: var(--ink);
-  color: var(--surface);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: .48rem;
+  margin-top: .4rem;
+  color: var(--muted);
   font-size: .75rem;
+  line-height: 1.45;
+}
+
+.article-media figcaption a {
+  color: inherit;
+  text-decoration-thickness: .07em;
 }
 
 .article-content {

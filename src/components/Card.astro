@@ -26,8 +26,8 @@ const sizes = compact
       src={image.small}
       srcset={image.srcset}
       sizes={sizes}
-      width="640"
-      height="426"
+      width={image.smallWidth}
+      height={image.smallHeight}
       loading={emphasis === 'lead' ? 'eager' : 'lazy'}
       fetchpriority={emphasis === 'lead' ? 'high' : undefined}
       decoding="async"

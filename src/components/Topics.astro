@@ -17,8 +17,8 @@ const articleLabel = { one: 'статья', few: 'статьи', many: 'стат
           <img
             src={image.small}
             srcset={image.srcset}
-            width="640"
-            height="426"
+            width={image.smallWidth}
+            height={image.smallHeight}
             sizes="(max-width: 680px) 94vw, (max-width: 1300px) 52vw, 670px"
             loading="lazy"
             decoding="async"

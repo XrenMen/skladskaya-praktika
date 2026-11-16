@@ -4,13 +4,13 @@ import Card from '../../components/Card.astro';
 import CollectionNav from '../../components/CollectionNav.astro';
 import articles from '../../lib/content.mjs';
 import { path } from '../../lib/site';
-import { loadingBay } from '../../lib/media';
+import { photoForArticle } from '../../lib/media';
 
 const lead = articles.find(article => article.slug === 'warehouse-move');
 const second = articles.find(article => article.slug === 'storage-cost');
 const archive = articles.filter(article => article !== lead && article !== second);
 ---
-<Site title="Все статьи журнала" description="Руководства по выбору склада, расчёту хранения, запуску фулфилмента и приёмке товара." section="materials" image={loadingBay.large}>
+<Site title="Все статьи журнала" description="Руководства по выбору склада, расчёту хранения, запуску фулфилмента и приёмке товара." section="materials" image={photoForArticle('warehouse-move').large}>
   <header class="collection-head">
     <div>
       <h1>Статьи</h1>

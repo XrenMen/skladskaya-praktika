@@ -3,7 +3,7 @@ import Site from '../layouts/Site.astro';
 import HomeIssue from '../components/HomeIssue.astro';
 import articles from '../lib/content.mjs';
 import { articlePath, categoryPath, path } from '../lib/site';
-import { loadingBay } from '../lib/media';
+import { photoForArticle } from '../lib/media';
 import '../styles/home-front.css';
 
 const image = {
@@ -11,6 +11,7 @@ const image = {
   narrow: path('photos/warehouse-front-768.webp'),
 };
 const lead = articles.find(article => article.slug === 'warehouse-move')!;
+const leadPhoto = photoForArticle(lead.slug);
 const routes = [
   { id: 'storage', title: 'Выбрать склад', description: 'Как сравнить операторов, посчитать хранение и заложить запас мест.' },
   { id: 'operations', title: 'Подготовить поставку', description: 'Приёмка товара, расписание отгрузок и переезд склада.' },
@@ -35,7 +36,7 @@ const routes = [
           <a class="button warehouse-front__action" href={articlePath(lead.slug)}>Читать о переезде <span aria-hidden="true">→</span></a>
         </article>
         <figure class="warehouse-front__detail">
-          <img src={loadingBay.small} width="768" height="512" decoding="async" alt={loadingBay.alt} />
+          <img src={leadPhoto.small} width={leadPhoto.smallWidth} height={leadPhoto.smallHeight} decoding="async" alt={leadPhoto.alt} style={{ objectPosition: leadPhoto.position }} />
         </figure>
       </div>
     </div>
