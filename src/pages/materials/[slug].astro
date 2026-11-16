@@ -69,6 +69,7 @@ const jsonLd = {
           <span aria-hidden="true">·</span>
           <span>{article.minutes} мин чтения</span>
         </nav>
+        <a class="article-return" id="article-return" data-pagefind-ignore hidden></a>
         <h1 data-pagefind-meta="title">{article.title}</h1>
         <p class="lede">{article.description}</p>
         <p class="article-byline" data-pagefind-ignore>
@@ -143,3 +144,30 @@ const jsonLd = {
     )}
   </article>
 </Site>
+
+<script>
+  import { categories, path } from '../../lib/site';
+
+  const link = document.querySelector<HTMLAnchorElement>('#article-return');
+  if (link && document.referrer) {
+    const source = new URL(document.referrer);
+    const searchPath = path('search/');
+    const homePath = path();
+    const query = source.searchParams.get('q')?.slice(0, 120).trim() ?? '';
+    const topic = categories.find(({ id }) => source.searchParams.get('topic') === id)?.id;
+    const fromSearch = source.pathname === searchPath && query.length >= 2;
+    const fromFeed = source.pathname === homePath && Boolean(query || topic);
+
+    if (source.origin === location.origin && (fromSearch || fromFeed)) {
+      const target = new URL(source.pathname, location.origin);
+      if (query) target.searchParams.set('q', query);
+      if (fromFeed) {
+        if (topic) target.searchParams.set('topic', topic);
+        target.hash = 'articles';
+      }
+      link.href = target.href;
+      link.textContent = fromSearch ? 'К результатам поиска' : 'К отфильтрованной ленте';
+      link.hidden = false;
+    }
+  }
+</script>

@@ -171,8 +171,9 @@
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 0 16px;
-  padding-top: 8px;
 }
+
+.nb-feedback[data-active] { padding-top: 8px; }
 
 .nb-status { color: var(--muted); margin: 0; }
 

@@ -44,6 +44,20 @@
   color: var(--link);
 }
 
+.article-return:not([hidden]) {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--link);
+  font-size: .875rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.article-return:hover {
+  color: var(--ink);
+}
+
 .article-mast h1 {
   max-width: 24ch;
   margin: 12px 0;
@@ -335,6 +349,7 @@
     padding: 0;
   }
 
+  .article-return:not([hidden]),
   .article-media,
   .article-guide,
   .article-up,

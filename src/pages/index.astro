@@ -81,9 +81,9 @@ const featuredTitle = featuredStory ? articleTeaserTitle(featuredStory) : 'Не�
           ))}
         </div>
       </div>
-      <div class="nb-feedback" id="nb-feedback" hidden>
+      <div class="nb-feedback" id="nb-feedback">
         <p class="nb-status" id="nb-status" role="status" aria-atomic="true"></p>
-        <div class="nb-feedback__actions">
+        <div class="nb-feedback__actions" id="nb-feedback-actions" hidden>
           <a id="nb-search-all" href={path('search/')} hidden>Искать по текстам статей <span aria-hidden="true">→</span></a>
           <button id="nb-reset" type="button">Сбросить фильтр</button>
         </div>
@@ -143,10 +143,11 @@ const featuredTitle = featuredStory ? articleTeaserTitle(featuredStory) : 'Не�
   const feed = document.querySelector<HTMLElement>('#articles');
   const status = document.querySelector<HTMLElement>('#nb-status');
   const feedback = document.querySelector<HTMLElement>('#nb-feedback');
+  const actions = document.querySelector<HTMLElement>('#nb-feedback-actions');
   const reset = document.querySelector<HTMLButtonElement>('#nb-reset');
   const searchAll = document.querySelector<HTMLAnchorElement>('#nb-search-all');
 
-  if (form && query && filters && lead && feed && status && feedback && reset && searchAll) {
+  if (form && query && filters && lead && feed && status && feedback && actions && reset && searchAll) {
     const buttons = [...filters.querySelectorAll<HTMLButtonElement>('button[data-topic]')];
     const topicIds = new Set(buttons.map(button => button.dataset.topic));
     const normalize = (value: string) => value.toLocaleLowerCase('ru').replaceAll('ё', 'е').trim();
@@ -168,11 +169,12 @@ const featuredTitle = featuredStory ? articleTeaserTitle(featuredStory) : 'Не�
 
       for (const button of buttons) button.setAttribute('aria-pressed', String(button.dataset.topic === activeTopic));
       lead.hidden = filtering;
-      feedback.hidden = !filtering;
+      feedback.toggleAttribute('data-active', filtering);
+      actions.hidden = !filtering;
       searchAll.hidden = !phrase;
       if (phrase) searchUrl.searchParams.set('q', phrase);
       searchAll.href = searchUrl.href;
-      status.textContent = count ? 'Найдено: ' + count : 'В ленте ничего не нашлось.';
+      status.textContent = filtering ? (count ? 'Найдено: ' + count : 'В ленте ничего не нашлось.') : '';
     };
 
     const restoreFilters = () => {
