@@ -26,12 +26,17 @@ export function compareQuotes(volumes, ratesByQuote) {
   });
 }
 
-function valuesFrom(inputs, validate) {
+function valuesFrom(inputs, validate, guidance) {
   return inputs.map((input) => {
     const value = input.valueAsNumber;
     const valid = validate(value);
+    const error = input.nextElementSibling;
     if (valid) input.removeAttribute('aria-invalid');
     else input.setAttribute('aria-invalid', 'true');
+    if (error?.classList.contains('quotes-error')) {
+      error.hidden = valid;
+      error.textContent = valid ? '' : guidance;
+    }
     return valid ? value : null;
   });
 }
@@ -55,7 +60,9 @@ export function mountQuotes(form) {
   });
 
   function update() {
-    const totals = compareQuotes(valuesFrom(volumes, volumeIsValid), quotes.map((quote) => valuesFrom(quote.rates, rateIsValid)));
+    const monthlyVolumes = valuesFrom(volumes, volumeIsValid, 'Введите целое число от 0 до 1 000 000.');
+    const ratesByQuote = quotes.map((quote) => valuesFrom(quote.rates, rateIsValid, 'Введите сумму от 0 до 1 000 000 ₽ с точностью до копеек.'));
+    const totals = compareQuotes(monthlyVolumes, ratesByQuote);
     const complete = totals?.filter((total) => total !== null) ?? [];
     const best = complete.length >= 2 ? Math.min(...complete) : null;
     const winners = [];

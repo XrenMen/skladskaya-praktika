@@ -3,11 +3,11 @@ import Site from '../layouts/Site.astro';
 import articles from '../lib/content.mjs';
 import { photoForArticle, photoLicenseUrl } from '../lib/media';
 import { practiceTools } from '../lib/practice-tools';
+import { articleTeaserTitle } from '../lib/teaser-titles';
 import { articlePath, path } from '../lib/site';
 import '../styles/notebook-home.css';
 
 const featuredSlug = 'receiving-discrepancies';
-const featuredTitle = 'Недостача и пересорт на приёмке';
 const featuredPhoto = photoForArticle(featuredSlug);
 const orderedSlugs = [
   'order-picking-check', 'warehouse-location-labels',
@@ -15,28 +15,13 @@ const orderedSlugs = [
   'warehouse-move', 'storage-cost', 'returns', 'peak-pallet-capacity',
   'dispatch-slots', 'choose-operator', 'own-vs-outsourced', featuredSlug,
 ];
-const shortTitles: Record<string, string> = {
-  'order-picking-check': 'Проверка комплектации перед упаковкой',
-  'warehouse-location-labels': 'Как разметить ячейки склада',
-  'cycle-counting': 'Как пересчитывать остатки по зонам',
-  'warehouse-site-audit': 'Что проверить на складе перед договором',
-  'compare-fulfillment': 'Как сравнить тарифы FBO и FBS',
-  'first-delivery': 'Первая поставка на склад',
-  'warehouse-move': 'Переезд склада без остановки отгрузок',
-  'storage-cost': 'Как посчитать стоимость хранения',
-  returns: 'Как организовать возвраты на складе',
-  'peak-pallet-capacity': 'Сколько паллетомест нужно в пик',
-  'dispatch-slots': 'Как распределить отгрузку по окнам',
-  'choose-operator': 'Что спросить у складского оператора',
-  'own-vs-outsourced': 'Свой склад или аутсорсинг',
-  [featuredSlug]: featuredTitle,
-};
 const topics = [
   { id: 'all', title: 'Все темы' },
   { id: 'operations', title: 'Операции' },
   { id: 'storage', title: 'Хранение' },
   { id: 'fulfillment', title: 'Фулфилмент' },
 ];
+const previewCount = 4;
 const categoryLabels: Record<string, string> = {
   operations: 'Складские операции',
   storage: 'Хранение',
@@ -50,6 +35,8 @@ const orderedStories = [
   }),
   ...articles.filter(article => !orderedSlugs.includes(article.slug)),
 ];
+const featuredStory = articlesBySlug.get(featuredSlug);
+const featuredTitle = featuredStory ? articleTeaserTitle(featuredStory) : 'Недостача и пересорт на приёмке';
 ---
 
 <Site title="Журнал о работе склада" description="Практические статьи для тех, кто выбирает склад, организует поставки и сравнивает фулфилмент." image={featuredPhoto.large} section="home">
@@ -57,9 +44,9 @@ const orderedStories = [
     <header class="nb-masthead nb-width">
       <h1 id="home-title">Журнал о работе склада</h1>
       <form class="nb-search" id="nb-search" role="search" action={path('search/')}>
-        <label class="nb-visually-hidden" for="nb-query">Поиск по статьям</label>
-        <input id="nb-query" name="q" type="search" placeholder="Поиск по статьям" autocomplete="off" maxlength="120" aria-controls="nb-grid" />
-        <button type="submit">Найти</button>
+        <label class="nb-visually-hidden" for="nb-query">Фильтр ленты по заголовкам, описаниям и темам</label>
+        <input id="nb-query" name="q" type="search" placeholder="Заголовок или тема" autocomplete="off" maxlength="120" aria-controls="nb-grid" />
+        <button type="submit">Фильтр ленты</button>
       </form>
     </header>
 
@@ -84,7 +71,10 @@ const orderedStories = [
 
     <section id="articles" class="nb-width nb-feed" aria-labelledby="nb-feed-title">
       <div class="nb-feed__header" id="guides">
-        <h2 id="nb-feed-title">Статьи</h2>
+        <div class="nb-feed__title">
+          <h2 id="nb-feed-title">Статьи</h2>
+          <a class="nb-archive-link" href={path('materials/')}>Все {articles.length} статей <span aria-hidden="true">→</span></a>
+        </div>
         <div class="nb-filters" role="group" aria-label="Темы статей" hidden>
           {topics.map(topic => (
             <button type="button" data-topic={topic.id} aria-pressed={topic.id === 'all' ? 'true' : 'false'}>{topic.title}</button>
@@ -93,26 +83,29 @@ const orderedStories = [
       </div>
       <div class="nb-feedback" id="nb-feedback" hidden>
         <p class="nb-status" id="nb-status" role="status" aria-atomic="true"></p>
-        <button id="nb-reset" type="button">Сбросить поиск и тему</button>
+        <div class="nb-feedback__actions">
+          <a id="nb-search-all" href={path('search/')} hidden>Искать по текстам статей <span aria-hidden="true">→</span></a>
+          <button id="nb-reset" type="button">Сбросить фильтр</button>
+        </div>
       </div>
       <div class="nb-grid" id="nb-grid">
         {orderedStories.map((article, index) => {
           const photo = photoForArticle(article.slug);
-          const title = shortTitles[article.slug] ?? article.title;
+          const title = articleTeaserTitle(article);
           const label = categoryLabels[article.category] ?? article.category;
-          const isFeatured = article.slug === featuredSlug;
+          const isPreview = index < previewCount && article.slug !== featuredSlug;
 
           return (
-            <article class="nb-story" data-category={article.category} data-search={title + ' ' + article.title + ' ' + article.description + ' ' + label} data-featured={String(isFeatured)} hidden={isFeatured}>
+            <article class="nb-story" data-category={article.category} data-search={title + ' ' + article.title + ' ' + article.description + ' ' + label} data-preview={String(isPreview)} hidden={!isPreview}>
               <a class="nb-story__link" href={articlePath(article.slug)} aria-labelledby={'nb-title-' + article.slug} aria-describedby={'nb-deck-' + article.slug}>
                 <img
                   src={photo.small}
                   srcset={photo.srcset}
-                  sizes="(max-width: 520px) 94vw, (max-width: 920px) 48vw, 24vw"
+                  sizes="(max-width: 520px) 94vw, (max-width: 880px) 46vw, (max-width: 1160px) 30vw, 23vw"
                   width={photo.smallWidth}
                   height={photo.smallHeight}
                   alt={photo.alt}
-                  loading={index < 4 ? 'eager' : 'lazy'}
+                  loading="lazy"
                   decoding="async"
                   style={{ objectPosition: photo.position }}
                 />
@@ -129,7 +122,10 @@ const orderedStories = [
 
     <section id="tools" class="nb-tools" aria-labelledby="nb-tools-title">
       <div class="nb-width nb-tools__inner" id="calculator">
-        <h2 id="nb-tools-title">Инструменты</h2>
+        <div class="nb-tools__title">
+          <h2 id="nb-tools-title">Инструменты</h2>
+          <a class="nb-archive-link" href={path('tools/')}>Все инструменты <span aria-hidden="true">→</span></a>
+        </div>
         <ul>
           {practiceTools.map(tool => <li><a href={path(tool.path)}>{tool.action}</a></li>)}
         </ul>
@@ -148,60 +144,86 @@ const orderedStories = [
   const status = document.querySelector<HTMLElement>('#nb-status');
   const feedback = document.querySelector<HTMLElement>('#nb-feedback');
   const reset = document.querySelector<HTMLButtonElement>('#nb-reset');
+  const searchAll = document.querySelector<HTMLAnchorElement>('#nb-search-all');
 
-  if (form && query && filters && lead && feed && status && feedback && reset) {
+  if (form && query && filters && lead && feed && status && feedback && reset && searchAll) {
     const buttons = [...filters.querySelectorAll<HTMLButtonElement>('button[data-topic]')];
+    const topicIds = new Set(buttons.map(button => button.dataset.topic));
     const normalize = (value: string) => value.toLocaleLowerCase('ru').replaceAll('ё', 'е').trim();
-    const searchableStories = cards.map(card => ({
-      card,
-      text: normalize(card.dataset.search ?? ''),
-    }));
+    const searchableStories = cards.map(card => ({ card, text: normalize(card.dataset.search ?? '') }));
     let activeTopic = 'all';
 
     const updateFeed = () => {
-      const search = normalize(query.value);
-      const words = search ? search.split(/\s+/) : [];
-      const filtering = Boolean(search) || activeTopic !== 'all';
+      const phrase = query.value.trim();
+      const words = normalize(phrase).split(/\s+/).filter(Boolean);
+      const filtering = Boolean(phrase) || activeTopic !== 'all';
+      const searchUrl = new URL(form.action);
       let count = 0;
 
       for (const { card, text } of searchableStories) {
         const matchesTopic = activeTopic === 'all' || card.dataset.category === activeTopic;
-        const matchesText = words.every(word => text.includes(word));
-        card.hidden = !(matchesTopic && matchesText && (filtering || card.dataset.featured !== 'true'));
+        card.hidden = filtering ? !(matchesTopic && words.every(word => text.includes(word))) : card.dataset.preview !== 'true';
         if (!card.hidden) count++;
       }
 
+      for (const button of buttons) button.setAttribute('aria-pressed', String(button.dataset.topic === activeTopic));
       lead.hidden = filtering;
       feedback.hidden = !filtering;
-      status.textContent = count ? 'Найдено: ' + count : 'Ничего не нашлось. Уточните запрос или выберите другую тему.';
+      searchAll.hidden = !phrase;
+      if (phrase) searchUrl.searchParams.set('q', phrase);
+      searchAll.href = searchUrl.href;
+      status.textContent = count ? 'Найдено: ' + count : 'В ленте ничего не нашлось.';
     };
 
-    const selectTopic = (topic: string) => {
-      activeTopic = topic;
-      for (const item of buttons) item.setAttribute('aria-pressed', String(item.dataset.topic === topic));
+    const restoreFilters = () => {
+      const params = new URL(location.href).searchParams;
+      const topic = params.get('topic') ?? 'all';
+      activeTopic = topicIds.has(topic) ? topic : 'all';
+      query.value = (params.get('q') ?? '').slice(0, query.maxLength);
       updateFeed();
+    };
+
+    const saveFilters = (push = false) => {
+      const url = new URL(location.href);
+      const phrase = query.value.trim();
+      if (phrase) url.searchParams.set('q', phrase);
+      else url.searchParams.delete('q');
+      if (activeTopic !== 'all') url.searchParams.set('topic', activeTopic);
+      else url.searchParams.delete('topic');
+      if (url.href === location.href) return;
+      if (push) history.pushState(history.state, '', url);
+      else history.replaceState(history.state, '', url);
     };
 
     filters.hidden = false;
-    query.addEventListener('input', updateFeed);
+    query.addEventListener('input', () => {
+      updateFeed();
+      saveFilters();
+    });
     form.addEventListener('submit', event => {
       event.preventDefault();
       updateFeed();
+      saveFilters();
       feed.scrollIntoView({ block: 'start' });
     });
 
     for (const button of buttons) {
       button.addEventListener('click', () => {
-        selectTopic(button.dataset.topic ?? 'all');
+        activeTopic = button.dataset.topic ?? 'all';
+        updateFeed();
+        saveFilters(true);
       });
     }
 
     reset.addEventListener('click', () => {
       query.value = '';
-      selectTopic('all');
+      activeTopic = 'all';
+      updateFeed();
+      saveFilters(true);
       query.focus();
     });
 
-    updateFeed();
+    window.addEventListener('popstate', restoreFilters);
+    restoreFilters();
   }
 </script>

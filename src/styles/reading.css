@@ -94,6 +94,10 @@
   text-decoration: none;
 }
 
+.article-copy .reading a {
+  font-weight: 600;
+}
+
 .article-media figcaption a:hover,
 .article-copy .reading a:hover,
 .article-up a:hover,
@@ -102,8 +106,7 @@
 }
 
 .article-guide {
-  margin-bottom: 24px;
-  border-block: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
 }
 
 .article-guide summary {

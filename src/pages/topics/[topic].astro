@@ -5,6 +5,7 @@ import CollectionNav from '../../components/CollectionNav.astro';
 import articles from '../../lib/content.mjs';
 import { articlePath, categories, path } from '../../lib/site';
 import { topicRoutes } from '../../lib/editorial-paths';
+import { articleTeaserTitle } from '../../lib/teaser-titles';
 import { photoForCategory, photoLicenseUrl } from '../../lib/media';
 import '../../styles/editorial-paths.css';
 
@@ -29,6 +30,15 @@ const image = photoForCategory(category.id);
       <a href={path('topics/')} class="collection-back"><span aria-hidden="true">←</span> Все рубрики</a>
       <h1>{category.title}</h1>
       <p>{category.description}</p>
+      {lead && (
+        <section class="collection-category-start topic-route-start" aria-labelledby="topic-route-title">
+          <h2 id="topic-route-title">С чего начать</h2>
+          <a href={articlePath(lead.slug)}>
+            {articleTeaserTitle(lead)} <span aria-hidden="true">→</span>
+          </a>
+          <p>{start.reason}</p>
+        </section>
+      )}
     </div>
     <figure class="collection-category-photo">
       <img
@@ -46,24 +56,15 @@ const image = photoForCategory(category.id);
     </figure>
   </header>
   <CollectionNav active={category.id} />
-  {lead && (
-    <section class="topic-route" aria-labelledby="topic-route-title">
-      <div class="topic-route-start">
-        <h2 id="topic-route-title">С чего начать</h2>
-        <a href={articlePath(lead.slug)}>
-          {lead.title} <span aria-hidden="true">→</span>
-        </a>
-        <p>{start.reason}</p>
-      </div>
-      {nextTitle && (
-        <a class="editorial-tool" href={nextHref}>
-          <span class="editorial-tool-label">{'route' in next ? 'Инструмент' : 'Следующая статья'}</span>
-          <strong>{nextTitle}</strong>
-          <span class="editorial-tool-detail">{next.reason}</span>
-          <span class="editorial-tool-arrow" aria-hidden="true">↗</span>
-        </a>
-      )}
-    </section>
+  {lead && nextTitle && (
+    <div class="collection-category-next">
+      <a class="editorial-tool" href={nextHref}>
+        <span class="editorial-tool-label">{'route' in next ? 'Инструмент' : 'Следующая статья'}</span>
+        <strong>{nextTitle}</strong>
+        <span class="editorial-tool-detail">{next.reason}</span>
+        <span class="editorial-tool-arrow" aria-hidden="true">↗</span>
+      </a>
+    </div>
   )}
   {archive.length > 0 && (
     <section class="topic-archive" aria-labelledby="topic-archive-title">

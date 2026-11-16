@@ -1,6 +1,7 @@
 ---
 import { articlePath, categories, type Article } from '../lib/site';
 import { photoForArticle, photoLicenseUrl } from '../lib/media';
+import { articleTeaserTitle } from '../lib/teaser-titles';
 import '../styles/factory-collections.css';
 
 interface Props {
@@ -13,14 +14,16 @@ interface Props {
 const { item, hideTopic = false, eager = false, heading: Heading = 'h3' } = Astro.props;
 const topic = categories.find(category => category.id === item.category);
 const image = photoForArticle(item.slug);
+const titleId = 'collection-title-' + item.slug;
+const cardSizes = '(max-width: 570px) 94vw, (max-width: 860px) 46vw, (max-width: 1160px) 30vw, 300px';
 ---
 <article class="collection-card">
-  <a class="collection-card-link" href={articlePath(item.slug)}>
+  <a class="collection-card-link" href={articlePath(item.slug)} aria-labelledby={titleId}>
     <div class="collection-card-photo">
       <img
         src={image.small}
         srcset={image.srcset}
-        sizes="(max-width: 520px) 94vw, (max-width: 920px) 46vw, (max-width: 1560px) 23vw, 355px"
+        sizes={eager ? cardSizes : 'auto, ' + cardSizes}
         width={image.smallWidth}
         height={image.smallHeight}
         loading={eager ? 'eager' : 'lazy'}
@@ -30,7 +33,7 @@ const image = photoForArticle(item.slug);
       />
     </div>
     <p class="collection-meta">{!hideTopic && topic && <span>{topic.name}</span>}<span>{item.minutes} мин</span></p>
-    <Heading class="collection-card-title">{item.title}</Heading>
+    <Heading id={titleId} class="collection-card-title">{articleTeaserTitle(item)}</Heading>
     <p class="collection-card-summary">{item.description}</p>
   </a>
   <p class="collection-credit">Фото <a href={image.source}>{image.photographer}</a> · <a href={photoLicenseUrl} aria-label="Лицензия фотографий Pexels">Pexels</a></p>

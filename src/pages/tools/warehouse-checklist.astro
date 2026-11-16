@@ -60,6 +60,7 @@ const total = sections.reduce((count, section) => count + section.checks.length,
       <div class="checklist-actions">
         <button class="button" type="button" data-checklist-print>Распечатать</button>
         <button class="checklist-reset" type="button" data-checklist-reset disabled>Сбросить отметки</button>
+        <button class="button outline" type="button" data-checklist-undo hidden>Вернуть отметки</button>
       </div>
     </div>
     <noscript>
@@ -152,6 +153,10 @@ const total = sections.reduce((count, section) => count + section.checks.length,
 
   .checklist-actions button {
     min-height: 2.75rem;
+  }
+
+  .checklist-actions button[hidden] {
+    display: none;
   }
 
   .checklist-reset {

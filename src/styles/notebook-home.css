@@ -1,7 +1,3 @@
-.nb-home {
-  --nb-field-rule: #c8c8c8;
-}
-
 .nb-home [hidden] { display: none !important; }
 .nb-home :is(h1, h2, h3, p, figure, ul) { margin: 0; }
 .nb-home :is(h1, h2, h3) { font-weight: 550; line-height: 1.12; text-wrap: pretty; }
@@ -27,7 +23,7 @@
 
 .nb-masthead {
   text-align: center;
-  padding-block: clamp(22px, 4.2vw, 52px) clamp(18px, 3vw, 32px);
+  padding-block: clamp(16px, 3.5vw, 44px) clamp(16px, 2.4vw, 28px);
 }
 
 .nb-masthead h1 {
@@ -46,7 +42,7 @@
 .nb-search input {
   min-width: 0;
   min-height: 44px;
-  border: 1px solid var(--nb-field-rule);
+  border: 1px solid var(--field-line);
   border-right: 0;
   border-radius: 0;
   background: var(--paper);
@@ -60,7 +56,7 @@
   background: var(--paper);
   font-weight: 550;
   padding-inline: 13px;
-  border: 1px solid var(--nb-field-rule);
+  border: 1px solid var(--field-line);
   border-radius: 0;
 }
 
@@ -69,7 +65,7 @@
   color: var(--link);
 }
 
-.nb-home .nb-lead { margin-bottom: clamp(28px, 5vw, 52px); }
+.nb-home .nb-lead { margin-bottom: clamp(22px, 4vw, 44px); }
 
 .nb-home .nb-lead__link {
   display: block;
@@ -124,6 +120,24 @@
   padding-bottom: 6px;
 }
 
+.nb-feed__title, .nb-tools__title {
+  display: flex;
+  align-items: center;
+  gap: 4px 18px;
+  flex-wrap: wrap;
+}
+
+.nb-home .nb-archive-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  color: var(--link);
+  font-weight: 600;
+}
+
+.nb-home .nb-archive-link:hover { color: var(--ink); }
+
 .nb-feed__header h2, .nb-tools h2 {
   font-size: clamp(1.55rem, 2.25vw, 2.05rem);
   letter-spacing: -.022em;
@@ -162,6 +176,22 @@
 
 .nb-status { color: var(--muted); margin: 0; }
 
+.nb-feedback__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 16px;
+}
+
+.nb-home .nb-feedback a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  color: var(--link);
+  font-weight: 600;
+}
+
 .nb-feedback button {
   min-height: 44px;
   padding-inline: 4px;
@@ -171,7 +201,7 @@
   font-weight: 550;
 }
 
-.nb-feedback button:hover { color: var(--ink); }
+.nb-home .nb-feedback a:hover, .nb-feedback button:hover { color: var(--ink); }
 
 .nb-grid {
   display: grid;
@@ -209,7 +239,7 @@
 }
 
 .nb-story .nb-story__deck {
-  color: var(--ink);
+  color: var(--text);
   font-size: .95rem;
   margin-top: 7px;
 }
@@ -236,7 +266,7 @@
 .nb-tools ul { list-style: none; padding: 0; }
 .nb-tools li + li { border-top: 1px solid var(--line); }
 
-.nb-tools a {
+.nb-tools li a {
   min-height: 44px;
   display: inline-flex;
   align-items: center;
@@ -244,7 +274,11 @@
   font-weight: 550;
 }
 
-@media (max-width: 920px) {
+@media (max-width: 1160px) {
+  .nb-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 880px) {
   .nb-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .nb-lead__link img { aspect-ratio: 2.36 / 1; }
 }
@@ -252,16 +286,28 @@
 @media (max-width: 520px) {
   .nb-grid, .nb-tools__inner { grid-template-columns: minmax(0, 1fr); }
 
-  .nb-lead__link img { aspect-ratio: 1.8 / 1; }
+  .nb-masthead h1 { font-size: clamp(1.6rem, 7.1vw, 1.84rem); }
+  .nb-search { margin-top: 10px; }
+  .nb-search button { padding-inline: 10px; }
+
+  .nb-home .nb-lead__link { background: var(--paper); color: var(--ink); }
+  .nb-lead__link img { aspect-ratio: 2.22 / 1; object-position: 50% 37%; }
 
   .nb-lead__text {
-    position: relative;
-    padding: 12px 13px 17px;
+    position: static;
+    padding: 10px 0 0;
     text-align: left;
     background: none;
   }
 
-  .nb-lead__text h2 { font-size: 1.82rem; }
+  .nb-lead__text h2 { font-size: 1.64rem; }
+  .nb-lead__text p { margin-inline: 0; color: var(--text); }
+  .nb-home .nb-lead__link:hover h2 { color: var(--link); }
+
+  .nb-feed__header { gap: 0; padding-bottom: 0; }
+  .nb-feed__title { width: 100%; justify-content: space-between; column-gap: 10px; }
+  .nb-filters { gap: 0; }
+  .nb-filters button { padding-inline: 6px; font-size: .92rem; }
   .nb-story .nb-story__deck { font-size: 1rem; }
   .nb-story h3 { font-size: 1.42rem; }
 }

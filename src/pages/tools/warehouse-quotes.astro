@@ -29,15 +29,21 @@ const quotes = [
       <legend>Объёмы на месяц</legend>
       <p class="quotes-note" id="quotes-volume-note">В полях — пример расчёта. Замените числа своими. Если операции не было, укажите 0.</p>
       <div class="quotes-volume-fields">
-        {units.map((unit) => (
+        {units.map((unit, index) => (
           <label class="quotes-field">
             <span>{unit.volume}</span>
-            <input data-quote-volume type="number" inputmode="numeric" min="0" max="1000000" step="1" value={unit.example} required aria-describedby="quotes-volume-note" />
+            <input data-quote-volume type="number" inputmode="numeric" min="0" max="1000000" step="1" value={unit.example} required aria-describedby={'quotes-volume-note quote-volume-error-' + index} />
+            <small class="quotes-error" id={'quote-volume-error-' + index} hidden></small>
           </label>
         ))}
       </div>
       <a class="quotes-inline-link" href={path('calculator/')}>Как посчитать паллето-дни</a>
     </fieldset>
+
+    <div class="quotes-summary">
+      <p data-quote-summary role="status" aria-atomic="true">В примере меньше всего стоит Склад 3 — 64 300 ₽ в месяц.</p>
+      <button type="reset" class="button outline" data-quotes-reset hidden>Вернуть пример</button>
+    </div>
 
     <div class="quotes-tariff-head">
       <h2 id="quotes-tariff-heading">Тарифы складов</h2>
@@ -52,7 +58,8 @@ const quotes = [
             {rateLabels.map((label, rateIndex) => (
               <label class="quotes-field">
                 <span>{label}</span>
-                <input data-quote-rate type="number" inputmode="decimal" min="0" max="1000000" step="0.01" value={quote.rates[rateIndex]} required aria-describedby="quotes-rates-note" />
+                <input data-quote-rate type="number" inputmode="decimal" min="0" max="1000000" step="0.01" value={quote.rates[rateIndex]} required aria-describedby={'quotes-rates-note quote-rate-error-' + index + '-' + rateIndex} />
+                <small class="quotes-error" id={'quote-rate-error-' + index + '-' + rateIndex} hidden></small>
               </label>
             ))}
           </fieldset>
@@ -63,11 +70,6 @@ const quotes = [
         </div>
       ))}
     </section>
-
-    <div class="quotes-summary">
-      <p data-quote-summary role="status" aria-atomic="true">В примере меньше всего стоит Склад 3 — 64 300 ₽ в месяц.</p>
-      <button type="reset" class="button outline" data-quotes-reset hidden>Вернуть пример</button>
-    </div>
 
     <noscript><p class="quotes-note">Для пересчёта включите JavaScript. Сейчас показан пример.</p></noscript>
   </form>
@@ -128,6 +130,7 @@ const quotes = [
   .quotes-field input {
     min-width: 0;
     width: 100%;
+    min-height: 44px;
     padding: 9px 10px;
     border: 1px solid var(--field-line, var(--line));
     border-radius: 6px;
@@ -143,6 +146,13 @@ const quotes = [
   }
   .quotes-field input[aria-invalid="true"] {
     border-color: var(--error);
+  }
+  .quotes-error {
+    color: var(--error);
+    font-size: .86rem;
+  }
+  .quotes-error[hidden] {
+    display: none;
   }
   .quotes-inline-link {
     font-size: 0.95rem;
@@ -203,7 +213,10 @@ const quotes = [
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
+    gap: 8px 16px;
+    padding: 12px 14px;
+    border-block: 1px solid var(--line);
+    background: var(--wash);
   }
   .quotes-summary p {
     flex: 1 1 320px;

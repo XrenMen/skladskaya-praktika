@@ -77,6 +77,17 @@ const jsonLd = {
         </p>
       </header>
 
+      {sections.length > 0 && (
+        <details class="article-guide" data-pagefind-ignore>
+          <summary id="article-sections">Оглавление</summary>
+          <nav aria-label="Разделы статьи">
+            <ol>
+              {sections.map(section => <li><a href={'#' + section.id}>{section.label}</a></li>)}
+            </ol>
+          </nav>
+        </details>
+      )}
+
       <figure class="article-media">
         <img
           src={image.large}
@@ -94,17 +105,6 @@ const jsonLd = {
           <a href={photoLicenseUrl}>Условия использования Pexels</a>
         </figcaption>
       </figure>
-
-      {sections.length > 0 && (
-        <details class="article-guide" data-pagefind-ignore>
-          <summary id="article-sections">Оглавление</summary>
-          <nav aria-label="Разделы статьи">
-            <ol>
-              {sections.map(section => <li><a href={'#' + section.id}>{section.label}</a></li>)}
-            </ol>
-          </nav>
-        </details>
-      )}
 
       <div class="article-copy">
         <div class="reading" set:html={body} />

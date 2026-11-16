@@ -7,8 +7,10 @@ if (checklist) {
   const count = checklist.querySelector('[data-checklist-count]');
   const progress = checklist.querySelector('[data-checklist-progress]');
   const reset = checklist.querySelector('[data-checklist-reset]');
+  const undo = checklist.querySelector('[data-checklist-undo]');
   const print = checklist.querySelector('[data-checklist-print]');
   const storageNote = checklist.querySelector('[data-checklist-storage]');
+  let resetSnapshot = null;
 
   function restore(serialized) {
     let saved = [];
@@ -29,8 +31,12 @@ if (checklist) {
       : 'Отметки доступны до закрытия страницы.';
   }
 
+  function selectedItems() {
+    return items.filter(item => item.checked).map(item => item.value);
+  }
+
   function save() {
-    const selected = items.filter(item => item.checked).map(item => item.value);
+    const selected = selectedItems();
     try {
       localStorage.setItem(storageKey, JSON.stringify(selected));
       announceStorage(true);
@@ -44,6 +50,7 @@ if (checklist) {
     count.textContent = 'Отмечено ' + completed + ' из ' + items.length;
     progress.value = completed;
     reset.disabled = completed === 0;
+    if (undo) undo.hidden = resetSnapshot === null;
   }
 
   try {
@@ -55,23 +62,37 @@ if (checklist) {
 
   checklist.addEventListener('change', (event) => {
     if (!items.includes(event.target)) return;
+    resetSnapshot = null;
     updateProgress();
     save();
   });
 
   reset.addEventListener('click', () => {
+    if (undo) resetSnapshot = new Set(selectedItems());
     items.forEach(item => { item.checked = false; });
     updateProgress();
     save();
-    items[0]?.focus();
+    (undo ?? items[0])?.focus();
+  });
+
+  undo?.addEventListener('click', () => {
+    if (resetSnapshot === null) return;
+    items.forEach(item => { item.checked = resetSnapshot.has(item.value); });
+    resetSnapshot = null;
+    updateProgress();
+    save();
+    reset.focus();
   });
 
   print.addEventListener('click', () => window.print());
 
   window.addEventListener('storage', event => {
     if (event.key !== storageKey && event.key !== null) return;
+    const undoHadFocus = document.activeElement === undo;
+    resetSnapshot = null;
     restore(event.newValue);
     updateProgress();
+    if (undoHadFocus) items[0]?.focus();
   });
 
   updateProgress();
