@@ -1,3 +1,6 @@
+import { clearDraft, readDraft, saveDraft } from './calculator-draft.js';
+
+const draftKey = 'peak-v1';
 const maxPallets = 1000000;
 const maxMovements = 50;
 const example = [
@@ -6,6 +9,16 @@ const example = [
   { direction: 'in', amount: 16 }
 ];
 const wholeCount = (value, min) => Number.isSafeInteger(value) && value >= min && value <= maxPallets;
+
+const numericField = value => typeof value === 'string' && (
+  value === '' || (/^-?(?:\d+(?:\.\d+)?|\.\d+)(?:[eE][+-]?\d+)?$/.test(value) && Number.isFinite(Number(value)))
+);
+
+function validDraft(draft) {
+  return numericField(draft?.initial) && numericField(draft.capacity)
+    && Array.isArray(draft.movements) && draft.movements.length <= maxMovements
+    && draft.movements.every(move => ['in', 'out'].includes(move?.direction) && numericField(move.amount));
+}
 
 export function calculatePeak(initial, capacity, movements) {
   if (!wholeCount(initial, 0) || !wholeCount(capacity, 0)) return { error: 'base' };
@@ -38,6 +51,7 @@ function setup(form) {
   const initial = get('initial');
   const capacity = get('capacity');
   const rows = get('rows');
+  const draftNote = get('draft');
   const rowTemplate = rows.firstElementChild.cloneNode(true);
   const add = form.querySelector('[data-peak-action="add"]');
   const format = new Intl.NumberFormat('ru-RU');
@@ -133,7 +147,18 @@ function setup(form) {
     get('end').textContent = 'Остаток после всех операций · ' + pallets(result.balance);
   }
 
-  form.addEventListener('input', render);
+  function saveCurrentDraft() {
+    const movements = Array.from(rows.children, row => ({
+      direction: row.querySelector('[data-peak-direction]').value,
+      amount: row.querySelector('[data-peak-amount]').value
+    }));
+    draftNote.hidden = !saveDraft(draftKey, { initial: initial.value, capacity: capacity.value, movements });
+  }
+
+  form.addEventListener('input', () => {
+    render();
+    saveCurrentDraft();
+  });
   form.addEventListener('submit', event => event.preventDefault());
   form.addEventListener('click', event => {
     const button = event.target.closest('[data-peak-action]');
@@ -160,9 +185,24 @@ function setup(form) {
     }
 
     render();
+    if (action === 'example') {
+      clearDraft(draftKey);
+      draftNote.hidden = true;
+    } else {
+      saveCurrentDraft();
+    }
     if (nextFocus.disabled) nextFocus = row.querySelector('[data-peak-direction]');
     nextFocus.focus();
   });
+
+  const draft = readDraft(draftKey);
+  if (validDraft(draft)) {
+    initial.value = draft.initial;
+    capacity.value = draft.capacity;
+    rows.replaceChildren();
+    draft.movements.forEach(addRow);
+    draftNote.hidden = false;
+  }
 
   form.querySelectorAll('[data-peak-controls]').forEach(element => { element.hidden = false; });
   get('inputs').disabled = false;

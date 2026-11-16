@@ -1,3 +1,6 @@
+import { clearDraft, readDraft, saveDraft } from './calculator-draft.js';
+
+const DRAFT_KEY = 'quotes-v1';
 const MAX_VALUE = 1_000_000;
 const rubles = new Intl.NumberFormat('ru-RU', {
   style: 'currency',
@@ -50,6 +53,7 @@ export function mountQuotes(form) {
   const volumes = [...volumeFields.querySelectorAll('[data-quote-volume]')];
   const summary = form.querySelector('[data-quote-summary]');
   const reset = form.querySelector('[data-quotes-reset]');
+  const draftNote = form.querySelector('[data-quote-draft-note]');
   const quotes = [...form.querySelectorAll('[data-quote-card]')].map((card) => {
     const fields = card.querySelector('[data-quote-fields]');
     const rates = [...fields.querySelectorAll('[data-quote-rate]')];
@@ -89,11 +93,25 @@ export function mountQuotes(form) {
     }
   }
 
+  const inputs = [...volumes, ...quotes.flatMap(quote => quote.rates)];
+  const draft = readDraft(DRAFT_KEY);
+  const restored = Array.isArray(draft) && draft.length === inputs.length && draft.every(value => typeof value === 'string' && value.length <= 256);
+  if (restored) inputs.forEach((input, index) => { input.value = draft[index]; });
+  if (draftNote) draftNote.hidden = !restored;
+
   volumeFields.disabled = false;
   reset.hidden = false;
   form.addEventListener('submit', (event) => event.preventDefault());
-  form.addEventListener('input', update);
-  form.addEventListener('reset', () => setTimeout(update, 0));
+  form.addEventListener('input', () => {
+    const saved = saveDraft(DRAFT_KEY, inputs.map(input => input.value));
+    if (draftNote) draftNote.hidden = !saved;
+    update();
+  });
+  form.addEventListener('reset', () => {
+    clearDraft(DRAFT_KEY);
+    if (draftNote) draftNote.hidden = true;
+    setTimeout(update, 0);
+  });
   update();
 }
 

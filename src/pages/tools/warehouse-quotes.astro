@@ -43,6 +43,7 @@ const quotes = [
     <div class="quotes-summary">
       <p data-quote-summary role="status" aria-atomic="true">В примере меньше всего стоит Склад 3 — 64 300 ₽ в месяц.</p>
       <button type="reset" class="button outline" data-quotes-reset hidden>Вернуть пример</button>
+      <small class="quotes-note quotes-draft-note" data-quote-draft-note hidden>Черновик сохранён в этой вкладке.</small>
     </div>
 
     <div class="quotes-tariff-head">
@@ -81,7 +82,7 @@ const quotes = [
     <a href={articlePath('storage-cost')}>Из чего складывается стоимость хранения <span aria-hidden="true">→</span></a>
     <a href={articlePath('warehouse-site-audit')}>Как проверить склад перед договором <span aria-hidden="true">→</span></a>
   </section>
-  <script is:inline type="module" src={path('assets/warehouse-quotes.js')}></script>
+  <script is:inline type="module" src={path('assets/warehouse-quotes.js?v=draft')}></script>
 </Site>
 
 <style>
@@ -222,6 +223,10 @@ const quotes = [
     flex: 1 1 320px;
     margin: 0;
     font-weight: 650;
+  }
+  .quotes-summary .quotes-draft-note {
+    flex-basis: 100%;
+    margin: 0;
   }
   .quotes-summary .button {
     flex: 0 0 auto;

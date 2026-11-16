@@ -38,6 +38,10 @@ import '../styles/practice-tools.css';
       </div>
     </div>
   </form>
+  <div class="storage-draft" id="storage-draft" hidden>
+    <button type="reset" class="button outline" form="storage-calculator">Вернуть пример</button>
+    <p class="muted" id="storage-draft-note" hidden>Черновик сохранён в этой вкладке.</p>
+  </div>
   <p class="storage-scope">Оценка включает только хранение. Приёмка, отгрузка, обработка и налоги рассчитываются отдельно.</p>
   <noscript><p>Для расчёта вручную умножьте средний остаток на число дней. Стоимость получится, если умножить объём на тариф.</p></noscript>
   <section class="storage-help" aria-labelledby="storage-help-title">
@@ -48,5 +52,23 @@ import '../styles/practice-tools.css';
       <p><a href={path('tools/warehouse-quotes/')}>Сравнить полную стоимость по трём тарифам <span aria-hidden="true">→</span></a></p>
     </div>
   </section>
-  <script is:inline type="module" src={path('assets/calculator.js')}></script>
+  <script is:inline type="module" src={path('assets/calculator.js?v=draft')}></script>
 </Site>
+<style>
+  .storage-draft:not([hidden]) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 12px;
+    margin-top: 12px;
+  }
+
+  .storage-draft button {
+    min-height: 44px;
+  }
+
+  .storage-draft p {
+    margin: 0;
+    font-size: .86rem;
+  }
+</style>

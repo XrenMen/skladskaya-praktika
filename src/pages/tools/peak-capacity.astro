@@ -70,6 +70,7 @@ const example = [
             <button type="button" class="button" data-peak-action="add">Добавить операцию</button>
             <button type="button" class="button outline" data-peak-action="example">Вернуть пример</button>
           </div>
+          <p class="peak-draft muted" data-peak-draft hidden>Черновик сохранён в этой вкладке.</p>
           <p class="peak-limit muted" data-peak-limit hidden>В расчёт можно добавить до 50 операций.</p>
         </div>
       </fieldset>
@@ -101,7 +102,7 @@ const example = [
     <p><a href={path('calculator/')}>Посчитать паллето-дни и стоимость хранения <span aria-hidden="true">→</span></a></p>
   </section>
 
-  <script is:inline type="module" src={path('assets/peak-capacity.js')}></script>
+  <script is:inline type="module" src={path('assets/peak-capacity.js?v=draft')}></script>
 </Site>
 
 <style>
@@ -219,7 +220,8 @@ const example = [
   .peak-end { margin: 12px 0 0; }
   .peak-result-error { margin: 10px 0 0; }
   .peak-error { color: #8b2922; font-size: .75rem; }
-  .peak-note, .peak-limit { margin: 12px 0 0; }
+  .peak-note, .peak-limit, .peak-draft { margin: 12px 0 0; }
+  .peak-draft { font-size: .86rem; }
   .peak-empty { margin: 0 0 10px; }
   .peak-form [hidden] { display: none; }
   .peak-sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(100%); white-space: nowrap; }
