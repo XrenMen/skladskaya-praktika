@@ -1,21 +1,44 @@
 const form = document.getElementById('storage-calculator');
 const volume = document.getElementById('storage-volume');
+const equation = document.getElementById('storage-equation');
 const cost = document.getElementById('storage-cost');
-const decimal = new Intl.NumberFormat('ru-RU', {maximumFractionDigits:1});
-const currency = new Intl.NumberFormat('ru-RU', {style:'currency',currency:'RUB'});
+const pallets = form.elements.namedItem('pallets');
+const days = form.elements.namedItem('days');
+const rate = form.elements.namedItem('rate');
+const decimal = new Intl.NumberFormat('ru-RU', {maximumFractionDigits: 1});
+const currency = new Intl.NumberFormat('ru-RU', {style: 'currency', currency: 'RUB'});
+
+function validate(input) {
+  const valid = input.validity.valid;
+  const error = document.getElementById(input.id + '-error');
+  input.setAttribute('aria-invalid', String(!valid));
+  error.hidden = valid;
+  return valid;
+}
+
 function render() {
-  if (!form.checkValidity()) {
+  const validPallets = validate(pallets);
+  const validDays = validate(days);
+  const validRate = validate(rate);
+  if (!validPallets || !validDays) {
     volume.textContent = '—';
-    cost.textContent = 'Проверьте значения в полях';
+    equation.textContent = 'Проверьте остаток и срок';
+    cost.textContent = '—';
     return;
   }
-  const days = form.elements.namedItem('days').valueAsNumber;
-  const pallets = form.elements.namedItem('pallets').valueAsNumber;
-  const rate = form.elements.namedItem('rate').valueAsNumber;
-  const total = Math.round(pallets * days * 10) / 10;
-  volume.textContent = decimal.format(total) + ' паллето-дней';
-  cost.textContent = Number.isFinite(rate) ? 'Хранение: ' + currency.format(total * rate) : 'Введите тариф для оценки суммы';
+
+  const total = Math.round(pallets.valueAsNumber * days.valueAsNumber * 10) / 10;
+  volume.textContent = decimal.format(total);
+  equation.textContent = decimal.format(pallets.valueAsNumber) + ' × ' + decimal.format(days.valueAsNumber);
+  if (!validRate) {
+    cost.textContent = 'Проверьте тариф';
+  } else {
+    cost.textContent = Number.isFinite(rate.valueAsNumber)
+      ? currency.format(total * rate.valueAsNumber)
+      : 'Введите тариф для расчёта';
+  }
 }
-form.addEventListener('input',render);
-form.addEventListener('submit',event=>{event.preventDefault();render();});
+
+form.addEventListener('input', render);
+form.addEventListener('submit', event => { event.preventDefault(); render(); });
 render();
