@@ -56,10 +56,17 @@ export const articleRoutes: Record<string, EditorialPath | undefined> = {
   },
   'storage-cost': {
     guides: [
+      { slug: 'first-warehouse-invoice', reason: 'После запуска сверяйте начисления с тарифами и фактическими операциями.' },
       { slug: 'own-vs-outsourced', reason: 'Сопоставьте смету хранения с расходами на собственный склад.' },
       { slug: 'choose-operator', reason: 'Подготовьте одинаковый набор вопросов для всех площадок.' },
     ],
     tool: compareQuotes,
+  },
+  'first-warehouse-invoice': {
+    guides: [
+      { slug: 'choose-operator', reason: 'Проверьте, какие доплаты нужно уточнить у оператора ещё при запросе тарифа.' },
+      { slug: 'first-delivery', reason: 'Сверьте документы и остатки по первой партии перед проверкой начислений.' },
+    ],
   },
   'first-delivery': {
     guides: [

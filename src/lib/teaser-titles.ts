@@ -7,6 +7,7 @@ const shortTitles: Record<string, string> = {
   'first-delivery': 'Первая поставка на склад',
   'warehouse-move': 'Переезд склада без остановки отгрузок',
   'storage-cost': 'Как посчитать стоимость хранения',
+  'first-warehouse-invoice': 'Проверка первого счёта за склад',
   returns: 'Как организовать возвраты на складе',
   'peak-pallet-capacity': 'Сколько паллетомест нужно в пик',
   'dispatch-slots': 'Как распределить отгрузку по окнам',

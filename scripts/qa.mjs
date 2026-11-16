@@ -3,6 +3,12 @@ import { readdir,readFile,stat } from 'node:fs/promises';
 import { resolve,join,relative } from 'node:path';
 const dist=resolve('dist'),prefix='/skladskaya-praktika/',origin='https://xrenmen.github.io';
 const problems=[],titles=new Set(),descriptions=new Set();
+const articlesBySlug = new Map(registry.map(article => [article.slug, article]));
+const dateIsValid = (date) => {
+  if (typeof date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(date)) return false;
+  const parsed = new Date(date + 'T00:00:00Z');
+  return Number.isFinite(parsed.valueOf()) && parsed.toISOString().slice(0,10) === date;
+};
 const walk=async root=>(await Promise.all((await readdir(root,{withFileTypes:true})).map(x=>x.isDirectory()?walk(join(root,x.name)):[join(root,x.name)]))).flat();
 const files=await walk(dist);const html=files.filter(f=>f.endsWith('.html'));let articles=0;const refs=[];
 for(const f of html){
@@ -40,12 +46,16 @@ for(const f of html){
     try{
       const data=JSON.parse(schema);
       if(data['@type']!=='Article'||data.image!==origin+photoPath+'-1280.webp')throw Error();
+      const article = articlesBySlug.get(slug);
+      const published = article?.published;
+      const updated = article?.updated ?? published;
+      if (!dateIsValid(published) || !dateIsValid(updated) || updated < published || data.datePublished !== published || data.dateModified !== updated || !src.includes('datetime="'+published+'"')) problems.push(local+' invalid article dates');
     }catch{problems.push(local+' invalid Article data or photo');}
     if(!src.includes('data-pagefind-body'))problems.push(local+' not opted into search');
   }
 }
 const toolsPages=['tools/index.html','tools/warehouse-checklist/index.html','tools/peak-capacity/index.html','tools/warehouse-quotes/index.html'];
 if(html.length!==registry.length+11+toolsPages.length || articles!==registry.length)problems.push('Unexpected page counts: '+html.length+' / '+articles);
-for(const asset of [...toolsPages,'.nojekyll','404.html','rss.xml','pagefind/pagefind.js','pagefind/pagefind-entry.json'])if(!(await stat(join(dist,asset)).catch(()=>null))?.isFile())problems.push('Missing '+asset);
+for(const asset of [...toolsPages,'.nojekyll','404.html','rss.xml','pagefind/pagefind.js','pagefind/pagefind-entry.json','downloads/receiving-discrepancy-log.xlsx'])if(!(await stat(join(dist,asset)).catch(()=>null))?.isFile())problems.push('Missing '+asset);
 if(problems.length){console.error(problems.join('\n'));process.exitCode=1;}
 else console.log(JSON.stringify({html:html.length,articles,noindex:html.length,refs,assets:files.length},null,2));

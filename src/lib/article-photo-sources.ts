@@ -10,6 +10,16 @@ interface ArticlePhotoSource {
 }
 
 export const articlePhotoSources: Record<string, ArticlePhotoSource> = {
+  "first-warehouse-invoice": {
+    "photographer": "Daniel Andraski",
+    "source": "https://www.pexels.com/photo/close-up-shot-of-a-person-doing-a-checklist-12234106/",
+    "alt": "Сотрудник склада делает отметки на бумажном бланке у стеллажа с коробками",
+    "position": "54% 50%",
+    "smallWidth": 640,
+    "smallHeight": 427,
+    "largeWidth": 1280,
+    "largeHeight": 853
+  },
   "order-picking-check": {
     "photographer": "RDNE Stock project",
     "source": "https://www.pexels.com/photo/deliveryman-scanning-the-barcode-7363196/",

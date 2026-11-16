@@ -2,7 +2,7 @@
 import Site from '../../layouts/Site.astro';
 import articles from '../../lib/content.mjs';
 import { articleRoutes } from '../../lib/editorial-paths';
-import { articlePath, categories, categoryPath, path, releaseDate, siteName } from '../../lib/site';
+import { articlePath, categories, categoryPath, path, siteName, type Article } from '../../lib/site';
 import { photoForArticle, photoLicenseUrl } from '../../lib/media';
 import '../../styles/reading.css';
 
@@ -10,7 +10,7 @@ export function getStaticPaths() {
   return articles.map(article => ({ params: { slug: article.slug }, props: { article } }));
 }
 
-const { article } = Astro.props;
+const { article }: { article: Article } = Astro.props;
 const category = categories.find(item => item.id === article.category)!;
 const route = articleRoutes[article.slug];
 const related = route?.guides.flatMap(guide => {
@@ -19,12 +19,13 @@ const related = route?.guides.flatMap(guide => {
 }) ?? [];
 const tool = route?.tool;
 const image = photoForArticle(article.slug);
-const dateLabel = new Intl.DateTimeFormat('ru-RU', {
+const dateFormatter = new Intl.DateTimeFormat('ru-RU', {
   day: 'numeric',
   month: 'long',
   year: 'numeric',
   timeZone: 'UTC',
-}).format(new Date(releaseDate + 'T00:00:00Z'));
+});
+const dateLabel = (date: string) => dateFormatter.format(new Date(date + 'T00:00:00Z'));
 
 const sections: Array<{ id: string; label: string }> = [];
 let tableNumber = 0;
@@ -32,6 +33,7 @@ const body = article.body
   .replace(/href="#storage-calculator"/g, 'href="' + path('calculator/') + '#storage-calculator"')
   .replace(/href="\.\.\/([a-z0-9-]+)\/"/g, (_match, slug: string) => 'href="' + articlePath(slug) + '"')
   .replace(/href="\.\.\/\.\.\/tools\/([a-z0-9-]+)\/"/g, (_match, slug: string) => 'href="' + path('tools/' + slug + '/') + '"')
+  .replace(/href="\.\.\/\.\.\/downloads\/([a-z0-9-]+\.xlsx)"/g, (_match, file: string) => 'href="' + path('downloads/' + file) + '"')
   .replace(/<h2>(.*?)<\/h2>|<table\b[^>]*>.*?<\/table>/gs, (markup, heading) => {
     if (heading !== undefined) {
       const id = 'razdel-' + (sections.length + 1);
@@ -58,8 +60,8 @@ const jsonLd = {
   headline: article.title,
   description: article.description,
   inLanguage: 'ru',
-  datePublished: releaseDate,
-  dateModified: releaseDate,
+  datePublished: article.published,
+  dateModified: article.updated ?? article.published,
   image: new URL(image.large, Astro.site).href,
   author: {
     '@type': 'Organization',
@@ -86,7 +88,10 @@ const jsonLd = {
         <p class="lede">{article.description}</p>
         <p class="article-byline" data-pagefind-ignore>
           <a href={path('editorial/')}>Редакция «Складская практика»</a>
-          <time datetime={releaseDate}>{dateLabel}</time>
+          <time datetime={article.published}>{dateLabel(article.published)}</time>
+          {article.updated && article.updated !== article.published && (
+            <span>Обновлено <time datetime={article.updated}>{dateLabel(article.updated)}</time></span>
+          )}
         </p>
       </header>
 

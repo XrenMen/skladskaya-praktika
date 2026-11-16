@@ -1,5 +1,4 @@
 export const siteName = 'Складская практика';
-export const releaseDate = '2026-11-16';
 export const base = import.meta.env.BASE_URL.replace(/\/$/,'') + '/';
 export const path = (slug = '') => base + slug.replace(/^\//,'');
 export const categories = [
@@ -13,6 +12,8 @@ export interface Article {
   title: string;
   description: string;
   minutes: number;
+  published: string;
+  updated?: string;
   body: string;
 }
 export const articlePath = (slug: string) => path('materials/' + slug + '/');

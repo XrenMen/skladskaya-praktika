@@ -41,9 +41,20 @@ const quotes = [
     </fieldset>
 
     <div class="quotes-summary">
-      <p data-quote-summary role="status" aria-atomic="true">В примере меньше всего стоит Склад 3 — 64 300 ₽ в месяц.</p>
-      <button type="reset" class="button outline" data-quotes-reset hidden>Вернуть пример</button>
+      <p class="quotes-result" data-quote-summary role="status" aria-atomic="true">В примере меньше всего стоит Склад 3 — 64 300 ₽ в месяц.</p>
+      <div class="quotes-actions" data-quotes-actions hidden>
+        <button type="button" class="button" data-quotes-copy disabled>Скопировать сравнение</button>
+        <button type="reset" class="button outline" data-quotes-reset>Вернуть пример</button>
+      </div>
       <small class="quotes-note quotes-draft-note" data-quote-draft-note hidden>Черновик сохранён в этой вкладке.</small>
+      <p class="quotes-note quotes-copy-guidance" data-quotes-copy-guidance hidden>Заполните объёмы и тарифы всех трёх складов, чтобы скопировать сравнение.</p>
+      <p class="quotes-copy-status" data-quotes-copy-status id="quotes-copy-status" role="status" aria-atomic="true"></p>
+      <div class="quotes-copy-fallback" data-quotes-copy-fallback hidden>
+        <label class="quotes-field">
+          <span>Текст сравнения</span>
+          <textarea data-quotes-copy-text aria-describedby="quotes-copy-status" readonly rows="7"></textarea>
+        </label>
+      </div>
     </div>
 
     <div class="quotes-tariff-head">
@@ -82,7 +93,7 @@ const quotes = [
     <a href={articlePath('storage-cost')}>Из чего складывается стоимость хранения <span aria-hidden="true">→</span></a>
     <a href={articlePath('warehouse-site-audit')}>Как проверить склад перед договором <span aria-hidden="true">→</span></a>
   </section>
-  <script is:inline type="module" src={path('assets/warehouse-quotes.js?v=draft')}></script>
+  <script is:inline type="module" src={path('assets/warehouse-quotes.js?v=copy')}></script>
 </Site>
 
 <style>
@@ -210,6 +221,7 @@ const quotes = [
     overflow-wrap: anywhere;
   }
   .quotes-summary {
+    position: relative;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -219,20 +231,51 @@ const quotes = [
     border-block: 1px solid var(--line);
     background: var(--wash);
   }
-  .quotes-summary p {
+  .quotes-result {
     flex: 1 1 320px;
     margin: 0;
     font-weight: 650;
   }
-  .quotes-summary .quotes-draft-note {
+  .quotes-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+  }
+  .quotes-actions .button {
+    min-height: 44px;
+  }
+  .quotes-actions .button:disabled {
+    border-color: var(--line);
+    background: var(--surface);
+    color: var(--muted);
+    cursor: default;
+  }
+  .quotes-summary :is(.quotes-draft-note, .quotes-copy-guidance, .quotes-copy-status, .quotes-copy-fallback) {
     flex-basis: 100%;
+    min-width: 0;
     margin: 0;
   }
-  .quotes-summary .button {
-    flex: 0 0 auto;
-  }
-  .quotes-summary .button[hidden] {
+  .quotes-summary [hidden] {
     display: none;
+  }
+  .quotes-copy-status:empty {
+    position: absolute;
+  }
+  .quotes-copy-fallback textarea {
+    width: 100%;
+    min-width: 0;
+    padding: 9px 10px;
+    border: 1px solid var(--field-line, var(--line));
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--ink);
+    font: inherit;
+    font-size: 1rem;
+    resize: vertical;
+  }
+  .quotes-copy-fallback textarea:focus-visible {
+    outline: 2px solid var(--link);
+    outline-offset: 2px;
   }
   .practice-tool-links a {
     display: block;
