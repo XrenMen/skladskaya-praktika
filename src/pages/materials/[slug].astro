@@ -23,7 +23,6 @@ const jsonLd={'@context':'https://schema.org','@type':'Article',headline:article
   <article data-pagefind-body>
     <header class="article-head">
       <p class="crumb" data-pagefind-ignore><a href={path('materials/')}>Статьи</a><span>/</span><a href={categoryPath(category.id)}>{category.name}</a></p>
-      <p class="eyebrow">{category.name}</p>
       <h1 data-pagefind-meta="title">{article.title}</h1>
       <p class="lede">{article.description}</p>
       <p class="article-meta" data-pagefind-ignore><a href={path('editorial/')}>Редакция «Складская практика»</a><time datetime={releaseDate}>{new Intl.DateTimeFormat('ru-RU',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(releaseDate+'T00:00:00Z'))}</time><span>{article.minutes} мин чтения</span></p>
@@ -34,5 +33,5 @@ const jsonLd={'@context':'https://schema.org','@type':'Article',headline:article
       <div class="reading" set:html={body} />
     </div>
   </article>
-  <section class="section" aria-labelledby="related"><p class="eyebrow">Читайте дальше</p><h2 id="related">Продолжить по теме</h2><div class="cards related-cards">{related.map(item=><Card item={item}/>)}</div></section>
+  <section class="section" aria-labelledby="related"><h2 id="related">Продолжить по теме</h2><div class="cards related-cards">{related.map(item=><Card item={item}/>)}</div></section>
 </Site>

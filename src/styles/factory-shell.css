@@ -1,0 +1,214 @@
+.site-top,
+.site-foot {
+  --shell-bg: #181a1b;
+  --shell-text: #f8f5ef;
+  --shell-muted: #bdb9b1;
+  --shell-accent: #ffb34a;
+  --shell-line: #414242;
+  background: var(--shell-bg);
+  color: var(--shell-text);
+}
+
+.site-top .mast {
+  min-height: 74px;
+  padding-block: 0;
+  border: 0;
+  gap: 28px;
+}
+
+.site-top .brand {
+  flex: 0 0 auto;
+  gap: 10px;
+  color: var(--shell-text);
+  font: 650 clamp(1rem, 2vw, 1.28rem)/1.15 "Geist Variable", Arial, sans-serif;
+  letter-spacing: -0.026em;
+}
+
+.site-top .brand img {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--shell-line);
+  border-radius: 8px;
+  filter: grayscale(1) brightness(1.25);
+}
+
+.site-top .brand span {
+  max-width: none;
+}
+
+.site-top .brand:hover {
+  color: var(--shell-accent);
+}
+
+.site-top .mast nav {
+  gap: clamp(16px, 3vw, 38px);
+  flex-wrap: nowrap;
+}
+
+.site-top .mast nav a {
+  position: relative;
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  min-height: 44px;
+  padding: 3px 0 0;
+  border: 0;
+  color: var(--shell-text);
+  font-size: 0.9rem;
+  font-weight: 540;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.site-top .mast nav a::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 2px;
+  background: currentColor;
+  opacity: 0;
+}
+
+.site-top .mast nav a:hover,
+.site-top .mast nav a[aria-current="page"] {
+  color: var(--shell-accent);
+}
+
+.site-top .mast nav a[aria-current="page"]::after {
+  opacity: 1;
+}
+
+.shell-search-mark {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  margin-right: 2px;
+}
+
+.shell-search-mark::after {
+  content: "";
+  position: absolute;
+  width: 5px;
+  height: 1.5px;
+  right: -4px;
+  bottom: -1.5px;
+  background: currentColor;
+  transform: rotate(45deg);
+}
+
+.site-top a:focus-visible,
+.site-foot a:focus-visible {
+  outline: 2px solid var(--shell-accent);
+  outline-offset: 4px;
+}
+
+.site-foot {
+  border-top: 0;
+  margin-top: clamp(52px, 8vw, 104px);
+}
+
+.site-foot .footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px 38px;
+  padding-block: clamp(28px, 5vw, 56px);
+  color: var(--shell-muted);
+}
+
+.site-foot .footer-name {
+  margin-bottom: 6px;
+  color: var(--shell-text);
+  font: 650 1.2rem/1.25 "Geist Variable", Arial, sans-serif;
+  letter-spacing: -0.022em;
+}
+
+.site-foot .footer-inner p:not(.footer-name) {
+  font-size: 0.875rem;
+}
+
+.site-foot nav {
+  gap: 10px 22px;
+}
+
+.site-foot nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  color: var(--shell-text);
+  font-weight: 540;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.site-foot nav a:hover {
+  color: var(--shell-accent);
+  text-decoration: underline;
+}
+
+@media (max-width: 760px) {
+  .site-top .mast {
+    min-height: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    padding-top: 11px;
+  }
+
+  .site-top .brand {
+    justify-self: start;
+    min-height: 39px;
+  }
+
+  .site-top .mast nav {
+    width: 100%;
+    justify-content: space-between;
+    border-top: 1px solid var(--shell-line);
+    margin-top: 8px;
+    gap: 0 10px;
+  }
+
+  .site-top .mast nav a {
+    min-height: 43px;
+    font-size: clamp(0.77rem, 3.5vw, 0.88rem);
+    gap: 6px;
+  }
+
+  .shell-search-mark {
+    display: none;
+  }
+
+  .site-foot .footer-inner {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 330px) {
+  .site-top .mast nav {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 0 14px;
+  }
+}
+
+@media print {
+  .site-top {
+    background: none;
+    padding-bottom: 12px;
+  }
+
+  .site-top .brand {
+    color: #000;
+  }
+
+  .site-top .brand img {
+    display: none;
+  }
+
+  .site-foot {
+    display: none;
+  }
+}

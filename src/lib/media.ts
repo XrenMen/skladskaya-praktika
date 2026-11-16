@@ -12,10 +12,20 @@ export function photo(key: PhotoKey) {
  const small = path('photos/'+key+'-640.webp'), large = path('photos/'+key+'-1280.webp');
  return {...item, small, large, srcset: small+' 640w, '+large+' 1280w'};
 }
+const loadingSmall = path('photos/loading-bay-768.webp');
+const loadingLarge = path('photos/loading-bay-1536.webp');
+
+export const loadingBay = {
+  small: loadingSmall,
+  large: loadingLarge,
+  srcset: loadingSmall + ' 768w, ' + loadingLarge + ' 1536w',
+  alt: 'Погрузчик с паллетой у открытого полуприцепа на складском доке',
+  position: '50% 57%',
+};
 const articlePhotos:Record<string,PhotoKey> = {
  'storage-cost':'storage', 'first-delivery':'operations', 'compare-fulfillment':'fulfillment',
- 'returns':'fulfillment', 'choose-operator':'planning', 'warehouse-move':'cover',
+ 'returns':'fulfillment', 'choose-operator':'planning',
  'dispatch-slots':'operations', 'own-vs-outsourced':'planning',
 };
-export const photoForArticle=(slug:string, fallback:PhotoKey='cover')=>photo(articlePhotos[slug]??fallback);
+export const photoForArticle=(slug:string, fallback:PhotoKey='cover')=>slug === 'warehouse-move' ? loadingBay : photo(articlePhotos[slug] ?? fallback);
 export function photoForCategory(category:string){return photo(category==='storage'?'storage':category==='fulfillment'?'fulfillment':'operations');}

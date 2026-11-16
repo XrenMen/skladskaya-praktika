@@ -1,11 +1,39 @@
 ---
-import {articlePath,categories,type Article} from '../lib/site';
-import {photoForArticle} from '../lib/media';
-const {item}=Astro.props as {item:Article};
-const topic=categories.find(c=>c.id===item.category);
-const image=photoForArticle(item.slug);
+import { articlePath, categories, type Article } from '../lib/site';
+import { photoForArticle } from '../lib/media';
+import '../styles/factory-collections.css';
+
+interface Props {
+  item: Article;
+  emphasis?: 'lead' | 'side';
+  hideTopic?: boolean;
+  heading?: 'h2' | 'h3';
+}
+
+const { item, emphasis, hideTopic = false, heading: Heading = 'h3' } = Astro.props;
+const topic = categories.find(category => category.id === item.category);
+const image = photoForArticle(item.slug);
+const sizes = emphasis === 'lead' ? '(max-width: 680px) 94vw, (max-width: 1300px) 54vw, 740px' : '(max-width: 680px) 94vw, (max-width: 1300px) 46vw, 620px';
 ---
-<a class="card journal-item" href={articlePath(item.slug)}>
-  <div class="journal-thumb"><img loading="lazy" decoding="async" width="640" height="426" src={image.small} srcset={image.srcset} sizes="(max-width: 540px) 28vw, 240px" style={{objectPosition:image.position}} alt="" /></div>
-  <div class="journal-item-text"><p class="kicker"><span>{topic?.name}</span><span>{item.minutes} мин</span></p><h3>{item.title}</h3><p class="muted">{item.description}</p></div><span class="item-arrow" aria-hidden="true">↗</span>
+<a class:list={['collection-card', emphasis && `collection-card--${emphasis}`]} href={articlePath(item.slug)}>
+  <div class="collection-card-photo">
+    <img
+      src={image.small}
+      srcset={image.srcset}
+      sizes={sizes}
+      width="640"
+      height="426"
+      loading={emphasis === 'lead' ? 'eager' : 'lazy'}
+      fetchpriority={emphasis === 'lead' ? 'high' : undefined}
+      decoding="async"
+      style={{ objectPosition: image.position }}
+      alt=""
+    />
+  </div>
+  <div class="collection-card-copy">
+    <p class="collection-meta">{!hideTopic && topic && <span>{topic.name}</span>}<span>{item.minutes} мин чтения</span></p>
+    <Heading class="collection-card-title">{item.title}</Heading>
+    <p class="collection-card-summary">{item.description}</p>
+    <span class="collection-arrow" aria-hidden="true">↗</span>
+  </div>
 </a>

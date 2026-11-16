@@ -1,13 +1,38 @@
 ---
-import {categoryPath,categories} from '../lib/site';
-import {photoForCategory} from '../lib/media';
+import { categoryPath, categories } from '../lib/site';
+import { photoForCategory } from '../lib/media';
 import articles from '../lib/content.mjs';
+import '../styles/factory-collections.css';
+
+const plural = new Intl.PluralRules('ru');
+const articleLabel = { one: 'статья', few: 'статьи', many: 'статей', other: 'статьи', zero: 'статей', two: 'статьи' };
 ---
-<div class="topic-grid">{categories.map(c=>{
- const image=photoForCategory(c.id);
- const count=articles.filter(a=>a.category===c.id).length;
- return <a class="topic journal-item" href={categoryPath(c.id)}>
-   <div class="journal-thumb"><img src={image.small} srcset={image.srcset} width="640" height="426" sizes="(max-width: 540px) 28vw, 240px" loading="lazy" decoding="async" alt="" /></div>
-   <div class="journal-item-text"><p class="kicker"><span>Рубрика {c.mark}</span><span>{count} материала</span></p><h3>{c.title}</h3><p class="muted">{c.description}</p></div><span class="item-arrow" aria-hidden="true">↗</span>
- </a>;
-})}</div>
+<div class="collection-topics">
+  {categories.map(category => {
+    const image = photoForCategory(category.id);
+    const count = articles.filter(article => article.category === category.id).length;
+    return (
+      <a class="collection-topic" href={categoryPath(category.id)}>
+        <div class="collection-topic-photo">
+          <img
+            src={image.small}
+            srcset={image.srcset}
+            width="640"
+            height="426"
+            sizes="(max-width: 680px) 94vw, (max-width: 1300px) 52vw, 670px"
+            loading="lazy"
+            decoding="async"
+            style={{ objectPosition: image.position }}
+            alt=""
+          />
+        </div>
+        <div class="collection-topic-copy">
+          <p class="collection-meta">{count} {articleLabel[plural.select(count)]}</p>
+          <h2 class="collection-card-title">{category.title}</h2>
+          <p class="collection-card-summary">{category.description}</p>
+          <span class="collection-arrow" aria-hidden="true">↗</span>
+        </div>
+      </a>
+    );
+  })}
+</div>

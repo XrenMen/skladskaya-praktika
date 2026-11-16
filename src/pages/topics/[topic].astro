@@ -2,18 +2,41 @@
 import Site from '../../layouts/Site.astro';
 import Card from '../../components/Card.astro';
 import articles from '../../lib/content.mjs';
-import { categories, path } from '../../lib/site';
+import { categories, categoryPath, path } from '../../lib/site';
 import { photoForCategory } from '../../lib/media';
-export function getStaticPaths(){return categories.map(category=>({params:{topic:category.id},props:{category}}));}
-const {category}=Astro.props;
-const selected=articles.filter(a=>a.category===category.id);
-const image=photoForCategory(category.id);
+
+export function getStaticPaths() {
+  return categories.map(category => ({ params: { topic: category.id }, props: { category } }));
+}
+
+const { category } = Astro.props;
+const selected = articles.filter(article => article.category === category.id);
+const image = photoForCategory(category.id);
 ---
 <Site title={category.title} description={category.description} image={image.large} section="topics">
-  <header class="category-head">
-    <div><p class="crumb"><a href={path()}>Главная</a><span>/</span><a href={path('topics/')}>Рубрики</a></p>
-    <p class="eyebrow">Рубрика {category.mark}</p><h1>{category.title}</h1><p class="lede">{category.description}</p></div>
-    <img src={image.small} srcset={image.srcset} width="640" height="426" sizes="(max-width: 850px) 90vw, 500px" alt={image.alt} />
+  <header class="collection-category">
+    <div class="collection-category-copy">
+      <a href={path('topics/')} class="collection-back"><span aria-hidden="true">←</span> Все рубрики</a>
+      <h1>{category.title}</h1>
+      <p>{category.description}</p>
+    </div>
+    <img
+      src={image.small}
+      srcset={image.srcset}
+      width="640"
+      height="426"
+      sizes="(max-width: 680px) 94vw, (max-width: 1300px) 52vw, 670px"
+      fetchpriority="high"
+      decoding="async"
+      style={{ objectPosition: image.position }}
+      alt={image.alt}
+    />
   </header>
-  <section class="section" aria-labelledby="category-articles"><h2 id="category-articles">Статьи рубрики</h2><div class="cards">{selected.map(item=><Card item={item}/>)}</div></section>
+  <nav class="collection-filter" aria-label="Рубрики журнала">
+    <a href={path('materials/')}>Все статьи</a>
+    {categories.map(item => <a aria-current={item.id === category.id ? 'page' : undefined} href={categoryPath(item.id)}>{item.name}</a>)}
+  </nav>
+  <div class="collection-grid collection-grid--topic">
+    {selected.map(item => <Card item={item} hideTopic heading="h2" />)}
+  </div>
 </Site>

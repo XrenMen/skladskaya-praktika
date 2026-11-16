@@ -4,10 +4,24 @@ import Card from '../../components/Card.astro';
 import articles from '../../lib/content.mjs';
 import { path, categories, categoryPath } from '../../lib/site';
 import { photo } from '../../lib/media';
-const image=photo('cover');
+
+const image = photo('cover');
+const lead = articles.find(article => article.slug === 'warehouse-move');
+const second = articles.find(article => article.slug === 'storage-cost');
+const archive = articles.filter(article => article !== lead && article !== second);
 ---
 <Site title="Все статьи журнала" description="Руководства по выбору склада, расчёту хранения, запуску фулфилмента и приёмке товара." section="materials" image={image.large}>
-  <header class="inner-head blog-head"><h1>Статьи</h1><p class="lede">Чек-листы и расчёты для складских задач. Выберите рубрику или <a href={path('search/')}>найдите статью по слову</a>.</p>
-  <nav class="rubric-nav" aria-label="Рубрики журнала"><a aria-current="page" href={path('materials/')}>Все статьи · {articles.length}</a>{categories.map(c=><a href={categoryPath(c.id)}>{c.name}</a>)}</nav></header>
-  <div class="cards">{articles.map(item=><Card item={item}/>)}</div>
+  <header class="collection-head">
+    <h1>Статьи</h1>
+    <p>Практические руководства по хранению, обработке заказов и работе склада. <a href={path('search/')}>Поиск по статьям</a></p>
+  </header>
+  <nav class="collection-filter" aria-label="Рубрики журнала">
+    <a aria-current="page" href={path('materials/')}>Все статьи</a>
+    {categories.map(category => <a href={categoryPath(category.id)}>{category.name}</a>)}
+  </nav>
+  <div class="collection-grid">
+    {lead && <Card item={lead} emphasis="lead" heading="h2" />}
+    {second && <Card item={second} emphasis="side" heading="h2" />}
+    {archive.map(item => <Card item={item} heading="h2" />)}
+  </div>
 </Site>
