@@ -2,6 +2,7 @@ import { clearDraft, readDraft, saveDraft } from './calculator-draft.js';
 
 const DRAFT_KEY = 'quotes-v1';
 const MAX_VALUE = 1_000_000;
+const volumeFormat = new Intl.NumberFormat('ru-RU');
 const rubles = new Intl.NumberFormat('ru-RU', {
   style: 'currency',
   currency: 'RUB',
@@ -52,7 +53,13 @@ export function mountQuotes(form) {
   const volumeFields = form.querySelector('[data-quotes-volume]');
   const volumes = [...volumeFields.querySelectorAll('[data-quote-volume]')];
   const summary = form.querySelector('[data-quote-summary]');
-  const reset = form.querySelector('[data-quotes-reset]');
+  const actions = form.querySelector('[data-quotes-actions]');
+  const copy = form.querySelector('[data-quotes-copy]');
+  const copyGuidance = form.querySelector('[data-quotes-copy-guidance]');
+  const copyStatus = form.querySelector('[data-quotes-copy-status]');
+  const copyFallback = form.querySelector('[data-quotes-copy-fallback]');
+  const copyField = form.querySelector('[data-quotes-copy-text]');
+  let comparison = '';
   const draftNote = form.querySelector('[data-quote-draft-note]');
   const quotes = [...form.querySelectorAll('[data-quote-card]')].map((card) => {
     const fields = card.querySelector('[data-quote-fields]');
@@ -91,6 +98,29 @@ export function mountQuotes(form) {
         ? 'Минимальная сумма' + scope + ' — ' + names + ', ' + format(best) + ' в месяц.'
         : 'Одинаковая минимальная сумма' + scope + ' — ' + names + ', ' + format(best) + ' в месяц.';
     }
+
+    const canCopy = complete.length === quotes.length;
+    copy.disabled = !canCopy;
+    copyGuidance.hidden = canCopy;
+    copyStatus.textContent = '';
+    copyFallback.hidden = true;
+    comparison = '';
+    if (canCopy) {
+      const [storage, receiving, dispatch] = monthlyVolumes.map(value => volumeFormat.format(value));
+      comparison = [
+        'Сравнение складских тарифов',
+        '',
+        'Объёмы за месяц',
+        'Хранение, паллето-дни — ' + storage,
+        'Приёмка, паллеты — ' + receiving,
+        'Отгрузка, паллеты — ' + dispatch,
+        '',
+        'Суммы за месяц',
+        ...quotes.map((quote, index) => quote.name + ' — ' + format(totals[index])),
+        '',
+        summary.textContent
+      ].join('\n');
+    }
   }
 
   const inputs = [...volumes, ...quotes.flatMap(quote => quote.rates)];
@@ -100,7 +130,33 @@ export function mountQuotes(form) {
   if (draftNote) draftNote.hidden = !restored;
 
   volumeFields.disabled = false;
-  reset.hidden = false;
+  actions.hidden = false;
+  copy.addEventListener('click', async () => {
+    const text = comparison;
+    if (!text) return;
+    copyStatus.textContent = '';
+    copyFallback.hidden = true;
+    let copied = false;
+    try {
+      if (window.isSecureContext && navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        copied = true;
+      }
+    } catch {
+      // The browser can decline clipboard access even on a secure page.
+    }
+    if (text !== comparison) return;
+
+    copyStatus.textContent = copied
+      ? 'Сравнение скопировано.'
+      : 'Копирование недоступно. Скопируйте выделенный текст вручную.';
+    if (!copied) {
+      copyField.value = text;
+      copyFallback.hidden = false;
+      copyField.focus();
+      copyField.select();
+    }
+  });
   form.addEventListener('submit', (event) => event.preventDefault());
   form.addEventListener('input', () => {
     const saved = saveDraft(DRAFT_KEY, inputs.map(input => input.value));
