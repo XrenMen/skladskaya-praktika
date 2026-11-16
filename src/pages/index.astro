@@ -2,16 +2,14 @@
 import Site from '../layouts/Site.astro';
 import articles from '../lib/content.mjs';
 import { photoForArticle, photoLicenseUrl } from '../lib/media';
-import { practiceTools } from '../lib/practice-tools';
 import { articleTeaserTitle } from '../lib/teaser-titles';
 import { articlePath, path } from '../lib/site';
 import '../styles/notebook-home.css';
 
 const featuredSlug = 'receiving-discrepancies';
-const spotlightSlug = 'warehouse-returns-case';
 const featuredPhoto = photoForArticle(featuredSlug);
 const orderedSlugs = [
-  spotlightSlug, 'first-warehouse-month', 'first-warehouse-invoice', 'order-picking-check',
+  'first-warehouse-month', 'warehouse-returns-case', 'first-warehouse-invoice', 'order-picking-check',
   'warehouse-location-labels',
   'cycle-counting', 'warehouse-site-audit', 'compare-fulfillment', 'first-delivery',
   'warehouse-move', 'storage-cost', 'returns', 'peak-pallet-capacity',
@@ -133,15 +131,14 @@ const featuredTitle = featuredStory ? articleTeaserTitle(featuredStory) : 'Не�
           const title = articleTeaserTitle(article);
           const label = categoryLabels[article.category] ?? article.category;
           const isPreview = index < previewCount && article.slug !== featuredSlug;
-          const isSpotlight = article.slug === spotlightSlug;
 
           return (
-            <article class="nb-story" data-category={article.category} data-search={title + ' ' + article.title + ' ' + article.description + ' ' + label} data-preview={String(isPreview)} data-spotlight={String(isSpotlight)} hidden={!isPreview}>
+            <article class="nb-story" data-category={article.category} data-search={title + ' ' + article.title + ' ' + article.description + ' ' + label} data-preview={String(isPreview)} hidden={!isPreview}>
               <a class="nb-story__link" href={articlePath(article.slug)} aria-labelledby={'nb-title-' + article.slug} aria-describedby={'nb-deck-' + article.slug}>
                 <img
                   src={photo.small}
                   srcset={photo.srcset}
-                  sizes={isSpotlight ? '(max-width: 720px) 94vw, (max-width: 1560px) 57vw, 900px' : '(max-width: 520px) 94vw, (max-width: 880px) 46vw, (max-width: 1160px) 30vw, 23vw'}
+                  sizes="auto, (max-width: 520px) 94vw, (max-width: 1050px) 46vw, 23vw"
                   width={photo.smallWidth}
                   height={photo.smallHeight}
                   alt={photo.alt}
@@ -150,10 +147,7 @@ const featuredTitle = featuredStory ? articleTeaserTitle(featuredStory) : 'Не�
                   style={{ objectPosition: photo.position }}
                 />
                 <div class="nb-story__body">
-                  <p class="nb-story__meta">
-                    {isSpotlight && <span class="nb-story__edition">Из практики · </span>}
-                    {label} · {article.minutes} мин
-                  </p>
+                  <p class="nb-story__meta">{label} · {article.minutes} мин</p>
                   <h3 id={'nb-title-' + article.slug}>{title}</h3>
                   <p class="nb-story__deck" id={'nb-deck-' + article.slug}>{article.description}</p>
                 </div>
@@ -168,30 +162,14 @@ const featuredTitle = featuredStory ? articleTeaserTitle(featuredStory) : 'Не�
     <section id="tools" class="nb-tools" aria-labelledby="nb-tools-title">
       <div class="nb-width nb-tools__inner" id="calculator">
         <div class="nb-tools__title">
-          <h2 id="nb-tools-title">Инструменты и шаблоны</h2>
+          <h2 id="nb-tools-title">Шаблоны Excel</h2>
           <a class="nb-archive-link" href={path('tools/')}>Все инструменты <span class="nb-arrow" aria-hidden="true">→</span></a>
         </div>
-        <div class="nb-tools__example">
-          <h3>Пример расчёта хранения</h3>
-          <p class="nb-tools__equation"><span>80 паллет × 30 дней =</span> <strong>2 400 паллето-дней</strong></p>
-          <a class="nb-tools__action" href={path('calculator/')}>Посчитать свой объём <span class="nb-arrow" aria-hidden="true">→</span></a>
-        </div>
-        <div class="nb-tools__links">
-          <h3>Другие инструменты</h3>
-          <ul>
-            {practiceTools.filter(tool => tool.path !== 'calculator/').map(tool => (
-              <li><a href={path(tool.path)}>{tool.action} <span class="nb-arrow" aria-hidden="true">→</span></a></li>
-            ))}
-          </ul>
-        </div>
-        <div class="nb-tools__links">
-          <h3>Шаблоны Excel</h3>
-          <ul>
-            {templates.map(template => (
-              <li><a href={path('downloads/' + template.file)} download>{template.label} <span aria-hidden="true">↓</span></a></li>
-            ))}
-          </ul>
-        </div>
+        <ul aria-label="Шаблоны Excel">
+          {templates.map(template => (
+            <li><a href={path('downloads/' + template.file)} download>{template.label} <span aria-hidden="true">↓</span></a></li>
+          ))}
+        </ul>
       </div>
     </section>
   </div>
