@@ -190,8 +190,7 @@
   margin: .4375rem 0 0;
 }
 
-.collection-meta,
-.collection-credit {
+.collection-meta {
   color: var(--muted);
   font-size: .8125rem;
   line-height: 1.36;
@@ -203,25 +202,6 @@
 
 .collection-meta > span + span::before {
   content: " · ";
-}
-
-.collection-credit {
-  margin: 0;
-  padding-top: .5625rem;
-  overflow-wrap: anywhere;
-}
-
-.collection-card > .collection-credit {
-  margin-top: auto;
-}
-
-.collection-credit a {
-  color: inherit;
-  text-decoration: none;
-}
-
-.collection-credit a:hover {
-  color: var(--link);
 }
 
 .collection-card-link:focus-visible,

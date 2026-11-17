@@ -90,17 +90,6 @@
   background: var(--wash);
 }
 
-.article-media figcaption {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  column-gap: .42rem;
-  margin-top: 6px;
-  color: var(--muted);
-  font-size: .83rem;
-}
-
-.article-media figcaption a,
 .article-copy .reading a,
 .article-up a,
 .article-category {
@@ -112,7 +101,6 @@
   font-weight: 600;
 }
 
-.article-media figcaption a:hover,
 .article-copy .reading a:hover,
 .article-up a:hover,
 .article-category:hover {

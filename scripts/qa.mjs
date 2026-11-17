@@ -15,6 +15,7 @@ for(const f of html){
   const local=relative(dist,f).replaceAll('\\','/'),page=local==='index.html'?prefix:prefix+local.replace(/index\.html$/,'');
   const src=await readFile(f,'utf8'),head=src.match(/<head>(.*?)<\/head>/s)?.[1]||'';
   if(!/<meta name="robots" content="noindex"\s*\/?\s*>/.test(head))problems.push(local+' noindex missing');
+  if (/pexels\.com|\bPexels\b|class="(?:nb|collection)-credit"/i.test(src)) problems.push(local+' contains a public photo credit');
   if((src.match(/<h1[ >]/g)||[]).length!==1)problems.push(local+' H1 count');
   const title=head.match(/<title>(.*?)<\/title>/s)?.[1];
   if(!title||titles.has(title))problems.push(local+' duplicate/missing title');titles.add(title);
@@ -36,8 +37,6 @@ for(const f of html){
 
     const slug=local.split('/')[1];
     const photoPath=prefix+'photos/articles/'+slug;
-    const credit=src.match(/<figcaption\b[^>]*>(.*?)<\/figcaption>/s)?.[1]||'';
-    if(!credit.includes('https://www.pexels.com/photo/')||!credit.includes('https://www.pexels.com/license/'))problems.push(local+' photo credit missing');
     for(const width of [640,1280]){
       const asset='photos/articles/'+slug+'-'+width+'.webp';
       if(!src.includes(prefix+asset)||!(await stat(join(dist,asset)).catch(()=>null))?.isFile())problems.push(local+' missing article photo '+width);

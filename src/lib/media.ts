@@ -1,8 +1,6 @@
 import { path } from './site';
 import { articlePhotoSources } from './article-photo-sources';
 
-export const photoLicenseUrl = 'https://www.pexels.com/license/';
-
 export function photoForArticle(slug: string) {
   const source = articlePhotoSources[slug];
   if (!source) throw new Error('Missing photo source for article: ' + slug);

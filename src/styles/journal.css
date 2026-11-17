@@ -7,8 +7,8 @@
   --surface: #fff;
   --line: #eaeaea;
   --dark: #202020;
-  --bright: #001489;
-  --link: #001489;
+  --bright: var(--link);
+  --link: #78283f;
   --wash: #f6f6f6;
   --on-dark-muted: #ddd;
   --field-line: #767676;
@@ -122,7 +122,6 @@ img { color: var(--muted); }
   border-radius: 0;
   margin-bottom: 5px;
 }
-.article-figure figcaption { color: var(--muted); font-size: .78rem; }
 .article-frame {
   max-width: 1030px;
   margin-inline: auto;

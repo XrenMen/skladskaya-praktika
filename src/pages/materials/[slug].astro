@@ -3,7 +3,7 @@ import Site from '../../layouts/Site.astro';
 import articles from '../../lib/content.mjs';
 import { articleRoutes } from '../../lib/editorial-paths';
 import { articlePath, categories, categoryPath, path, siteName, type Article } from '../../lib/site';
-import { photoForArticle, photoLicenseUrl } from '../../lib/media';
+import { photoForArticle } from '../../lib/media';
 import '../../styles/reading.css';
 
 export function getStaticPaths() {
@@ -117,11 +117,6 @@ const jsonLd = {
           style={{ objectPosition: image.position }}
           alt={image.alt}
         />
-        <figcaption data-pagefind-ignore>
-          <a href={image.source}>Фото {image.photographer}</a>
-          <span aria-hidden="true">·</span>
-          <a href={photoLicenseUrl}>Условия использования Pexels</a>
-        </figcaption>
       </figure>
 
       <div class="article-copy">

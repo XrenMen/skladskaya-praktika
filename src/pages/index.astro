@@ -1,7 +1,7 @@
 ---
 import Site from '../layouts/Site.astro';
 import articles from '../lib/content.mjs';
-import { photoForArticle, photoLicenseUrl } from '../lib/media';
+import { photoForArticle } from '../lib/media';
 import { articleTeaserTitle } from '../lib/teaser-titles';
 import { articlePath, path } from '../lib/site';
 import '../styles/notebook-home.css';
@@ -87,7 +87,6 @@ const featuredTitle = featuredStory ? articleTeaserTitle(featuredStory) : 'Не�
             <p id="lead-deck">Что делать, если в накладной 40 коробов, а нужного артикула приехало 37.</p>
           </div>
         </a>
-        <figcaption class="nb-credit">Фото <a href={featuredPhoto.source}>{featuredPhoto.photographer}</a> · <a href={photoLicenseUrl}>Pexels</a></figcaption>
       </figure>
       <nav class="nb-routes" aria-labelledby="nb-routes-title">
         <h2 id="nb-routes-title">С чего начать</h2>
@@ -152,7 +151,6 @@ const featuredTitle = featuredStory ? articleTeaserTitle(featuredStory) : 'Не�
                   <p class="nb-story__deck" id={'nb-deck-' + article.slug}>{article.description}</p>
                 </div>
               </a>
-              <p class="nb-credit">Фото <a href={photo.source}>{photo.photographer}</a> · <a href={photoLicenseUrl}>Pexels</a></p>
             </article>
           );
         })}

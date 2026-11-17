@@ -6,7 +6,7 @@ import articles from '../../lib/content.mjs';
 import { articlePath, categories, path } from '../../lib/site';
 import { topicRoutes } from '../../lib/editorial-paths';
 import { articleTeaserTitle } from '../../lib/teaser-titles';
-import { photoForCategory, photoLicenseUrl } from '../../lib/media';
+import { photoForCategory } from '../../lib/media';
 import '../../styles/editorial-paths.css';
 
 export function getStaticPaths() {
@@ -52,7 +52,6 @@ const image = photoForCategory(category.id);
         style={{ objectPosition: image.position }}
         alt={image.alt}
       />
-      <figcaption class="collection-credit">Фото <a href={image.source}>{image.photographer}</a> · <a href={photoLicenseUrl} aria-label="Лицензия фотографии Pexels">Pexels</a></figcaption>
     </figure>
   </header>
   <CollectionNav active={category.id} />

@@ -1,6 +1,6 @@
 ---
 import { categoryPath, categories } from '../lib/site';
-import { photoForCategory, photoLicenseUrl } from '../lib/media';
+import { photoForCategory } from '../lib/media';
 import articles from '../lib/content.mjs';
 import '../styles/factory-collections.css';
 
@@ -30,7 +30,6 @@ const articleLabel = { one: 'статья', few: 'статьи', many: 'стат
           <h2 class="collection-card-title">{category.title}</h2>
           <p class="collection-card-summary">{category.description}</p>
         </a>
-        <p class="collection-credit">Фото <a href={image.source}>{image.photographer}</a> · <a href={photoLicenseUrl} aria-label="Лицензия фотографий Pexels">Pexels</a></p>
       </li>
     );
   })}
